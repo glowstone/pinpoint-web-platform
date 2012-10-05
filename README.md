@@ -1,0 +1,1 @@
+Place virtualenv called 'blue-env' next to this README.
