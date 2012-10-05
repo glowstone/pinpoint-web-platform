@@ -1,5 +1,5 @@
-from flask_app import app
 from flask import render_template
+from web_package import app
 
 @app.route('/')
 def hello_world():
