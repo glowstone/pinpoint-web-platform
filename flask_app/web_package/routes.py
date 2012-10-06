@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, g, session
 from web_package import app
 
 @app.route('/')
@@ -11,6 +11,7 @@ def index():
 @app.route('/user/<id>', methods = ['GET'])
 def user_profile(id):
 	print "Your identifier is " + str(id)
+	print session['username']
 	return render_template('user_profile.html')
 
 
@@ -25,10 +26,13 @@ def user_signup():
 	return render_template('user_signup.html')
 
 
-@app.route('/user/create', methods = ['POST'])
+@app.route('/user/create', methods = ['GET'])
 def user_create():
 	#Create a new user
 	print "TODO: Create a user"
+	g.db.execute("INSERT INTO users (username, hash, salt) VALUES('dog', 'dsadas', 'salty')")
+	g.db.commit()
+	session['username'] = 'dalton'
 	return redirect(url_for('index'))
 
 
