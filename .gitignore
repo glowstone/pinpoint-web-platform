@@ -1,5 +1,5 @@
 /blue-env
-*/db/*.sqlite3
+*.sqlite
 *.pyc
 *.pyo
 *~
