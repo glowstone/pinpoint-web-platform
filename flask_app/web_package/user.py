@@ -11,8 +11,14 @@ class User(object):
 
 	@staticmethod
 	def create(username, password):
+		"""
+		Used when a new User is created, which is used differently from the class constructor (which isn't
+		necessarily used for creating a new User in the database, so they're separated into different functions).
+		"""
 		password_hash, salt = hash_password(password)
-		return User(username, password_hash, salt, None, None)
+		u = User(username, password_hash, salt, None, None)
+		u.save()
+		return u
 
 	def set_password(self, password):
 		"""
