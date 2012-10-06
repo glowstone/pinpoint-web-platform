@@ -3,10 +3,16 @@ from web_package import connect_db
 
 
 class User(object):
-	def __init__(self, username, password, hash=None, latitude=None, longitude=None):
+	def __init__(self, username, password_hash, salt, latitude=None, longitude=None):
 		self.username = username
-		self.set_password(password)
+		self.password_hash = password_hash
+		self.salt = salt
 		self.set_location(latitude, longitude)
+
+	@staticmethod
+	def create(username, password):
+		password_hash, salt = hash_password(password)
+		return User(username, password_hash, salt, None, None)
 
 	def set_password(self, password):
 		"""
@@ -26,7 +32,8 @@ class User(object):
 
 	def save(self):
 		"""
-		Wrapper around the database insert for the User
+		Wrapper around the database upsert for the User. You need to call save if you want to insert the 
+		object into the database or save changes to it.
 		"""
 		object_dict = self.__dict__
 		print object_dict
