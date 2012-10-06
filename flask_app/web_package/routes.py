@@ -1,5 +1,6 @@
-from flask import render_template, redirect, url_for, g, session
+from flask import render_template, redirect, url_for, g, session, request
 from web_package import app
+from web_package import user
 
 @app.route('/')
 def index():
@@ -26,13 +27,11 @@ def user_signup():
 	return render_template('user_signup.html')
 
 
-@app.route('/user/create', methods = ['GET'])
+@app.route('/user/create', methods = ['POST'])
 def user_create():
 	#Create a new user
-	print "TODO: Create a user"
-	g.db.execute("INSERT INTO users (username, hash, salt) VALUES('dog', 'dsadas', 'salty')")
-	g.db.commit()
-	session['username'] = 'dalton'
+	print "Created user. TODO: Set session user"
+	user.User.create(request.form['username'], request.form['password'])
 	return redirect(url_for('index'))
 
 
