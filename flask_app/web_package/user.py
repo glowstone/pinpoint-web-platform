@@ -52,7 +52,7 @@ class User(object):
 		db.close()
 
 	@staticmethod
-	def get(username):
+	def get_from_username(username):
 		"""
 		Wrapper around the query to get a User object from the database.
 		"""
