@@ -1,46 +1,36 @@
-from flask import render_template
+from flask import render_template, redirect, url_for
 from web_package import app
 
 @app.route('/')
-def hello_world():
+def index():
 	return render_template('index.html')
 
 
-@app.route('/user/<id>')
+# User Resources
+#######################################################
+@app.route('/user/<id>', methods = ['GET'])
 def user_profile(id):
-	return 'Viewing profile for user ' + str(id)
+	print "Your identifier is " + str(id)
+	return render_template('user_profile.html')
 
 
-@app.route('/user/<id>/edit')
-def edit_user(id):
-	return 'Editing user: ' + str(id)
+@app.route('/user/<id>/edit', methods = ['GET'])
+def user_edit(id):
+	print "User ", str(id), " attempting to edit"
+	return render_template('user_edit.html')
 
 
-@app.route('/user/new')
-def new_user_form():
-	return 'This will be a form for creating a new user'
+@app.route('/user/new', methods = ['GET'])
+def user_signup():
+	return render_template('user_signup.html')
 
 
-@app.route('/user/create')
-def create_user():
-	return 'This will handle the post request to create a user'
+@app.route('/user/create', methods = ['POST'])
+def user_create():
+	#Create a new user
+	print "TODO: Create a user"
+	return redirect(url_for('index'))
 
 
-@app.route('/post')
-def list_posts():
-	return 'Lists the posts?'
-
-
-@app.route('/post/<id>')
-def view_post(id):
-	return 'Viewing post ' + str(id)
-
-
-@app.route('/post/new')
-def new_post_form():
-	return 'This will be a form for creating a new post'
-
-
-@app.route('/post/create')
-def create_post():
-	return 'This will handle the post request for creating a new post'
+# Post Resources
+#######################################################
