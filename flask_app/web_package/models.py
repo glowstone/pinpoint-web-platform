@@ -29,7 +29,7 @@ class Post(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     #abstract_location_id = db.Column(db.Integer, db.ForeignKey('AbstractLocation.id'))
     creation_time = db.Column(db.DateTime)
-    deletion_time = db.Column(db.DateTime)
+    expiration_time = db.Column(db.DateTime)
     ttl_time = db.Column(db.DateTime)
     # Eventually move these attributes to a subclass
     title = db.Column(db.String(120))
@@ -38,10 +38,9 @@ class Post(db.Model):
     # Abstract location
 
     # Post initialization
-    def __init__(self, title, body, create_time, ttl_time, delete_time, user_id):
+    def __init__(self, title, body, create_time, expiration_time, user_id):
         self.create_time = create_time
-        self.ttl_time = ttl_time
-        self.delete_time = delete_time
+        self.expiration_time = expiration_time
         self.user_id = user_id
         #self.abstract_location_id = abstract_location_id
         self.title = title

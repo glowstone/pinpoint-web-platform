@@ -65,11 +65,12 @@ def post_new():
 def post_create():
 	if request.method == 'POST':
 		username = session['username']
-		user = User.query.filter_by(username=username)
+		user = User.query.filter_by(username=username).first()
+		print user
 		
 		# TODO: Clean this ugliness
 		post = Post(request.form['title'], request.form['body'], datetime.datetime.now(), \
-			datetime.datetime.now() + 1111, datetime.datetime.now(), user.id)
+			datetime.datetime.now() + datetime.timedelta(days=5), user.id)
 		print post
 		db.session.add(post)
 		db.session.commit()		
