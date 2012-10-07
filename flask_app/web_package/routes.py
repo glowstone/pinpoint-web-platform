@@ -37,6 +37,34 @@ def user_create():
 
 # Post Resources
 #######################################################
+@app.route('/post/<id>', methods = ['GET'])
+def post_view(id):
+	#Query for post with id 
+
+	return render_template('post_view.html')
+
+
+@app.route('/post/<id>/edit', methods = ['GET'])
+def post_edit(id):
+	
+	return render_template('post_edit.html')
+
+
+@app.route('/post/new', methods = ['GET'])
+def post_new():
+	return render_template('post_new.html')
+
+
+@app.route('/post/create', methods = ['POST'])
+def post_create():
+	if request.method == 'POST':
+		print request.form['title']
+		print request.form['post_text']
+		return redirect(url_for('post_new'))
+
+	else:
+		return redirect(url_for('index'))
+
 
 
 
