@@ -1,6 +1,6 @@
 from flask import render_template, redirect, url_for, g, session, request
 from web_package import app
-from web_package import user
+from web_package.models import *
 
 @app.route('/')
 def index():
@@ -30,8 +30,8 @@ def user_signup():
 @app.route('/user/create', methods = ['POST'])
 def user_create():
 	#Create a new user
-	print "Created user. TODO: Set session user"
-	user.User.create(request.form['username'], request.form['password'])
+	# print "Created user. TODO: Set session user"
+	# user.User.create(request.form['username'], request.form['password'])
 	return redirect(url_for('index'))
 
 
