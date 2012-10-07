@@ -5,6 +5,7 @@ import datetime
 from web_package import app, db
 # Package Modules
 from web_package.models import *
+from utils import hash_password
 
 @app.route('/')
 def index():
@@ -34,8 +35,11 @@ def user_signup():
 @app.route('/user/create', methods = ['POST'])
 def user_create():
 	#Create a new user
-	# print "Created user. TODO: Set session user"
-	# user.User.create(request.form['username'], request.form['password'])
+	hash, salt = hash_password(request.form['password'])
+	user = User(request.form['username'], hash, salt)
+	session['username'] = request.form['username']
+	db.session.add(user)
+	db.session.commit()
 	return redirect(url_for('index'))
 
 
