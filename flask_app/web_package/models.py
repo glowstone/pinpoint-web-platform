@@ -38,12 +38,12 @@ class Post(db.Model):
     # Abstract location
 
     # Post initialization
-    def __init__(self, title, body, create_time, ttl_time, delete_time, user_id, abstract_location_id):
+    def __init__(self, title, body, create_time, ttl_time, delete_time, user_id):
         self.create_time = create_time
         self.ttl_time = ttl_time
         self.delete_time = delete_time
         self.user_id = user_id
-        self.abstract_location_id = abstract_location_id
+        #self.abstract_location_id = abstract_location_id
         self.title = title
         self.body = body
 

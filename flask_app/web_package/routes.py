@@ -1,5 +1,9 @@
+# Environment Imports
 from flask import render_template, redirect, url_for, g, session, request
-from web_package import app
+import datetime
+# Package Variables
+from web_package import app, db
+# Package Modules
 from web_package.models import *
 
 @app.route('/')
@@ -38,15 +42,13 @@ def user_create():
 # Post Resources
 #######################################################
 @app.route('/post/<id>', methods = ['GET'])
-def post_view(id):
-	#Query for post with id 
-
-	return render_template('post_view.html')
-
+def post_show(id):
+	post = Post.query.filter_by(id=id)
+	return render_template('post_show.html', post=post)
 
 @app.route('/post/<id>/edit', methods = ['GET'])
 def post_edit(id):
-	
+	# TODO
 	return render_template('post_edit.html')
 
 
@@ -58,11 +60,18 @@ def post_new():
 @app.route('/post/create', methods = ['POST'])
 def post_create():
 	if request.method == 'POST':
-		print request.form['title']
-		print request.form['post_text']
+		username = session['username']
+		user = Post.query.filter_by(username=username)
+		# TODO: Clean this ugliness
+		post = Post(request.form['title'], request.form['body'], datetime.datetime.now(), \
+			datetime.datetime.now() + 1111, datetime.datetime.now(), user.id)
+		print post
+		db.session.add(post)
+		db.session.commit()		
+		# Need to check success status
 		return redirect(url_for('post_new'))
-
 	else:
+		# Do some sort of flash
 		return redirect(url_for('index'))
 
 
