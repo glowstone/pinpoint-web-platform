@@ -5,7 +5,7 @@ import datetime
 from web_package import app, db
 # Package Modules
 from web_package.models import *
-from utils import hash_password
+from utils import hash_password, check_password
 
 @app.route('/')
 def index():
@@ -34,13 +34,28 @@ def user_signup():
 
 @app.route('/user/create', methods = ['POST'])
 def user_create():
-	#Create a new user
+	# Hash the password provided in the new user form. Store the hashed value and the salt used in the hash.
 	hash, salt = hash_password(request.form['password'])
 	user = User(request.form['username'], hash, salt)
+	# Set the session username to be the username for the new user
 	session['username'] = request.form['username']
+	# Insert the user object into the database
 	db.session.add(user)
 	db.session.commit()
 	return redirect(url_for('index'))
+
+
+@app.route('/user/login', methods = ['POST'])
+def user_login():
+	username = request.form['username']
+	# TODO: Make sure password is encrypted when sent over network
+	password = request.form['password']
+	if check_password(username, password):
+		session['username'] = username
+		print "Logged in as ", username
+		return redirect(url_for('index'))
+	else:
+		return "Bad login"
 
 
 # Post Resources

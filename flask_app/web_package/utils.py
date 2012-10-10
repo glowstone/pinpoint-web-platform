@@ -1,6 +1,7 @@
 import hashlib
 import random
 import string
+from web_package.models import User
 
 
 SALT_LENGTH = 16
@@ -18,17 +19,11 @@ def hash_password(password, salt=None):
 	return (hash.hexdigest(), salt)
 
 
-# def check_password(username, password):
-# 	from web_package import user
-# 	# TODO: exception handling
-# 	try:
-# 		u = user.User.get(username)
-# 	except TypeError:
-# 		return False
-# 	password_guess = hash_password(password, u.salt)
-# 	print password_guess
-# 	print u.password_hash
-# 	if u.password_hash == password_guess[0]:
-# 		return True
-# 	else:
-# 		return False
+def check_password(username, password):
+	# TODO: exception handling
+	u = User.query.filter_by(username=username).first()
+	password_guess = hash_password(password, u.salt)[0]
+	if u.password_hash == password_guess:
+		return True
+	else:
+		return False
