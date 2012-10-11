@@ -5,7 +5,7 @@ import datetime
 from web_package import app, db
 # Package Modules
 from web_package.models import *
-from utils import hash_password, check_password, create_user, do_login, do_logout
+from utils import hash_password, check_password, create_user, do_login, do_logout, get_current_user, create_post
 
 @app.route('/')
 def index():
@@ -44,7 +44,7 @@ def user_login():
 	password = request.form['password']
 	if check_password(username, password):
 		do_login(username)
-		return redirect(url_for('index'))
+		return redirect(url_for('user_profile', username=username))
 	else:
 		return "Bad login"
 
@@ -59,7 +59,7 @@ def user_logout():
 #######################################################
 @app.route('/post/<id>', methods = ['GET'])
 def post_show(id):
-	post = Post.query.filter_by(id=id)
+	post = Post.query.filter_by(id=id).first()
 	return render_template('post_show.html', post=post)
 
 @app.route('/post/<id>/edit', methods = ['GET'])
@@ -75,33 +75,10 @@ def post_new():
 
 @app.route('/post/create', methods = ['POST'])
 def post_create():
+	user = get_current_user()
 	if request.method == 'POST':
-		username = session['username']
-
-		user = User.query.filter_by(username=username).first()
-		geolocation = Geolocation(42.355751, -71.099474, 40.0)
-		print user
-		print geolocation
-		print geolocation.id
-
-
-		db.session.add(geolocation)
-		db.session.commit()
-
-		found = Geolocation.query.filter_by(id=1).first()
-		print found
-		print found.id
-
-		post = Post(request.form['title'], request.form['body'], \
-			datetime.datetime.now(), datetime.datetime.now() + datetime.timedelta(days=5), \
-			user.id, geolocation.id)
-		
-		print post
-
-		db.session.add(post)
-		db.session.commit()	
-
-		
+		#TODO - handle case where form does not have these names
+		create_post(request.form['title'], request.form['body'], user, request.form['tdelta'])		
 		# Need to check success status
 		return redirect(url_for('post_new'))
 	else:
