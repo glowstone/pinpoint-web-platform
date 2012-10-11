@@ -67,18 +67,11 @@ def get_current_user():
 		print "Bad, probably redirect to login here"
 	return user
 
-def create_post(title, text, user, duration):
-	# Need to think about when to really create geolocation
-	geolocation = Geolocation(42.355751, -71.099474, 40.0)
-	db.session.add(geolocation)
-	db.session.commit()
-	post_geolocation = Geolocation.query.filter_by(id=1).first()
-	# TODO take out hard coded geolocation
-
+def create_post(title, text, form_tdelta, user, geolocation):
 	creation_time = datetime.datetime.now()
 
-	if duration in POST_DELTAS:
-		tdelta = POST_DELTAS[duration]
+	if form_tdelta in POST_DELTAS:
+		tdelta = POST_DELTAS[form_tdelta]
 	else:
 		tdelta = POST_DELTAS['default']
 
@@ -89,5 +82,12 @@ def create_post(title, text, user, duration):
 	db.session.add(post)
 	db.session.commit()
 	# Make return False upon error
-	return True
+	return post
+
+
+def create_geolocation(latitude, longitude, elevation):
+	gloc = Geolocation(latitude, longitude, elevation)
+	db.session.add(gloc)
+	db.session.commit()
+	return gloc
 	

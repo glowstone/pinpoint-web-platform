@@ -5,7 +5,8 @@ import datetime
 from web_package import app, db
 # Package Modules
 from web_package.models import *
-from utils import hash_password, check_password, create_user, do_login, do_logout, get_current_user, create_post
+from utils import hash_password, check_password, create_user, do_login, do_logout, get_current_user, create_post, \
+create_geolocation
 
 @app.route('/')
 def index():
@@ -78,7 +79,8 @@ def post_create():
 	user = get_current_user()
 	if request.method == 'POST':
 		#TODO - handle case where form does not have these names
-		create_post(request.form['title'], request.form['body'], user, request.form['tdelta'])		
+		geolocation = create_geolocation(42.355751, -71.099474, 40.0)
+		create_post(request.form['title'], request.form['body'], request.form['tdelta'], user, geolocation)		
 		# Need to check success status
 		return redirect(url_for('post_new'))
 	else:
@@ -86,6 +88,23 @@ def post_create():
 		return redirect(url_for('index'))
 
 
+# Geolocation Resources
+########################################################
+@app.route('/location/<id>', methods = ['GET'])
+def geolocation_show(id):
+	geolocation = Geolocation.query.filter_by(id=id).first()
+	return render_template('geolocation_show.html', geolocation=geolocation)
+
+@app.route('/location/new', methods = ['GET'])
+def geolocation_new():
+	return render_template('geolocation_new.html')
+
+@app.route('/location/create', methods = ['POST'])
+def geolocation_create():
+	user = get_current_user()
+	return redirect(url_for('index'))
+
+#############################################################
 @app.route('/test', methods = ['GET'])
 def test():
 	username = session['username']

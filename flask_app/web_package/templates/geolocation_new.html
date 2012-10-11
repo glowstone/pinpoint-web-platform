@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>CodeBlue--New Post</title>
+
+		<link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap.css')}}">
+		<link rel="stylsheet" href="{{url_for('static', filename='bootstrap/css/bootstrap-responsive.css')}}">
+	</head>
+
+	<body>
+
+		<div class="container">
+			<form action="/post/create" method="POST">
+				<legend>Create a Post</legend>
+				<label>Title</label>
+				<input type="text" name="title">
+				<label>Text</label>
+				<input type="text" name="body"><br>
+				<fieldset>
+					<legend>Duration:</legend>
+					<input type="radio" name="tdelta" value="3h">3 Hours<br>
+					<input type="radio" name="tdelta" value="6h">6 Hours<br>
+					<input type="radio" name="tdelta" value="12h">12 Hours<br>
+					<input type="radio" name="tdelta" value="1d">1 Day<br>
+					<input type="radio" name="tdelta" value="3d">3 Days<br>
+				</fieldset>
+				<input type="submit" class="btn" value="Post"></input>
+			</form>
+		</div>
+
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
+	</body>
+</html>
