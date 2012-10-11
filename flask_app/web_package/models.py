@@ -4,7 +4,6 @@ from flask.ext.sqlalchemy import SQLAlchemy
 from web_package import db
 
 class User(db.Model):
-    # User Database Representation
     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
@@ -24,10 +23,9 @@ class User(db.Model):
 
 
 class Post(db.Model):
-    # Post Database Representation
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    #abstract_location_id = db.Column(db.Integer, db.ForeignKey('AbstractLocation.id'))
+    geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))
     creation_time = db.Column(db.DateTime)
     expiration_time = db.Column(db.DateTime)
     ttl_time = db.Column(db.DateTime)
@@ -35,20 +33,37 @@ class Post(db.Model):
     title = db.Column(db.String(120))
     body = db.Column(db.String(120))
     # Relationship References
-    # Abstract location
-
+    geolocation = db.relationship('Geolocation', backref=db.backref('post', uselist=False))
+    
     # Post initialization
-    def __init__(self, title, body, create_time, expiration_time, user_id):
+    def __init__(self, title, body, create_time, expiration_time, user_id, geolocation_id):
         self.create_time = create_time
         self.expiration_time = expiration_time
         self.user_id = user_id
-        #self.abstract_location_id = abstract_location_id
+        self.geolocation_id = geolocation_id
         self.title = title
         self.body = body
 
     # Post Methods
     def __repr__(self):
-        return '<Post %r>' % self.title
+        return '<Post %s>' % self.title
+
+
+
+class Geolocation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    latitude = db.Column(db.Float)
+    longitude = db.Column(db.Float)
+    elevation = db.Column(db.Float)         # Meters
+    
+    def __init__(self, latitude, longitude, elevation=0):
+        self.latitude = latitude
+        self.longitude = longitude
+        self.elevation = elevation
+
+    def __repr__(self):
+        return '<Geolocation %s, %s>' % (self.latitude, self.longitude)
+
 
 # class Query(Post):
 #   def __init__(self, title, text):

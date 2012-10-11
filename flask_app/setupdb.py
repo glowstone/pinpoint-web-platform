@@ -23,5 +23,5 @@ from web_package import db
 #             disconnect_db(conn)
 
 if __name__ == '__main__':
-    # init_db()
+    db.drop_all()
     db.create_all()

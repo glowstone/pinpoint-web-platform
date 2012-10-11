@@ -11,7 +11,6 @@ from utils import hash_password, check_password
 def index():
 	return render_template('index.html')
 
-
 # User Resources
 #######################################################
 @app.route('/user/<id>', methods = ['GET'])
@@ -80,20 +79,52 @@ def post_new():
 def post_create():
 	if request.method == 'POST':
 		username = session['username']
+
 		user = User.query.filter_by(username=username).first()
+		geolocation = Geolocation(42.355751, -71.099474, 40.0)
 		print user
+		print geolocation
+		print geolocation.id
+
+
+		db.session.add(geolocation)
+		db.session.commit()
+
+		found = Geolocation.query.filter_by(id=1).first()
+		print found
+		print found.id
+
+		post = Post(request.form['title'], request.form['body'], \
+			datetime.datetime.now(), datetime.datetime.now() + datetime.timedelta(days=5), \
+			user.id, geolocation.id)
 		
-		# TODO: Clean this ugliness
-		post = Post(request.form['title'], request.form['body'], datetime.datetime.now(), \
-			datetime.datetime.now() + datetime.timedelta(days=5), user.id)
 		print post
+
 		db.session.add(post)
-		db.session.commit()		
+		db.session.commit()	
+
+		
 		# Need to check success status
 		return redirect(url_for('post_new'))
 	else:
 		# Do some sort of flash
 		return redirect(url_for('index'))
+
+
+@app.route('/test', methods = ['GET'])
+def test():
+	username = session['username']
+	print "All your Posts"
+	user = User.query.filter_by(username=username).first()
+
+	print user.posts
+	for post in user.posts:
+
+		print post
+		print post.geolocation
+
+	return render_template('test.html', posts=user.posts)
+
 
 
 
