@@ -5,7 +5,7 @@ import datetime
 from web_package import app, db
 # Package Modules
 from web_package.models import *
-from utils import hash_password, check_password
+from utils import hash_password, check_password, create_user, do_login, do_logout
 
 @app.route('/')
 def index():
@@ -13,9 +13,9 @@ def index():
 
 # User Resources
 #######################################################
-@app.route('/user/<id>', methods = ['GET'])
-def user_profile(id):
-	print "Your identifier is " + str(id)
+@app.route('/user/<username>', methods = ['GET'])
+def user_profile(username):
+	print "Your identifier is " + str(username)
 	print session['username']
 	return render_template('user_profile.html')
 
@@ -33,28 +33,26 @@ def user_signup():
 
 @app.route('/user/create', methods = ['POST'])
 def user_create():
-	# Hash the password provided in the new user form. Store the hashed value and the salt used in the hash.
-	hash, salt = hash_password(request.form['password'])
-	user = User(request.form['username'], hash, salt)
-	# Set the session username to be the username for the new user
-	session['username'] = request.form['username']
-	# Insert the user object into the database
-	db.session.add(user)
-	db.session.commit()
+	# TODO: check if the user can be created
+	create_user(request.form['username'], request.form['password'])
 	return redirect(url_for('index'))
 
 
 @app.route('/user/login', methods = ['POST'])
 def user_login():
 	username = request.form['username']
-	# TODO: Make sure password is encrypted when sent over network
 	password = request.form['password']
 	if check_password(username, password):
-		session['username'] = username
-		print "Logged in as ", username
+		do_login(username)
 		return redirect(url_for('index'))
 	else:
 		return "Bad login"
+
+
+@app.route('/user/logout', methods = ['GET', 'POST'])
+def user_logout():
+	do_logout()
+	return redirect(url_for('index'))
 
 
 # Post Resources

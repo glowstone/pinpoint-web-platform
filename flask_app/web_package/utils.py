@@ -2,6 +2,8 @@ import hashlib
 import random
 import string
 from web_package.models import User
+from flask import session
+from web_package import db
 
 
 SALT_LENGTH = 16
@@ -27,3 +29,24 @@ def check_password(username, password):
 		return True
 	else:
 		return False
+
+
+def create_user(username, password):
+	# Hash the password provided in the new user form. Store the hashed value and the salt used in the hash.
+	hash, salt = hash_password(password)
+	user = User(username, hash, salt)
+	# Insert the user object into the database
+	db.session.add(user)
+	db.session.commit()
+	# Set the session information for the new user
+	do_login(username)
+
+
+def do_login(username):
+	session['username'] = username
+	session['logged_in'] = True
+
+
+def do_logout():
+	session['username'] = None
+	session['logged_in'] = False
