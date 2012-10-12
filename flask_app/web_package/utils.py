@@ -39,9 +39,13 @@ def check_password(username, password):
 
 
 def create_user(username, password):
+	# Create a new location for the User
+	location = create_geolocation(None, None, None)
+	db.session.add(location)
+	db.session.commit()
 	# Hash the password provided in the new user form. Store the hashed value and the salt used in the hash.
 	hash, salt = hash_password(password)
-	user = User(username, hash, salt)
+	user = User(username, hash, salt, location.id)
 	# Insert the user object into the database
 	db.session.add(user)
 	db.session.commit()
@@ -64,7 +68,8 @@ def get_current_user():
 	#Handle when session is not defined
 	username = session['username']
 	user = User.query.filter_by(username=username).first()
-	return None
+	print "HERE %s" % user
+	return user
 
 def create_post(title, text, form_tdelta, user, geolocation):
 	"""

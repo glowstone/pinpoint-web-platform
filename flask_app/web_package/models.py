@@ -11,6 +11,7 @@ class User(db.Model):
     geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))
     # Relationship References
     posts = db.relationship('Post', backref=db.backref('user'), lazy='dynamic')
+    geolocation = db.relationship('Geolocation', backref=db.backref('user', uselist=False))
 
     # User Initialization
     def __init__(self, username, password_hash, salt, geolocation_id):

@@ -56,6 +56,27 @@ def user_logout():
 	return redirect(url_for('index'))
 
 
+@app.route('/user/location', methods = ['GET', 'POST'])
+def set_user_location():
+	user = get_current_user()
+	if request.method == 'GET':
+		return render_template('user_location.html')
+	elif request.method == 'POST':
+		lat = request.form['latitude']
+		lng = request.form['longitude']
+		elev = request.form['elevation']
+
+		user = get_current_user()
+
+		geolocation = user.geolocation
+		geolocation.latitude = lat
+		geolocation.longitude = lng
+		geolocation.elevation = elev
+
+		db.session.commit()
+		return "set location"
+
+
 # Post Resources
 #######################################################
 @app.route('/post/<id>', methods = ['GET'])
