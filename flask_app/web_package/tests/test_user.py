@@ -1,28 +1,36 @@
-from web_package import user, utils, connect_db
-import unittest
+from flask import Flask
+import flask
+from flask.ext.sqlalchemy import SQLAlchemy
 import web_package
+import unittest
+import os
+from web_package import db
+from web_package.models import User
+
 
 
 class UserTestCase(unittest.TestCase):
 	def setUp(self):
-		web_package.app.config['DATABASE'] = 'db/test.db'
+		dialect = "sqlite:////"
 		web_package.app.config['TESTING'] = True
+		web_package.app.config['SQLALCHEMY_DATABASE_URI'] = dialect + os.path.join(os.path.dirname(__file__), "db", "testing.sqlite")
 		self.app = web_package.app.test_client()
-		web_package.init_db()
-		self.db = connect_db()
 		
-		self.username = 'test'
-		self.password = 'test'
+		self.test_db = db
+		self.test_db.create_all()
+
+	def tearDown(self):
+		self.test_db.session.remove()
+		self.test_db.drop_all()
+
+	def create_user(self, username, password):
+		return self.app.post('/user/create', data=dict(
+	        username=username,
+	        password=password
+	    ), follow_redirects=True)
 
 	def test_create_user(self):
-		# The database should contain zero users because it was just initialized
-		number_of_users = len(self.db.execute('select * from users').fetchall())
-		unittest.TestCase.assertEqual(self, number_of_users, 0)
-
-		# Now create a new user
-		u = user.User.create(self.username, self.password)
-		unittest.TestCase.assertEqual(self, u.username, self.username)
-
-		# Now there should be one user in the database
-		number_of_users = len(self.db.execute('select * from users').fetchall())
-		unittest.TestCase.assertEqual(self, number_of_users, 1)
+		response = self.create_user('test', 'test')
+		assert response.status_code == 200
+		count = len(User.query.all())
+		assert count == 1

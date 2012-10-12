@@ -21,7 +21,6 @@ def hash_password(password, salt=None):
 	"""
 	Generate a sha256 hash for the given password plus a salt, and return both the hash and the salt.
 	"""
-	print "Salt: ", salt
 	if not salt:
 		salt = ''.join([random.choice(ALPHANUMERIC) for i in xrange(SALT_LENGTH)])
 	hash = hashlib.sha256(password + salt)
@@ -68,7 +67,6 @@ def get_current_user():
 	#Handle when session is not defined
 	username = session['username']
 	user = User.query.filter_by(username=username).first()
-	print "HERE %s" % user
 	return user
 
 def create_post(title, text, form_tdelta, user, geolocation):
