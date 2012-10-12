@@ -2,16 +2,15 @@
 <html lang="en">
 	<head>
 		<meta charset="utf-8">
-		<title>CodeBlue--Show Post</title>
+		<title>CodeBlue--Show Geolocation</title>
 
 		<link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap.css')}}">
 		<link rel="stylsheet" href="{{url_for('static', filename='bootstrap/css/bootstrap-responsive.css')}}">
 	</head>
 
 	<body>
-		<h1>Post: {{post.title}}</h1>
-		<p>{{post.body}}</p>
-
+		<h1>Geolocation: {{geolocation}}</h1>
+		
 		<script src="http://code.jquery.com/jquery-latest.js"></script>
 		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
 	</body>

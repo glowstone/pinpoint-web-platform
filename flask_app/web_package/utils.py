@@ -11,11 +11,11 @@ SALT_LENGTH = 16
 ALPHANUMERIC = string.letters + string.digits	# List of all characters that can be used to generate a salt
 
 POST_DELTAS = {'3h': datetime.timedelta(hours=3),
-		   '6h': datetime.timedelta(hours=6),
-		   '12h': datetime.timedelta(hours=12),
-		   '1d': datetime.timedelta(days=1),
-		   '3d': datetime.timedelta(days=3),
-		   'default': datetime.timedelta(hours=6)}
+		       '6h': datetime.timedelta(hours=6),
+		       '12h': datetime.timedelta(hours=12),
+		       '1d': datetime.timedelta(days=1),
+		       '3d': datetime.timedelta(days=3),
+		       'default': datetime.timedelta(hours=6)}
 
 def hash_password(password, salt=None):
 	"""
@@ -51,25 +51,31 @@ def create_user(username, password):
 
 def do_login(username):
 	session['username'] = username
-	session['logged_in'] = True
+	session['logged_in'] = True          
 
 
 def do_logout():
-	session['username'] = None
+	session.pop('username', None)        #Remove username from session, if its defined.
 	session['logged_in'] = False
 
+
 def get_current_user():
+	"""Queries for User corresponding to current session. Returns User object or None if no user found."""
 	#Handle when session is not defined
 	username = session['username']
 	user = User.query.filter_by(username=username).first()
-	print user
-	if user == None:
-		print "Bad, probably redirect to login here"
-	return user
+	return None
 
 def create_post(title, text, form_tdelta, user, geolocation):
+	"""
+	Attempts to create Post object belonging to a user and pinned to a geolocation. Returns the newly 
+	created Post or None upon failure.
+	Requires: user, geolocation objects already exist in db
+	Affects: Post object table
+	""" 
 	creation_time = datetime.datetime.now()
 
+	# TODO: Do Browser datetime to Python datetime conversion instead maybe
 	if form_tdelta in POST_DELTAS:
 		tdelta = POST_DELTAS[form_tdelta]
 	else:
@@ -81,11 +87,15 @@ def create_post(title, text, form_tdelta, user, geolocation):
 	post = Post(title, text, creation_time, expiration_time, user.id, geolocation.id)
 	db.session.add(post)
 	db.session.commit()
-	# Make return False upon error
 	return post
 
 
 def create_geolocation(latitude, longitude, elevation):
+	"""
+	Attempts to create and return a new Geolocation obj. Returns None upon failure
+	Requires: 
+	Affects: Geolocation object table
+	""" 
 	gloc = Geolocation(latitude, longitude, elevation)
 	db.session.add(gloc)
 	db.session.commit()
