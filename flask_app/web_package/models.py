@@ -8,14 +8,16 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True, nullable=False)
     password_hash = db.Column(db.String(120), nullable=False)
     salt = db.Column(db.String(120), nullable=False)
+    geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))
     # Relationship References
     posts = db.relationship('Post', backref=db.backref('user'), lazy='dynamic')
 
     # User Initialization
-    def __init__(self, username, password_hash, salt):
+    def __init__(self, username, password_hash, salt, geolocation_id):
         self.username = username
         self.password_hash = password_hash
         self.salt = salt
+        self.geolocation_id = geolocation_id
 
     # User Methods
     def __repr__(self):
