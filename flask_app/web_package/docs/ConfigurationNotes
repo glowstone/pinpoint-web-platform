@@ -1,0 +1,3 @@
+ConfigurationNotes
+
+Flask itself is undecided about whether configuration from files or configurtion from environment pointed to files is better. The decision made here will influence both testing and deployment. We are currently using a hybrid because environment pointed to files are easier for deployment and while regular configuration files seem to be better for testing (at least, that's what we both did).

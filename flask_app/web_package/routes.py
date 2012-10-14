@@ -1,12 +1,16 @@
 # Environment Imports
 from flask import render_template, redirect, url_for, g, session, request
+
+# Library Imports
 import datetime
-# Package Variables
-from web_package import app, db
+
 # Package Modules
 from web_package.models import *
-from utils import hash_password, check_password, create_user, do_login, do_logout, get_current_user, create_post, \
-create_geolocation
+from utils import *
+
+# Package Variables
+from web_package import app, db
+
 
 @app.route('/')
 def index():
@@ -99,8 +103,13 @@ def post_new():
 def post_create():
 	user = get_current_user()
 	if request.method == 'POST':
+		#ignore
+		#required_keys = ['title', 'body', 'tdelta']
+		#for key in required_keys:
+		#	print request.has_key(key)
 		#TODO - handle case where form does not have these names
-		geolocation = create_geolocation(42.355751, -71.099474, 40.0)
+		#geolocation = create_geolocation(42.355751, -71.099474, 40.0)
+		geolocation = user.geolocation
 		create_post(request.form['title'], request.form['body'], request.form['tdelta'], user, geolocation)		
 		# Need to check success status
 		return redirect(url_for('post_new'))
@@ -110,7 +119,7 @@ def post_create():
 
 
 # Geolocation Resources
-########################################################
+###########################################################
 @app.route('/location/<id>', methods = ['GET'])
 def geolocation_show(id):
 	geolocation = Geolocation.query.filter_by(id=id).first()
@@ -124,6 +133,8 @@ def geolocation_new():
 def geolocation_create():
 	user = get_current_user()
 	return redirect(url_for('index'))
+
+
 
 #############################################################
 @app.route('/test', methods = ['GET'])

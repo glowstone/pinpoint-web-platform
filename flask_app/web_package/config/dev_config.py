@@ -1,4 +1,4 @@
-# Flask Application Configuration
+# Development Application Configuration
 import os
 
 dialect = "sqlite:////"

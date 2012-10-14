@@ -1,23 +1,19 @@
-from flask import Flask, g
+from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
 
 # Create the Flask Application
 app = Flask(__name__)
 # Configure the app
-app.config.from_object('web_package.config')
+# First load configuration from 
+app.config.from_object('web_package.config.dev_config')
+# Override configuration with values within the file pointed to in Deployment Environment
+app.config.from_envvar('DEPLOYMENT_CONFIG', silent=True)
+
+# Setup the SQLAlchemy db object
 db = SQLAlchemy(app)
 
-# def connect_db():
-#     return sqlite3.connect(app.config['DATABASE'])
 
-# @app.before_request
-# def before_request():
-#     g.db = connect_db()
 
-# @app.teardown_request
-# def teardown_request(exception):
-#     if hasattr(g, 'db'):
-#         g.db.close()
 
 # Import routes and models at the bottom to prevent circular dependency problems.
 from web_package import models

@@ -8,7 +8,6 @@ from web_package import db
 from web_package.models import User
 
 
-
 class UserTestCase(unittest.TestCase):
 	def setUp(self):
 		dialect = "sqlite:////"
