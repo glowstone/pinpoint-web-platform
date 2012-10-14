@@ -20,9 +20,9 @@ def index():
 #######################################################
 @app.route('/user/<username>', methods = ['GET'])
 def user_profile(username):
-	print "Your identifier is " + str(username)
-	print session['username']
-	return render_template('user_profile.html')
+	user = get_current_user()
+	print user.posts
+	return render_template('user_profile.html', posts=user.posts)
 
 
 @app.route('/user/<id>/edit', methods = ['GET'])
@@ -103,18 +103,19 @@ def post_new():
 def post_create():
 	user = get_current_user()
 	if request.method == 'POST':
-		#ignore
-		#required_keys = ['title', 'body', 'tdelta']
-		#for key in required_keys:
-		#	print request.has_key(key)
-		#TODO - handle case where form does not have these names
-		#geolocation = create_geolocation(42.355751, -71.099474, 40.0)
-		geolocation = user.geolocation
-		create_post(request.form['title'], request.form['body'], request.form['tdelta'], user, geolocation)		
+		form_names = ['title', 'body', 'tdelta']
+		if not all(request.form.has_key(name) for name in form_names):
+			print "Bad form. Validation error. Do something appropriate"
+			return redirect(url_for('index'))
+		# Copy user's location into a new geolocation object.
+		user_gloc = user.geolocation
+		post_gloc = create_geolocation(user_gloc.latitude, user_gloc.longitude, user_gloc.elevation)
+		create_post(request.form['title'], request.form['body'], request.form['tdelta'], user, post_gloc)		
 		# Need to check success status
 		return redirect(url_for('post_new'))
 	else:
 		# Do some sort of flash
+		# User not logged in
 		return redirect(url_for('index'))
 
 
@@ -133,8 +134,6 @@ def geolocation_new():
 def geolocation_create():
 	user = get_current_user()
 	return redirect(url_for('index'))
-
-
 
 #############################################################
 @app.route('/test', methods = ['GET'])
