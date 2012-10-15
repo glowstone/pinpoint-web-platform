@@ -2,7 +2,6 @@ import hashlib
 import random
 import string
 import datetime
-import math
 from web_package.models import User, Post, Geolocation
 from flask import session
 from web_package import db
@@ -118,9 +117,9 @@ def get_sql_distance_query(location, radius, num):
 
 	# Source: https://developers.google.com/maps/articles/phpsqlsearch_v3?hl=hu-HU
 	# A query to find the closest locations to the goal, sorted by distance. Distance computed using haversine formula.
-	query = "SELECT id, ( %f * acos( cos( radians(%f) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - \
-			 radians(%f) ) + sin( radians(%f) ) * sin( radians( latitude ) ) ) ) AS distance FROM %s \
-			 HAVING distance < %f \	ORDER BY distance LIMIT 0 , %d;"
+	query = """SELECT id, ( %f * acos( cos( radians(%f) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - 
+		radians(%f) ) + sin( radians(%f) ) * sin( radians( latitude ) ) ) ) AS distance FROM %s HAVING distance < %f 
+		ORDER BY distance LIMIT 0 , %d;"""
 
 	# Add in the parameters to the query
 	query = query % (EARTH_RADIUS, location.latitude, location.longitude, location.latitude, 
@@ -136,7 +135,7 @@ def closest_locations(location, radius, num=10):
 	Affects:
 	"""
 	# Get the query needed to find the closest locations
-	query = get_distance_query_mysql(location, radius, num)
+	query = get_sql_distance_query(location, radius, num)
 	conn = db.session.connection()
 	# Execute the query to get the geolocation IDs and the distances to each
 	result = conn.execute(query).fetchall()
