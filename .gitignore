@@ -5,3 +5,4 @@
 *~
 *.swp
 *.
+/flask_app/web_package/config/config_secret.py
