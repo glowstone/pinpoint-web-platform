@@ -2,6 +2,7 @@ import hashlib
 import random
 import string
 import datetime
+import math
 from web_package.models import User, Post, Geolocation
 from flask import session
 from web_package import db
@@ -9,13 +10,14 @@ from web_package import db
 
 SALT_LENGTH = 16
 ALPHANUMERIC = string.letters + string.digits	# List of all characters that can be used to generate a salt
+EARTH_RADIUS = 6371	# Radius of the earth, in kilometers
 
 POST_DELTAS = {'3h': datetime.timedelta(hours=3),
-		       '6h': datetime.timedelta(hours=6),
-		       '12h': datetime.timedelta(hours=12),
-		       '1d': datetime.timedelta(days=1),
-		       '3d': datetime.timedelta(days=3),
-		       'default': datetime.timedelta(hours=6)}
+			   '6h': datetime.timedelta(hours=6),
+			   '12h': datetime.timedelta(hours=12),
+			   '1d': datetime.timedelta(days=1),
+			   '3d': datetime.timedelta(days=3),
+			   'default': datetime.timedelta(hours=6)}
 
 def hash_password(password, salt=None):
 	"""
@@ -103,4 +105,45 @@ def create_geolocation(latitude, longitude, elevation):
 	db.session.add(gloc)
 	db.session.commit()
 	return gloc
-	
+
+
+def get_sql_distance_query(location, radius, num):
+	"""
+	Constructs the SQL query to get the num closest locations within the radius to the given location.
+	Requires:None?
+	Affects:None
+	"""
+	goal_latitude = location.latitude
+	goal_longitude = location.longitude
+
+	# Source: https://developers.google.com/maps/articles/phpsqlsearch_v3?hl=hu-HU
+	# A query to find the closest locations to the goal, sorted by distance. Distance computed using haversine formula.
+	query = "SELECT id, ( %f * acos( cos( radians(%f) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - \
+			 radians(%f) ) + sin( radians(%f) ) * sin( radians( latitude ) ) ) ) AS distance FROM %s \
+			 HAVING distance < %f \	ORDER BY distance LIMIT 0 , %d;"
+
+	# Add in the parameters to the query
+	query = query % (EARTH_RADIUS, location.latitude, location.longitude, location.latitude, 
+					 'geolocation', radius, num)
+	return query
+
+
+def closest_locations(location, radius, num=10):
+	"""
+	Gets the query and executes it to find the num closest geolocations within the radius to the location. Returns
+	tuples of (geolocation, distance)
+	Requires:
+	Affects:
+	"""
+	# Get the query needed to find the closest locations
+	query = get_distance_query_mysql(location, radius, num)
+	conn = db.session.connection()
+	# Execute the query to get the geolocation IDs and the distances to each
+	result = conn.execute(query).fetchall()
+	ids = [item[0] for item in result]
+	distances = [item[1] for item in result]
+	# Get the actual Geolocation objects from the returned IDs
+	# TODO: Is there a bulk select in SQLAlchemy? This does a query for each ID instead of a single query for all IDs.
+	locations = [Geolocation.query.get(id) for id in ids]
+	# Return tuples of (Geolocation, distance)
+	return zip(locations, distances)

@@ -119,6 +119,18 @@ def post_create():
 		return redirect(url_for('index'))
 
 
+@app.route('/post/nearby', methods = ['GET', 'POST'])
+def post_nearby():
+	if request.method == 'POST':
+		radius = float(request.form['radius'])
+		location = get_current_user().geolocation
+		posts = closest_locations(location, radius)
+		return render_template('nearby_posts.html', location=location, radius=radius, posts=posts)
+		
+	elif request.method == 'GET':
+		return render_template('nearby_posts.html')
+
+
 # Geolocation Resources
 ###########################################################
 @app.route('/location/<id>', methods = ['GET'])
@@ -149,8 +161,4 @@ def test():
 		print post.geolocation
 
 	return render_template('test.html', posts=user.posts)
-
-
-
-
 

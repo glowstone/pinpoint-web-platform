@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>CodeBlue--New Post</title>
+
+		<link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap.css')}}">
+		<link rel="stylsheet" href="{{url_for('static', filename='bootstrap/css/bootstrap-responsive.css')}}">
+	</head>
+
+	<body>
+
+		<div class="container">
+			<form action="/post/nearby" method="POST">
+				<legend>Get nearby posts</legend>
+				<label>Radius</label>
+				<input type="text" name="radius">
+				<input type="submit" class="btn" value="Get"></input>
+			</form>
+		</div>
+		{% if posts %}
+		<div class="container">
+			<h2>Posts within {{ radius }} of {{ location }}</h2>
+			<ul>
+			{% for loc in posts %}
+				<li>{{ loc[0] }} is {{ loc[1] }} kilometer(s) away</li>
+			{% endfor %}
+			</ul>
+		</div>
+		{% endif %}
+
+		<script src="http://code.jquery.com/jquery-latest.js"></script>
+		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
+	</body>
+</html>
