@@ -20,7 +20,7 @@
 		</div>
 		{% if posts %}
 		<div class="container">
-			<h2>Locations within {{ radius }} kilometers of {{ location }}</h2>
+			<h2>Posts within {{ radius }} kilometers of {{ location }}</h2>
 			<ul>
 			{% for loc in posts %}
 				<li>{{ loc[0] }} is {{ loc[1] }} kilometer(s) away</li>

@@ -116,14 +116,18 @@ def get_sql_distance_query(location, radius, num):
 	goal_longitude = location.longitude
 
 	# Source: https://developers.google.com/maps/articles/phpsqlsearch_v3?hl=hu-HU
-	# A query to find the closest locations to the goal, sorted by distance. Distance computed using haversine formula.
-	query = """SELECT id, ( %f * acos( cos( radians(%f) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - 
-		radians(%f) ) + sin( radians(%f) ) * sin( radians( latitude ) ) ) ) AS distance FROM %s HAVING distance < %f 
+	# A query to find the closest posts to the goal, sorted by distance. Distance computed using haversine formula.
+	query = """SELECT %s.id, ( %f * acos( cos( radians(%f) ) * cos( radians( %s.latitude ) ) * cos( radians( %s.longitude ) - 
+			radians(%f) ) + sin( radians(%f) ) * sin( radians( %s.latitude ) ) ) ) 
+		AS distance 
+		FROM %s, %s 
+		WHERE %s.geolocation_id = %s.id
+		HAVING distance < %f
 		ORDER BY distance LIMIT 0 , %d;"""
 
 	# Add in the parameters to the query
-	query = query % (EARTH_RADIUS, location.latitude, location.longitude, location.latitude, 
-					 'geolocation', radius, num)
+	query = query % ('post', EARTH_RADIUS, location.latitude, 'geolocation', 'geolocation', location.longitude, location.latitude, 
+					 'geolocation', 'geolocation', 'post', 'post', 'geolocation', radius, num)
 	return query
 
 
@@ -143,6 +147,6 @@ def closest_locations(location, radius, num=10):
 	distances = [item[1] for item in result]
 	# Get the actual Geolocation objects from the returned IDs
 	# TODO: Is there a bulk select in SQLAlchemy? This does a query for each ID instead of a single query for all IDs.
-	locations = [Geolocation.query.get(id) for id in ids]
+	locations = [Post.query.get(id) for id in ids]
 	# Return tuples of (Geolocation, distance)
 	return zip(locations, distances)
