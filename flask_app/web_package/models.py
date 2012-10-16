@@ -17,9 +17,9 @@ class Geolocation(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     elevation = db.Column(db.Float)         # Meters
+    # Relationships
     pin = db.relationship('Pin', uselist=False, backref="geolocation")
-    #pin_id = db.Column(db.Integer, db.ForeignKey('pin.id'))           # True one to one relationship (Implicit Parent)
- 
+     
     def __init__(self, latitude, longitude, elevation):
         self.latitude = latitude
         self.longitude = longitude
@@ -41,27 +41,23 @@ class Pin(db.Model):
         return '<Pin Object %s>' % id(self)      # Instance id merely useful to differentiate instances.
 
 
+class User(Pin):
+    #id = db.Column(db.Integer, primary_key=True)
+    pin_id = db.Column(db.Integer, db.ForeignKey('pin.id'), primary_key=True)
+    username = db.Column(db.String(80), unique=True, nullable=False)
+    password_hash = db.Column(db.String(120), nullable=False)
+    salt = db.Column(db.String(120), nullable=False)
+    # Relationships
+    #posts = db.relationship('Post', backref=db.backref('user'), lazy='dynamic')        #One User to many Postings.
 
-# class User(db.Model):
-#     id = db.Column(db.Integer, primary_key=True, unique=True, nullable=False)
-#     username = db.Column(db.String(80), unique=True, nullable=False)
-#     password_hash = db.Column(db.String(120), nullable=False)
-#     salt = db.Column(db.String(120), nullable=False)
-#     geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))
-#     # Relationship References
-#     posts = db.relationship('Post', backref=db.backref('user'), lazy='dynamic')        #One user to many posts.
-#     geolocation = db.relationship('Geolocation', backref=db.backref('user', uselist=False))
+    def __init__(self, username, password_hash, salt, geolocation_id):
+        super(Pin, self).__init__(self, geolocation_id)
+        self.username = username
+        self.password_hash = password_hash
+        self.salt = salt
 
-#     # User Initialization
-#     def __init__(self, username, password_hash, salt, geolocation_id):
-#         self.username = username
-#         self.password_hash = password_hash
-#         self.salt = salt
-#         self.geolocation_id = geolocation_id
-
-#     # User Methods
-#     def __repr__(self):
-#         return '<User %r>' % self.username
+    def __repr__(self):
+        return '<User %r>' % self.username
 
 
 
