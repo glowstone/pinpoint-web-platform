@@ -1,18 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>CodeBlue--Show Geolocation</title>
+{% extends 'base.html' %}
+	{% block title %}CodeBlue--Show Geolocation{% endblock %}
 
-		<link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap.css')}}">
-		<link rel="stylsheet" href="{{url_for('static', filename='bootstrap/css/bootstrap-responsive.css')}}">
-	</head>
+	{% block body %}
+		{{ super() }}
 
-	<body>
-		{% include 'header.html' %}
 		<h1>Geolocation: {{geolocation}}</h1>
 		
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
-		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
-	</body>
-</html>
+	{% endblock %}

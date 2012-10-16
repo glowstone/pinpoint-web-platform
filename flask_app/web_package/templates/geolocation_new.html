@@ -1,16 +1,10 @@
+{% extends 'base.html' %}
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>CodeBlue--New Location</title>
+{% block title %}CodeBlue--New Location{% endblock %}
 
-		<link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap.css')}}">
-		<link rel="stylsheet" href="{{url_for('static', filename='bootstrap/css/bootstrap-responsive.css')}}">
-	</head>
-
-	<body>
-		{% include 'header.html' %}
-
+	{% block body %}
+		{{ super() }}
+		
 		<div class="container">
 			<form action="/location/create" method="POST">
 				<legend>Specify a Location</legend>
@@ -24,8 +18,5 @@
 			</form>
 		</div>
 
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
-		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
 		<script src="{{url_for('static', filename='geotest.js')}}"></script>
-	</body>
-</html>
+	{% endblock %}
