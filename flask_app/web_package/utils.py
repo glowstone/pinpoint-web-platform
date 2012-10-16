@@ -2,7 +2,7 @@ import hashlib
 import random
 import string
 import datetime
-from web_package.models import User, Post, Geolocation
+from web_package.models import *
 from flask import session
 from web_package import db
 
