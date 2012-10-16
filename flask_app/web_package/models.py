@@ -5,22 +5,10 @@ from web_package import db
 
 # One to ones relationships are never truly balanced. After all, the implicit parent may access the 
 # child by a property while the implicit child stores the parent_id and accesses the parent via a 
-# a backreference. Here Pin is the implicit parent but, notice that this is wrong for our purposes.
-# This means you create a Pin and then create a Geolocation. A geolocation cannot exist without a Pin 
-# being made for it first - we wish to enforce the opposite invariant - a Pin will at all times have 
-# a geolocation.
-# This simplified version of the models was very instructive, hence the commit point.
-
-class Pin(db.Model):
-    __tablename__ = "pin"
-    id = db.Column(db.Integer, primary_key=True)
-    geolocation = db.relationship("Geolocation", uselist=False, backref="pin")       # True one to one relationship
-
-    def __init__(self):
-        pass
-
-    def __repr__(self):
-        return '<Pin Object %s>' % id(self)      # Instance id merely useful to differentiateinstances.
+# a backreference. Now the Geolocation has been made the implicit parent. This allows us to enforce 
+# the invariant that a Geolocation must exist before a Pin can be created. In other words, at all times, 
+# a pin will have a non-null geolocation object associated with it. A Geolocation will not at all times 
+# have a Pin associated with it.
 
 
 class Geolocation(db.Model):
@@ -29,17 +17,28 @@ class Geolocation(db.Model):
     latitude = db.Column(db.Float)
     longitude = db.Column(db.Float)
     elevation = db.Column(db.Float)         # Meters
-    pin_id = db.Column(db.Integer, db.ForeignKey('pin.id'))           # True one to one relationship
+    pin = db.relationship('Pin', uselist=False, backref="geolocation")
+    #pin_id = db.Column(db.Integer, db.ForeignKey('pin.id'))           # True one to one relationship (Implicit Parent)
  
-    def __init__(self, latitude, longitude, elevation, pin_id):
+    def __init__(self, latitude, longitude, elevation):
         self.latitude = latitude
         self.longitude = longitude
         self.elevation = elevation
-        self.pin_id = pin_id
 
     def __repr__(self):
         return '<Geolocation %s, %s>' % (self.latitude, self.longitude)
 
+
+class Pin(db.Model):
+    __tablename__ = "pin"
+    id = db.Column(db.Integer, primary_key=True)
+    geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))  # True one to one relationship (Implicit child)
+
+    def __init__(self, geolocation_id):
+        self.geolocation_id = geolocation_id
+
+    def __repr__(self):
+        return '<Pin Object %s>' % id(self)      # Instance id merely useful to differentiate instances.
 
 
 
