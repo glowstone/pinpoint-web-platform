@@ -124,7 +124,7 @@ def post_nearby():
 	if request.method == 'POST':
 		radius = float(request.form['radius'])
 		location = get_current_user().geolocation
-		posts = closest_locations(location, radius)
+		posts = closest_posts(location, radius)
 		return render_template('nearby_posts.html', location=location, radius=radius, posts=posts)
 		
 	elif request.method == 'GET':

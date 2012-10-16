@@ -131,7 +131,7 @@ def get_sql_distance_query(location, radius, num):
 	return query
 
 
-def closest_locations(location, radius, num=10):
+def closest_posts(location, radius, num=10):
 	"""
 	Gets the query and executes it to find the num closest geolocations within the radius to the location. Returns
 	tuples of (geolocation, distance)
@@ -141,12 +141,12 @@ def closest_locations(location, radius, num=10):
 	# Get the query needed to find the closest locations
 	query = get_sql_distance_query(location, radius, num)
 	conn = db.session.connection()
-	# Execute the query to get the geolocation IDs and the distances to each
+	# Execute the query to get the post IDs and the distances to each
 	result = conn.execute(query).fetchall()
 	ids = [item[0] for item in result]
 	distances = [item[1] for item in result]
-	# Get the actual Geolocation objects from the returned IDs
+	# Get the Post objects from the returned IDs
 	# TODO: Is there a bulk select in SQLAlchemy? This does a query for each ID instead of a single query for all IDs.
-	locations = [Post.query.get(id) for id in ids]
+	posts = [Post.query.get(id) for id in ids]
 	# Return tuples of (Geolocation, distance)
-	return zip(locations, distances)
+	return zip(posts, distances)
