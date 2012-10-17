@@ -48,6 +48,22 @@ s = Posting(datetime.datetime.now(), datetime.datetime.now(), t.user_id, gn.id)
 db_session.add(s)
 db_session.commit()
 
+go = Geolocation(0,1,2)
+db_session.add(go)
+db_session.commit()
+
+a = Alert(datetime.datetime.now(), datetime.datetime.now(), "Warning!!!", t.user_id, go.id)
+db_session.add(a)
+db_session.commit()
+
+gp = Geolocation(9,9,9)
+db_session.add(gp)
+db_session.commit()
+
+b = Alert(datetime.datetime.now(), datetime.datetime.now(), "Flood!!", d.user_id, gp.id)
+db_session.add(b)
+db_session.commit()
+
 
 print d.username
 print d.geolocation
@@ -68,6 +84,18 @@ for post in d.posts:
 for post in Posting.query.all():
 	print post
 	print post.user
+
+print a
+print a.user
+print a.geolocation
+print a.message
+print a.user.geolocation
+
+print b
+print b.user
+print b.geolocation
+print b.message
+print b.user.geolocation
 
 
 

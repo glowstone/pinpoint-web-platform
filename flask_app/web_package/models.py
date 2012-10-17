@@ -1,7 +1,7 @@
 # Define models to be used by the Flask Application
 #from flask import Flask
 #from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
+from sqlalchemy import Column, BigInteger, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship, backref
 from web_package.database import Base
 
@@ -41,10 +41,6 @@ class Pin(Base):
 
     def __init__(self, geolocation_id):
         self.geolocation_id = geolocation_id
-
-    #def __repr__
-    def __repr__(self):
-        return '<Pin Object %s>' % id(self)      # Instance id merely useful to differentiate instances.
 
 
 class User(Pin):
@@ -90,6 +86,22 @@ class Posting(Pin):
         #TODO come up with a better representation
         return '<Post %s>' % (self.creation_time)
 
+
+class Alert(Posting):
+    __tablename__ = 'alert'
+    id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
+    __mapper_args__ = {'polymorphic_identity': 'alert',
+                        'inherit_condition': (id == Posting.id)}
+    alert_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    message = Column(String(140))
+
+    def __init__(self, creation_time, expiration_time, message, user_id, geo_id):
+        super(Alert, self).__init__(creation_time, expiration_time, user_id, geo_id)
+        self.message = message
+
+    def __repr__(self):
+        return '<Alert %s>' % (self.message)
+        
 
 # class Pin(db.Model):
 #     __tablename__ = "pin"
