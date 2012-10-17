@@ -1,7 +1,7 @@
 # Define models to be used by the Flask Application
 #from flask import Flask
 #from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy import Column, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship, backref
 from web_package.database import Base
 
@@ -36,7 +36,7 @@ class Pin(Base):
     id = Column(Integer, primary_key=True)
     # Unique constraint ensures that the relationship remains 1-1. No geolocation tied to multiple Pins.
     geolocation_id = Column(Integer, ForeignKey('geolocation.id'), unique=True)  # True one to one relationship (Implicit child)
-    type = Column('type', String(50))                  # discriminator
+    type = Column('type', String(50))              # discriminator
     __mapper_args__ = {'polymorphic_on': type}
 
     def __init__(self, geolocation_id):
@@ -48,35 +48,46 @@ class Pin(Base):
 # Also allowed to use 'id' in the table to refer to the foreign key and <class>_id as an explicit reference 
 # to the id column in class (id = <class>_id)
 
-class Engineer(Pin):
-    __tablename__ = 'engineer'
-    __mapper_args__ = {'polymorphic_identity': 'engineer'}
+class User(Pin):
+    __tablename__ = 'user'
+    __mapper_args__ = {'polymorphic_identity': 'user'}
     
     # Customary to combine the primary key and foreign key to parent under the column name parent_id
     #person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
-    engineer_id = Column('id', Integer, ForeignKey('pin.id'), primary_key=True)
-    primary_language = Column(String(50))
+    user_id = Column('id', Integer, ForeignKey('pin.id'), primary_key=True)
+    username = Column(String(80), unique=True)
+    password_hash = Column(String(120))
+    salt = Column(String(120))
+    #posts = relationship('Posting', primaryjoin="User.id==Posting.user_id", backref='user', lazy='dynamic')   #One User to many Postings.
 
-    def __init__(self, primary_language, geoid):
-        super(Engineer, self).__init__(geoid)
-        self.primary_language = primary_language
-
-    def __repr__(self):
-        return '<Engineer %s>' % (self.primary_language)
-
-
-class Nobody(Pin):
-    __tablename__ = 'nobody'
-    __mapper_args__ = {'polymorphic_identity': 'nobody'}
-    nobody_id = Column('id', Integer, ForeignKey('pin.id'), primary_key=True)
-    prop = Column(String(50))
-
-    def __init__(self, prop, geoid):
-        super(Nobody, self).__init__(geoid)
-        self.prop = prop
+    def __init__(self, username, password_hash, salt, geo_id):
+        super(User, self).__init__(geo_id)
+        self.username = username
+        self.password_hash = password_hash
+        self.salt = salt
 
     def __repr__(self):
-        return '<Nobody %s>' % (self.name)
+        return '<User %s>' % (self.username)
+
+
+class Posting(Pin):
+    __tablename__ = 'posting'
+    __mapper_args__ = {'polymorphic_identity': 'posting'}
+    posting_id = Column('id', Integer, ForeignKey('pin.id'), primary_key=True)
+    creation_time = Column(DateTime)
+    expiration_time = Column(DateTime)
+    #user_id = Column(Integer, ForeignKey('user.id'))              # One User to many Postings
+
+    def __init__(self, creation_time, expiration_time, user_id, geo_id):
+        super(Posting, self).__init__(geo_id)
+        # For now, require creation time to be passed in. May make this default to current time.
+        self.creation_time = creation_time
+        self.expiration_time = expiration_time
+        self.user_id = user_id
+
+    def __repr__(self):
+        #TODO come up with a better representation
+        return '<Post %s>' % (self.creation_time)
 
 
 

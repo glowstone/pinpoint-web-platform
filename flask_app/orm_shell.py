@@ -2,34 +2,68 @@ from web_package import db_session
 from web_package.models import *
 import os
 import sys
+import datetime
 
 os.system('clear')
 sys.ps1 = "cool>>"
+
+
+# g = Geolocation(5,6,7)
+# db_session.add(g)
+# db_session.commit()
+
+# d = User('dalton', 'dsadsadas', 'dwqeqdsadwq', g.id)
+# db_session.add(d)
+# db_session.commit()
+
+# q = Geolocation(8,9,10)
+# db_session.add(q)
+# db_session.commit()
+
+# p = Posting(datetime.datetime.now(), datetime.datetime.now(), q.id)
+# db_session.add(p)
+# db_session.commit()
+
+# print d.geolocation
+# print d.username
+
+# print p.geolocation
+# print p.creation_time
+
 
 
 g = Geolocation(5,6,7)
 db_session.add(g)
 db_session.commit()
 
-e = Engineer('python', g.id)            #Named Ben
-db_session.add(e)
-db_session.commit()
-print e.primary_language
-print e.id
-print e.engineer_id
-
-print g.person
-print e.geolocation
-
-n = Nobody('some-string', g.id)       # try to associate multiple geolocations with 2 Pinnable Objects
-db_session.add(n)
+d = User('dalton', 'dsadsadas', 'dwqeqdsadwq', g.id)
+db_session.add(d)
 db_session.commit()
 
-print n.prop
-print n.type
-print n.geolocation
-print e.geolocation
-print g.person
+q = Geolocation(8,9,10)
+db_session.add(q)
+db_session.commit()
+
+p = Posting(datetime.datetime.now(), datetime.datetime.now(), d.id, q.id)
+db_session.add(p)
+db_session.commit()
+
+r = Posting(datetime.datetime.now(), datetime.datetime.now(), d.id, q.id)
+db_session.add(p)
+db_session.commit()
+
+print d.username
+print d.geolocation
+print d.posts
+
+print p
+print p.geolocation
+print p.creation_time
+
+print r
+print r.geolocation
+print r.creation_time
+
 
 
 os.environ['PYTHONINSPECT'] = 'True'
