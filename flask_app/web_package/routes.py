@@ -120,6 +120,7 @@ def post_create():
 
 
 @app.route('/post/nearby', methods = ['GET', 'POST'])
+@login_required
 def post_nearby():
 	if request.method == 'POST':
 		radius = float(request.form['radius'])

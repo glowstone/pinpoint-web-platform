@@ -3,8 +3,8 @@ import random
 import string
 import datetime
 from web_package.models import User, Post, Geolocation
-from flask import session
-from web_package import db
+from flask import session, redirect, url_for, request
+from functools import wraps
 
 
 SALT_LENGTH = 16
@@ -17,6 +17,17 @@ POST_DELTAS = {'3h': datetime.timedelta(hours=3),
 			   '1d': datetime.timedelta(days=1),
 			   '3d': datetime.timedelta(days=3),
 			   'default': datetime.timedelta(hours=6)}
+
+
+def login_required(f):
+	@wraps(f)
+	def decorated_function(*args, **kwargs):
+		if get_current_user() is None:
+			# TODO: This should probably redirect to a login page rather than index
+			return redirect(url_for('index', next=request.url))
+		return f(*args, **kwargs)
+	return decorated_function
+
 
 def hash_password(password, salt=None):
 	"""
@@ -66,8 +77,11 @@ def do_logout():
 def get_current_user():
 	"""Queries for User corresponding to current session. Returns User object or None if no user found."""
 	#Handle when session is not defined
-	username = session['username']
-	user = User.query.filter_by(username=username).first()
+	try:
+		username = session['username']
+		user = User.query.filter_by(username=username).first()
+	except:
+		user = None
 	return user
 
 def create_post(title, text, form_tdelta, user, geolocation):
