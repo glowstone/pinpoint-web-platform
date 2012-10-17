@@ -1,7 +1,7 @@
 # Define models to be used by the Flask Application
-from flask import Flask
-from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String
+#from flask import Flask
+#from flask.ext.sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, Integer, String, ForeignKey
 from web_package.database import Base
 
 # One to ones relationships are never truly balanced. After all, the implicit parent may access the 
@@ -12,18 +12,57 @@ from web_package.database import Base
 # have a Pin associated with it.
 
 
-class User(Base):
-    __tablename__ = 'user'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(50), unique=True)
-    email = Column(String(120), unique=True)
+# class User(Base):
+#     __tablename__ = 'user'
+#     id = Column(Integer, primary_key=True)
+#     name = Column(String(50), unique=True)
+#     email = Column(String(120), unique=True)
 
-    def __init__(self, name=None, email=None):
-        self.name = name
-        self.email = email
+#     def __init__(self, name=None, email=None):
+#         self.name = name
+#         self.email = email
+
+#     def __repr__(self):
+#         return '<User %r>' % (self.name)
+
+
+class Person(Base):
+    __tablename__ = 'person'
+    id = Column(Integer, primary_key=True)
+    type = Column('type', String(50))                  # discriminator
+    __mapper_args__ = {'polymorphic_on': type}
+
+
+
+class Engineer(Person):
+    __tablename__ = 'engineer'
+    __mapper_args__ = {'polymorphic_identity': 'engineer'}
+    
+    # Customary to combine the primary key and foreign key to parent under the column name parent_id
+    person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
+    primary_language = Column(String(50))
+
+    def __init__(self, primary_language):
+        self.primary_language = primary_language
 
     def __repr__(self):
-        return '<User %r>' % (self.name)
+        return '<Engineer %s>' % (self.primary_language)
+
+
+class Nobody(Person):
+    __tablename__ = 'nobody'
+    __mapper_args__ = {'polymorphic_identity': 'nobody'}
+    id = Column(Integer, autoincrement=True)
+    # Customary to combine the primary key and foreign key to parent under the column name parent_id
+    person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
+    name = Column(String(50))
+
+    def __init__(self, name):
+        self.name = name
+
+    def __repr__(self):
+        return '<Nobody %s>' % (self.name)
+
 
 
 

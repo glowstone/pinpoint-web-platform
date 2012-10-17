@@ -6,13 +6,20 @@ import sys
 os.system('clear')
 sys.ps1 = "cool>>"
 
-u = User('admin', 'sample')
-db_session.add(u)
+e = Engineer('python')
+db_session.add(e)
 db_session.commit()
-User.query.all()
+print e.primary_language
+print e.person_id
+
+n = Nobody('lame')
+db_session.add(n)
+db_session.commit()
+print n.name
+print n.person_id
 
 
-#os.environ['PYTHONINSPECT'] = 'True'
+os.environ['PYTHONINSPECT'] = 'True'
 
 #u = User('dalton', 'dsadsadasd', 'dsadsaada', None)
 #db.session.add(u)
