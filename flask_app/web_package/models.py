@@ -42,16 +42,14 @@ class Pin(Base):
     def __init__(self, geolocation_id):
         self.geolocation_id = geolocation_id
 
-    ## def __repr__
+    #def __repr__
+    def __repr__(self):
+        return '<Pin Object %s>' % id(self)      # Instance id merely useful to differentiate instances.
 
-# Customary to combine the primary key and foreign key to parent under the column name id or <parent>_id. 
-# Also allowed to use 'id' in the table to refer to the foreign key and <class>_id as an explicit reference 
-# to the id column in class (id = <class>_id)
 
 class User(Pin):
     __tablename__ = 'user'
-    # Customary to combine the primary key and foreign key to parent under the column name parent_id
-    #person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
+    # Customary to combine the primary key and foreign key to parent under the column name id or parent_id
     id = Column(Integer, ForeignKey('pin.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity': 'user',
                        'inherit_condition': (id == Pin.id)}

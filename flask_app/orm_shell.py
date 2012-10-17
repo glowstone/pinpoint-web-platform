@@ -8,30 +8,6 @@ os.system('clear')
 sys.ps1 = "cool>>"
 
 
-# g = Geolocation(5,6,7)
-# db_session.add(g)
-# db_session.commit()
-
-# d = User('dalton', 'dsadsadas', 'dwqeqdsadwq', g.id)
-# db_session.add(d)
-# db_session.commit()
-
-# q = Geolocation(8,9,10)
-# db_session.add(q)
-# db_session.commit()
-
-# p = Posting(datetime.datetime.now(), datetime.datetime.now(), q.id)
-# db_session.add(p)
-# db_session.commit()
-
-# print d.geolocation
-# print d.username
-
-# print p.geolocation
-# print p.creation_time
-
-
-
 g = Geolocation(5,6,7)
 db_session.add(g)
 db_session.commit()
@@ -64,6 +40,14 @@ t = User('tommy', 'weqeqeqew', 'dasdasda', gm.id)
 db_session.add(t)
 db_session.commit()
 
+gn = Geolocation(1,2,3)
+db_session.add(gn)
+db_session.commit()
+
+s = Posting(datetime.datetime.now(), datetime.datetime.now(), t.user_id, gn.id)
+db_session.add(s)
+db_session.commit()
+
 
 print d.username
 print d.geolocation
@@ -79,6 +63,11 @@ print r.creation_time
 print "Posts"
 for post in d.posts:
 	print post
+
+
+for post in Posting.query.all():
+	print post
+	print post.user
 
 
 
