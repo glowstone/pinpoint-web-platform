@@ -1,7 +1,8 @@
 # Define models to be used by the Flask Application
 #from flask import Flask
 #from flask.ext.sqlalchemy import SQLAlchemy
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Float
+from sqlalchemy.orm import relationship, backref
 from web_package.database import Base
 
 # One to ones relationships are never truly balanced. After all, the implicit parent may access the 
@@ -12,59 +13,66 @@ from web_package.database import Base
 # have a Pin associated with it.
 
 
-# class User(Base):
-#     __tablename__ = 'user'
-#     id = Column(Integer, primary_key=True)
-#     name = Column(String(50), unique=True)
-#     email = Column(String(120), unique=True)
-
-#     def __init__(self, name=None, email=None):
-#         self.name = name
-#         self.email = email
-
-#     def __repr__(self):
-#         return '<User %r>' % (self.name)
-
-
-class Person(Base):
-    __tablename__ = 'person'
+class Geolocation(Base):
+    __tablename__ = "geolocation"
     id = Column(Integer, primary_key=True)
-    name = Column(String(50))
+    latitude = Column(Float)
+    longitude = Column(Float)
+    elevation = Column(Float)         # Meters
+    # Relationships
+    person = relationship('Pin', uselist=False, backref="geolocation")
+     
+    def __init__(self, latitude, longitude, elevation):
+        self.latitude = latitude
+        self.longitude = longitude
+        self.elevation = elevation
+
+    def __repr__(self):
+        return '<Geolocation %s, %s>' % (self.latitude, self.longitude)
+
+
+class Pin(Base):
+    __tablename__ = 'pin'
+    id = Column(Integer, primary_key=True)
+    # Unique constraint ensures that the relationship remains 1-1. No geolocation tied to multiple Pins.
+    geolocation_id = Column(Integer, ForeignKey('geolocation.id'), unique=True)  # True one to one relationship (Implicit child)
     type = Column('type', String(50))                  # discriminator
     __mapper_args__ = {'polymorphic_on': type}
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, geolocation_id):
+        self.geolocation_id = geolocation_id
+
+    ## def __repr__
 
 # Customary to combine the primary key and foreign key to parent under the column name id or <parent>_id. 
 # Also allowed to use 'id' in the table to refer to the foreign key and <class>_id as an explicit reference 
 # to the id column in class (id = <class>_id)
 
-class Engineer(Person):
+class Engineer(Pin):
     __tablename__ = 'engineer'
     __mapper_args__ = {'polymorphic_identity': 'engineer'}
     
     # Customary to combine the primary key and foreign key to parent under the column name parent_id
     #person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
-    engineer_id = Column('id', Integer, ForeignKey('person.id'), primary_key=True)
+    engineer_id = Column('id', Integer, ForeignKey('pin.id'), primary_key=True)
     primary_language = Column(String(50))
 
-    def __init__(self, primary_language, name="Ben"):
-        super(Engineer, self).__init__(name)
+    def __init__(self, primary_language, geoid):
+        super(Engineer, self).__init__(geoid)
         self.primary_language = primary_language
 
     def __repr__(self):
         return '<Engineer %s>' % (self.primary_language)
 
 
-class Nobody(Person):
+class Nobody(Pin):
     __tablename__ = 'nobody'
     __mapper_args__ = {'polymorphic_identity': 'nobody'}
-    nobody_id = Column('id', Integer, ForeignKey('person.id'), primary_key=True)
+    nobody_id = Column('id', Integer, ForeignKey('pin.id'), primary_key=True)
     prop = Column(String(50))
 
-    def __init__(self, prop, name="Nameless"):
-        super(Nobody, self).__init__(name)
+    def __init__(self, prop, geoid):
+        super(Nobody, self).__init__(geoid)
         self.prop = prop
 
     def __repr__(self):
@@ -73,22 +81,6 @@ class Nobody(Person):
 
 
 
-# class Geolocation(db.Model):
-#     __tablename__ = "geolocation"
-#     id = db.Column(db.Integer, primary_key=True)
-#     latitude = db.Column(db.Float)
-#     longitude = db.Column(db.Float)
-#     elevation = db.Column(db.Float)         # Meters
-#     # Relationships
-#     pin = db.relationship('Pin', uselist=False, backref="geolocation")
-     
-#     def __init__(self, latitude, longitude, elevation):
-#         self.latitude = latitude
-#         self.longitude = longitude
-#         self.elevation = elevation
-
-#     def __repr__(self):
-#         return '<Geolocation %s, %s>' % (self.latitude, self.longitude)
 
 
 # class Pin(db.Model):
