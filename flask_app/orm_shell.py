@@ -44,7 +44,7 @@ q = Geolocation(8,9,10)
 db_session.add(q)
 db_session.commit()
 
-p = Posting(datetime.datetime.now(), datetime.datetime.now(), d.id, q.id)
+p = Posting(datetime.datetime.now(), datetime.datetime.now(), d.user_id, q.id)
 db_session.add(p)
 db_session.commit()
 
@@ -52,9 +52,18 @@ ql = Geolocation(9,10,11)
 db_session.add(ql)
 db_session.commit()
 
-r = Posting(datetime.datetime.now(), datetime.datetime.now(), d.id, ql.id)
+r = Posting(datetime.datetime.now(), datetime.datetime.now(), d.user_id, ql.id)
 db_session.add(r)
 db_session.commit()
+
+gm = Geolocation(2,3,4)
+db_session.add(gm)
+db_session.commit()
+
+t = User('tommy', 'weqeqeqew', 'dasdasda', gm.id)
+db_session.add(t)
+db_session.commit()
+
 
 print d.username
 print d.geolocation

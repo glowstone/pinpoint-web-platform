@@ -55,10 +55,11 @@ class User(Pin):
     id = Column(Integer, ForeignKey('pin.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity': 'user',
                        'inherit_condition': (id == Pin.id)}
+    user_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     username = Column(String(80), unique=True)
     password_hash = Column(String(120))
     salt = Column(String(120))
-    posts = relationship('Posting', primaryjoin="(User.id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
+    posts = relationship('Posting', primaryjoin="(User.user_id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
 
     def __init__(self, username, password_hash, salt, geo_id):
         super(User, self).__init__(geo_id)
@@ -74,10 +75,11 @@ class Posting(Pin):
     __tablename__ = 'posting'
     id = Column(Integer, ForeignKey('pin.id'), primary_key=True)
     __mapper_args__ = {'polymorphic_identity': 'posting',
-                        'inherit_condition': (id == Pin.id)}    
+                        'inherit_condition': (id == Pin.id)}
+    posting_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     creation_time = Column(DateTime)
     expiration_time = Column(DateTime)
-    user_id = Column(Integer, ForeignKey('user.id'))              # One User to many Postings
+    user_id = Column(Integer, ForeignKey('user.user_id'))              # One User to many Postings
 
     def __init__(self, creation_time, expiration_time, user_id, geo_id):
         super(Posting, self).__init__(geo_id)
