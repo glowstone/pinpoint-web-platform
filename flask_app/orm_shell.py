@@ -6,17 +6,20 @@ import sys
 os.system('clear')
 sys.ps1 = "cool>>"
 
-e = Engineer('python')
+e = Engineer('python')            #Named Ben
 db_session.add(e)
 db_session.commit()
 print e.primary_language
-print e.person_id
+print e.name
+print e.id
+print e.engineer_id
 
-n = Nobody('lame')
+n = Nobody('some-string')
 db_session.add(n)
 db_session.commit()
+print n.prop
 print n.name
-print n.person_id
+print n.type
 
 
 os.environ['PYTHONINSPECT'] = 'True'

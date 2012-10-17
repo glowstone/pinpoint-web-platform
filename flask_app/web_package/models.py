@@ -29,20 +29,28 @@ from web_package.database import Base
 class Person(Base):
     __tablename__ = 'person'
     id = Column(Integer, primary_key=True)
+    name = Column(String(50))
     type = Column('type', String(50))                  # discriminator
     __mapper_args__ = {'polymorphic_on': type}
 
+    def __init__(self, name):
+        self.name = name
 
+# Customary to combine the primary key and foreign key to parent under the column name id or <parent>_id. 
+# Also allowed to use 'id' in the table to refer to the foreign key and <class>_id as an explicit reference 
+# to the id column in class (id = <class>_id)
 
 class Engineer(Person):
     __tablename__ = 'engineer'
     __mapper_args__ = {'polymorphic_identity': 'engineer'}
     
     # Customary to combine the primary key and foreign key to parent under the column name parent_id
-    person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
+    #person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
+    engineer_id = Column('id', Integer, ForeignKey('person.id'), primary_key=True)
     primary_language = Column(String(50))
 
-    def __init__(self, primary_language):
+    def __init__(self, primary_language, name="Ben"):
+        super(Engineer, self).__init__(name)
         self.primary_language = primary_language
 
     def __repr__(self):
@@ -52,13 +60,12 @@ class Engineer(Person):
 class Nobody(Person):
     __tablename__ = 'nobody'
     __mapper_args__ = {'polymorphic_identity': 'nobody'}
-    id = Column(Integer, autoincrement=True)
-    # Customary to combine the primary key and foreign key to parent under the column name parent_id
-    person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
-    name = Column(String(50))
+    nobody_id = Column('id', Integer, ForeignKey('person.id'), primary_key=True)
+    prop = Column(String(50))
 
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, prop, name="Nameless"):
+        super(Nobody, self).__init__(name)
+        self.prop = prop
 
     def __repr__(self):
         return '<Nobody %s>' % (self.name)
