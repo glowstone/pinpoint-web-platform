@@ -3,7 +3,7 @@
 
 	{% block body %}
 		{{ super() }}
-		
+
 		<div class="container">
 			<form action="/post/nearby" method="POST">
 				<legend>Get nearby posts</legend>
@@ -12,15 +12,16 @@
 				<input type="submit" class="btn" value="Get"></input>
 			</form>
 		</div>
-		{% if posts %}
-		<div class="container">
-			<h2>Posts within {{ radius }} kilometers of {{ location }}</h2>
-			<ul>
-			{% for loc in posts %}
-				<li>{{ loc[0] }} is {{ loc[1] }} kilometer(s) away</li>
-			{% endfor %}
-			</ul>
+		<div class="container row">
+			<div class="span3 offset1">
+				<h4>Posts within <span id="radius">{{ radius }}</span> meter(s) of {{ location }}</h4>
+				<ul>
+				{% for post in posts %}
+					<li class="post" latitude="{{ post.latitude }}" longitude="{{ post.longitude }}">{{ post.post }} is {{ post.distance }} meter(s) away</li>
+				{% endfor %}
+				</ul>
+			</div>
+			<div class="map_canvas span5 offset2" style="height: 400px"></div>
 		</div>
-		{% endif %}
 
 	{% endblock %}

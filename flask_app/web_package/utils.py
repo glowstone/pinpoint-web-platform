@@ -9,7 +9,7 @@ from web_package import db
 
 SALT_LENGTH = 16
 ALPHANUMERIC = string.letters + string.digits	# List of all characters that can be used to generate a salt
-EARTH_RADIUS = 6371	# Radius of the earth, in kilometers
+EARTH_RADIUS_METERS = 6371000	# Radius of the earth, in kilometers
 
 POST_DELTAS = {'3h': datetime.timedelta(hours=3),
 			   '6h': datetime.timedelta(hours=6),
@@ -126,7 +126,7 @@ def get_sql_distance_query(location, radius, num):
 		ORDER BY distance LIMIT 0 , %d;"""
 
 	# Add in the parameters to the query
-	query = query % ('post', EARTH_RADIUS, location.latitude, 'geolocation', 'geolocation', location.longitude, location.latitude, 
+	query = query % ('post', EARTH_RADIUS_METERS, location.latitude, 'geolocation', 'geolocation', location.longitude, location.latitude, 
 					 'geolocation', 'geolocation', 'post', 'post', 'geolocation', radius, num)
 	return query
 
@@ -134,7 +134,7 @@ def get_sql_distance_query(location, radius, num):
 def closest_posts(location, radius, num=10):
 	"""
 	Gets the query and executes it to find the num closest geolocations within the radius to the location. Returns
-	tuples of (geolocation, distance)
+	list of dictionaries with 'post', 'latitude', 'longitude', and 'distance' keys
 	Requires:
 	Affects:
 	"""
@@ -148,5 +148,13 @@ def closest_posts(location, radius, num=10):
 	# Get the Post objects from the returned IDs
 	# TODO: Is there a bulk select in SQLAlchemy? This does a query for each ID instead of a single query for all IDs.
 	posts = [Post.query.get(id) for id in ids]
-	# Return tuples of (Geolocation, distance)
-	return zip(posts, distances)
+	
+	# Construct a list of dictionaries to represent the post objects
+	post_dicts = []
+	for i in xrange(len(posts)):
+		post = posts[i]
+		latitude = post.geolocation.latitude
+		longitude = post.geolocation.longitude
+		distance = distances[i]
+		post_dicts.append(dict(post = post, latitude = latitude, longitude = longitude, distance = distance))
+	return post_dicts
