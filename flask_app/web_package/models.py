@@ -35,7 +35,7 @@ class Pin(Base):
     __tablename__ = 'pin'
     id = Column(Integer, primary_key=True)
     # Unique constraint ensures that the relationship remains 1-1. No geolocation tied to multiple Pins.
-    geolocation_id = Column(Integer, ForeignKey('geolocation.id'), unique=True)  # True one to one relationship (Implicit child)
+    geolocation_id = Column(Integer, ForeignKey('geolocation.id'), unique=True, nullable=False)  # True one to one relationship (Implicit child)
     type = Column('type', String(50))              # discriminator
     __mapper_args__ = {'polymorphic_on': type}
 
@@ -50,15 +50,15 @@ class Pin(Base):
 
 class User(Pin):
     __tablename__ = 'user'
-    __mapper_args__ = {'polymorphic_identity': 'user'}
-    
     # Customary to combine the primary key and foreign key to parent under the column name parent_id
     #person_id = Column(Integer, ForeignKey('person.id'), primary_key=True)
-    user_id = Column('id', Integer, ForeignKey('pin.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('pin.id'), primary_key=True)
+    __mapper_args__ = {'polymorphic_identity': 'user',
+                       'inherit_condition': (id == Pin.id)}
     username = Column(String(80), unique=True)
     password_hash = Column(String(120))
     salt = Column(String(120))
-    #posts = relationship('Posting', primaryjoin="User.id==Posting.user_id", backref='user', lazy='dynamic')   #One User to many Postings.
+    posts = relationship('Posting', primaryjoin="(User.id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
 
     def __init__(self, username, password_hash, salt, geo_id):
         super(User, self).__init__(geo_id)
@@ -72,11 +72,12 @@ class User(Pin):
 
 class Posting(Pin):
     __tablename__ = 'posting'
-    __mapper_args__ = {'polymorphic_identity': 'posting'}
-    posting_id = Column('id', Integer, ForeignKey('pin.id'), primary_key=True)
+    id = Column(Integer, ForeignKey('pin.id'), primary_key=True)
+    __mapper_args__ = {'polymorphic_identity': 'posting',
+                        'inherit_condition': (id == Pin.id)}    
     creation_time = Column(DateTime)
     expiration_time = Column(DateTime)
-    #user_id = Column(Integer, ForeignKey('user.id'))              # One User to many Postings
+    user_id = Column(Integer, ForeignKey('user.id'))              # One User to many Postings
 
     def __init__(self, creation_time, expiration_time, user_id, geo_id):
         super(Posting, self).__init__(geo_id)
@@ -88,10 +89,6 @@ class Posting(Pin):
     def __repr__(self):
         #TODO come up with a better representation
         return '<Post %s>' % (self.creation_time)
-
-
-
-
 
 
 # class Pin(db.Model):

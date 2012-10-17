@@ -48,13 +48,16 @@ p = Posting(datetime.datetime.now(), datetime.datetime.now(), d.id, q.id)
 db_session.add(p)
 db_session.commit()
 
-r = Posting(datetime.datetime.now(), datetime.datetime.now(), d.id, q.id)
-db_session.add(p)
+ql = Geolocation(9,10,11)
+db_session.add(ql)
+db_session.commit()
+
+r = Posting(datetime.datetime.now(), datetime.datetime.now(), d.id, ql.id)
+db_session.add(r)
 db_session.commit()
 
 print d.username
 print d.geolocation
-print d.posts
 
 print p
 print p.geolocation
@@ -63,6 +66,11 @@ print p.creation_time
 print r
 print r.geolocation
 print r.creation_time
+
+print "Posts"
+for post in d.posts:
+	print post
+
 
 
 
