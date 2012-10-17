@@ -10,11 +10,15 @@ app.config.from_object('web_package.config.dev_config')
 app.config.from_envvar('DEPLOYMENT_CONFIG', silent=True)
 
 # Setup the SQLAlchemy db object
-db = SQLAlchemy(app)
+#db = SQLAlchemy(app)
+from web_package.database import db_session
+
+
+
 
 
 
 
 # Import routes and models at the bottom to prevent circular dependency problems.
-from web_package import models
-from web_package import routes
+#from web_package import models
+#from web_package import routes

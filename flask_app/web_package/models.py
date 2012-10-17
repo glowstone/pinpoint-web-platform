@@ -1,7 +1,8 @@
 # Define models to be used by the Flask Application
 from flask import Flask
 from flask.ext.sqlalchemy import SQLAlchemy
-from web_package import db
+from sqlalchemy import Column, Integer, String
+from web_package.database import Base
 
 # One to ones relationships are never truly balanced. After all, the implicit parent may access the 
 # child by a property while the implicit child stores the parent_id and accesses the parent via a 
@@ -11,53 +12,68 @@ from web_package import db
 # have a Pin associated with it.
 
 
-class Geolocation(db.Model):
-    __tablename__ = "geolocation"
-    id = db.Column(db.Integer, primary_key=True)
-    latitude = db.Column(db.Float)
-    longitude = db.Column(db.Float)
-    elevation = db.Column(db.Float)         # Meters
-    # Relationships
-    pin = db.relationship('Pin', uselist=False, backref="geolocation")
+class User(Base):
+    __tablename__ = 'user'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(50), unique=True)
+    email = Column(String(120), unique=True)
+
+    def __init__(self, name=None, email=None):
+        self.name = name
+        self.email = email
+
+    def __repr__(self):
+        return '<User %r>' % (self.name)
+
+
+
+# class Geolocation(db.Model):
+#     __tablename__ = "geolocation"
+#     id = db.Column(db.Integer, primary_key=True)
+#     latitude = db.Column(db.Float)
+#     longitude = db.Column(db.Float)
+#     elevation = db.Column(db.Float)         # Meters
+#     # Relationships
+#     pin = db.relationship('Pin', uselist=False, backref="geolocation")
      
-    def __init__(self, latitude, longitude, elevation):
-        self.latitude = latitude
-        self.longitude = longitude
-        self.elevation = elevation
+#     def __init__(self, latitude, longitude, elevation):
+#         self.latitude = latitude
+#         self.longitude = longitude
+#         self.elevation = elevation
 
-    def __repr__(self):
-        return '<Geolocation %s, %s>' % (self.latitude, self.longitude)
-
-
-class Pin(db.Model):
-    __tablename__ = "pin"
-    id = db.Column(db.Integer, primary_key=True)
-    geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))  # True one to one relationship (Implicit child)
-
-    def __init__(self, geolocation_id):
-        self.geolocation_id = geolocation_id
-
-    def __repr__(self):
-        return '<Pin Object %s>' % id(self)      # Instance id merely useful to differentiate instances.
+#     def __repr__(self):
+#         return '<Geolocation %s, %s>' % (self.latitude, self.longitude)
 
 
-class User(Pin):
-    #id = db.Column(db.Integer, primary_key=True)
-    pin_id = db.Column(db.Integer, db.ForeignKey('pin.id'), primary_key=True)
-    username = db.Column(db.String(80), unique=True, nullable=False)
-    password_hash = db.Column(db.String(120), nullable=False)
-    salt = db.Column(db.String(120), nullable=False)
-    # Relationships
-    #posts = db.relationship('Post', backref=db.backref('user'), lazy='dynamic')        #One User to many Postings.
+# class Pin(db.Model):
+#     __tablename__ = "pin"
+#     id = db.Column(db.Integer, primary_key=True)
+#     geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))  # True one to one relationship (Implicit child)
 
-    def __init__(self, username, password_hash, salt, geolocation_id):
-        super(Pin, self).__init__(self, geolocation_id)
-        self.username = username
-        self.password_hash = password_hash
-        self.salt = salt
+#     def __init__(self, geolocation_id):
+#         self.geolocation_id = geolocation_id
 
-    def __repr__(self):
-        return '<User %r>' % self.username
+#     def __repr__(self):
+#         return '<Pin Object %s>' % id(self)      # Instance id merely useful to differentiate instances.
+
+
+# class User(Pin):
+#     #id = db.Column(db.Integer, primary_key=True)
+#     pin_id = db.Column(db.Integer, db.ForeignKey('pin.id'), primary_key=True)
+#     username = db.Column(db.String(80), unique=True, nullable=False)
+#     password_hash = db.Column(db.String(120), nullable=False)
+#     salt = db.Column(db.String(120), nullable=False)
+#     # Relationships
+#     #posts = db.relationship('Post', backref=db.backref('user'), lazy='dynamic')        #One User to many Postings.
+
+#     def __init__(self, username, password_hash, salt, geolocation_id):
+#         super(Pin, self).__init__(self, geolocation_id)
+#         self.username = username
+#         self.password_hash = password_hash
+#         self.salt = salt
+
+#     def __repr__(self):
+#         return '<User %r>' % self.username
 
 
 

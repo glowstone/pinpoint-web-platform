@@ -1,4 +1,4 @@
-from web_package import db
+from web_package.database import init_db
 
 # SCHEMA = os.path.join(os.getcwd(), "web_package/db", "schema.sql")
 
@@ -23,5 +23,6 @@ from web_package import db
 #             disconnect_db(conn)
 
 if __name__ == '__main__':
-    db.drop_all()
-    db.create_all()
+    #db.drop_all()
+    #db.create_all()
+    init_db()
