@@ -78,7 +78,7 @@ def set_user_location():
 		geolocation.elevation = elev
 
 		db.session.commit()
-		return "set location"
+		return redirect(url_for('user_profile'))
 
 
 # Post Resources

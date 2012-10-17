@@ -126,8 +126,10 @@ def get_sql_distance_query(location, radius, num):
 		ORDER BY distance LIMIT 0 , %d;"""
 
 	# Add in the parameters to the query
-	query = query % ('post', EARTH_RADIUS_METERS, location.latitude, 'geolocation', 'geolocation', location.longitude, location.latitude, 
-					 'geolocation', 'geolocation', 'post', 'post', 'geolocation', radius, num)
+	query = query % (Post.__tablename__, EARTH_RADIUS_METERS, location.latitude, Geolocation.__tablename__,
+					 Geolocation.__tablename__, location.longitude, location.latitude, Geolocation.__tablename__,
+					 Geolocation.__tablename__, Post.__tablename__, Post.__tablename__, Geolocation.__tablename__,
+					 radius, num)
 	return query
 
 
