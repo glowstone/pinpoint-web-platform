@@ -64,6 +64,14 @@ b = Alert(datetime.datetime.now(), datetime.datetime.now(), "Flood!!", d.user_id
 db_session.add(b)
 db_session.commit()
 
+gq = Geolocation(11,11,9)
+db_session.add(gq)
+db_session.commit()
+
+c = Question(datetime.datetime.now(), datetime.datetime.now(), "Are you there?", d.user_id, gq.id)
+db_session.add(c)
+db_session.commit()
+
 
 print d.username
 print d.geolocation
@@ -99,6 +107,10 @@ print b.user
 print b.geolocation
 print b.message
 print b.user.geolocation
+
+print c
+print c.query
+print c.type
 
 
 

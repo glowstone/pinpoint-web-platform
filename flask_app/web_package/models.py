@@ -104,6 +104,22 @@ class Posting(Pin):
         return '<Post %s>' % (self.creation_time)
 
 
+class Question(Posting):
+    __tablename__ = 'question'
+    id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
+    question_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    query = Column(String(140))
+    __mapper_args__ = {'polymorphic_identity': 'question',
+                        'inherit_condition': (id == Posting.id)}
+
+    def __init__(self, creation_time, expiration_time, query, user_id, geo_id):
+        super(Question, self).__init__(creation_time, expiration_time, user_id, geo_id)
+        self.query = query
+
+    def __repr__(self):
+        return '<Question %s>' % (self.query)
+
+
 class Alert(Posting):
     __tablename__ = 'alert'
     id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
