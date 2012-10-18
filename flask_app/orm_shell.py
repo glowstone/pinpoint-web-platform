@@ -8,109 +8,176 @@ os.system('clear')
 sys.ps1 = "cool>>"
 
 
-g = Geolocation(5,6,7)
-db_session.add(g)
+g1 = Geolocation(1,2,3)
+db_session.add(g1)
 db_session.commit()
 
-d = User('dalton', 'dsadsadas', 'dwqeqdsadwq', g.id)
-db_session.add(d)
+dalton = User('dalton', 'dsadsadas', 'dwqeqdsadwq', g1.id)
+db_session.add(dalton)
 db_session.commit()
 
-q = Geolocation(8,9,10)
-db_session.add(q)
+g2 = Geolocation(2,3,4)
+db_session.add(g2)
 db_session.commit()
 
-p = Posting(datetime.datetime.now(), datetime.datetime.now(), d.user_id, q.id)
-db_session.add(p)
+post1 = Posting(datetime.datetime.now(), datetime.datetime.now(), dalton.user_id, g2.id)
+db_session.add(post1)
 db_session.commit()
 
-# ql = Geolocation(9,10,11)
-# db_session.add(ql)
-# db_session.commit()
-
-# r = Posting(datetime.datetime.now(), datetime.datetime.now(), d.user_id, ql.id)
-# db_session.add(r)
-# db_session.commit()
-
-gm = Geolocation(2,3,4)
-db_session.add(gm)
+g3 = Geolocation(3,4,5)
+db_session.add(g3)
 db_session.commit()
 
-t = User('tommy', 'weqeqeqew', 'dasdasda', gm.id)
-db_session.add(t)
+post2 = Posting(datetime.datetime.now(), datetime.datetime.now(), dalton.user_id, g3.id)
+db_session.add(post2)
 db_session.commit()
 
-# gn = Geolocation(1,2,3)
-# db_session.add(gn)
-# db_session.commit()
-
-# s = Posting(datetime.datetime.now(), datetime.datetime.now(), t.user_id, gn.id)
-# db_session.add(s)
-# db_session.commit()
-
-go = Geolocation(0,1,2)
-db_session.add(go)
+g4 = Geolocation(4,5,6)
+db_session.add(g4)
 db_session.commit()
 
-a = Alert(datetime.datetime.now(), datetime.datetime.now(), "Warning!!!", t.user_id, go.id)
-db_session.add(a)
-db_session.commit()
-
-gp = Geolocation(10,9,9)
-db_session.add(gp)
-db_session.commit()
-
-b = Alert(datetime.datetime.now(), datetime.datetime.now(), "Flood!!", d.user_id, gp.id)
-db_session.add(b)
-db_session.commit()
-
-gq = Geolocation(11,11,9)
-db_session.add(gq)
-db_session.commit()
-
-c = Question(datetime.datetime.now(), datetime.datetime.now(), "Are you there?", d.user_id, gq.id)
-db_session.add(c)
+commentable1 = Commentable(datetime.datetime.now(), datetime.datetime.now(), dalton.user_id, g4.id)
+db_session.add(commentable1)
 db_session.commit()
 
 
-print d.username
-print d.geolocation
-print d.type
+print dalton                  
+print dalton.geolocation
+print dalton.geolocation.pin
 
-print p
-print p.geolocation
-print p.creation_time
-print p.type
+print post2
+print post2.geolocation
+print post2.type
+print post2.user
+print post2.id                 #Should be 3 since its the 3rd pin created.
+print post2.posting_id         #Should be 2
 
-# print r
-# print r.geolocation
-# print r.creation_time
+print commentable1
+print commentable1.id          #Should be 4
+print commentable1.type        #Should be type commentable (raw posting/commentable still have appropriate types)
 
-print "Posts"
-for post in d.posts:
+for post in dalton.postings:
 	print post
 
 
-for post in Posting.query.all():
-	print post
-	print post.user
+print "Phase 2 of Testing"
 
-print a
-print a.user
-print a.type
-print a.geolocation
-print a.message
-print a.user.geolocation
+g5 = Geolocation(5,6,7)
+db_session.add(g5)
+db_session.commit()
 
-print b
-print b.user
-print b.geolocation
-print b.message
-print b.user.geolocation
+tommy = User('tommy', 'weqeqeqew', 'dasdasda', g5.id)
+db_session.add(tommy)
+db_session.commit()
 
-print c
-print c.query
-print c.type
+g6 = Geolocation(6,7,8)
+db_session.add(g6)
+db_session.commit()
+
+question1 = Question(datetime.datetime.now(), datetime.datetime.now(), "Does Stata food suck today?", tommy.user_id, g6.id)
+db_session.add(question1)
+db_session.commit()
+
+g7 = Geolocation(7,8,9)
+db_session.add(g7)
+db_session.commit()
+
+comment1 = Comment(datetime.datetime.now(), datetime.datetime.now(), "Some comment", dalton.user_id, g7.id)
+db_session.add(comment1)
+db_session.commit()
+
+g8 = Geolocation(8,9,10)
+db_session.add(g8)
+db_session.commit()
+
+question2 = Question(datetime.datetime.now(), datetime.datetime.now(), "Where is UAT today?", dalton.user_id, g8.id)
+db_session.add(question2)
+db_session.commit()
+
+g9 = Geolocation(9,10,11)
+db_session.add(g9)
+db_session.commit()
+
+comment2 = Comment(datetime.datetime.now(), datetime.datetime.now(), "Tommy's comment", tommy.user_id, g9.id)
+db_session.add(comment2)
+db_session.commit()
+
+print question1
+print question1.query
+print question1.user_id
+print question1.geolocation
+print question1.user
+#print question1.comments
+
+print question2
+
+
+print comment1
+print comment2
+
+
+
+
+# gp = Geolocation(10,9,9)
+# db_session.add(gp)
+# db_session.commit()
+
+# b = Alert(datetime.datetime.now(), datetime.datetime.now(), "Flood!!", d.user_id, gp.id)
+# db_session.add(b)
+# db_session.commit()
+
+# gq = Geolocation(11,11,9)
+# db_session.add(gq)
+# db_session.commit()
+
+# c = Question(datetime.datetime.now(), datetime.datetime.now(), "Are you there?", d.user_id, gq.id)
+# db_session.add(c)
+# db_session.commit()
+
+# print "d Object"
+# print d.username
+# print d.geolocation
+# print d.type
+
+# print "p object"
+# print p
+# print p.geolocation
+# print p.creation_time
+# print p.type
+
+# # print r
+# # print r.geolocation
+# # print r.creation_time
+
+# print "Posts"
+# for post in d.posts:
+# 	print post
+
+
+# for post in Posting.query.all():
+# 	print post
+# 	print post.user
+
+# print "a object"
+# print a
+# print a.user
+# print a.type
+# print a.posting_id
+# print a.geolocation
+# print a.message
+# print a.user.geolocation
+
+# print "b object"
+# print b
+# print b.user
+# print b.geolocation
+# print b.message
+# print b.user.geolocation
+
+# print "c object"
+# print c
+# print c.query
+# print c.type
 
 
 
@@ -120,4 +187,3 @@ os.environ['PYTHONINSPECT'] = 'True'
 #u = User('dalton', 'dsadsadasd', 'dsadsaada', None)
 #db.session.add(u)
 #db.session.commit()
-

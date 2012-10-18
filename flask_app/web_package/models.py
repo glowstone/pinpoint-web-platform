@@ -23,7 +23,7 @@ class Geolocation(Base):
     longitude = Column(Float)
     elevation = Column(Float)         # Meters
     # Relationships
-    person = relationship('Pin', uselist=False, backref="geolocation")
+    pin = relationship('Pin', uselist=False, backref="geolocation")
 
     @validates('latitude')
     def validate_latitude(self, key, latitude):              # User-level, not ORM
@@ -49,7 +49,7 @@ class Pin(Base):
     id = Column(Integer, primary_key=True)
     # Unique constraint ensures that the relationship remains 1-1. No geolocation tied to multiple Pins.
     geolocation_id = Column(Integer, ForeignKey('geolocation.id'), unique=True, nullable=False)  # True one to one relationship (Implicit child)
-    type = Column('type', String(50), nullable=False)     # discriminator   #Cannot create raw Pin
+    type = Column('type', String(50), nullable=False)     # discriminator   
     __mapper_args__ = {'polymorphic_on': type,
                        'polymorphic_identity': 'pin'}
 
@@ -65,7 +65,7 @@ class User(Pin):
     username = Column(String(80), unique=True)
     password_hash = Column(String(120))
     salt = Column(String(120))
-    posts = relationship('Posting', primaryjoin="(User.user_id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
+    postings = relationship('Posting', primaryjoin="(User.user_id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
     __mapper_args__ = {'polymorphic_identity': 'user',
                        'inherit_condition': (id == Pin.id)}
 
@@ -86,8 +86,8 @@ class Posting(Pin):
     posting_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     creation_time = Column(DateTime)
     expiration_time = Column(DateTime)
-    user_id = Column(Integer, ForeignKey('user.user_id'))              # One User to many Postings
-    type = Column('type', String(50), nullable=False)  # discriminator    # Cannot create raw Posting
+    user_id = Column(Integer, ForeignKey('user.user_id'))           # One User to many Postings
+    type = Column('type', String(50), nullable=False)               # discriminator    
     __mapper_args__ = {'polymorphic_on': type,
                        'polymorphic_identity': 'posting',
                         'inherit_condition': (id == Pin.id)}
@@ -104,13 +104,45 @@ class Posting(Pin):
         return '<Post %s>' % (self.creation_time)
 
 
-class Question(Posting):
-    __tablename__ = 'question'
+class Commentable(Posting):
+    __tablename__ = 'commentable'
     id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
+    commentable_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    type = Column('type', String(50), nullable=False)
+    __mapper_args__ = {'polymorphic_on': type,
+                       'polymorphic_identity': 'commentable',
+                       'inherit_condition': (id == Posting.id)}
+
+    def __init__(self, creation_time, expiration_time, user_id, geo_id):
+        super(Commentable, self).__init__(creation_time, expiration_time, user_id, geo_id)
+
+    def __repr__(self):
+        return '<Commentable %s>' % id(self)
+
+
+class Noncommentable(Posting):
+    __tablename__ = 'noncommentable'
+    id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
+    noncommentable_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    type = Column('type', String(50), nullable=False)
+    __mapper_args__ = {'polymorphic_on': type,
+                       'polymorphic_identity': 'noncommentable',
+                       'inherit_condition': (id == Posting.id)}
+
+    def __init__(self, creation_time, expiration_time, user_id, geo_id):
+        super(Noncommentable, self).__init__(creation_time, expiration_time, user_id, geo_id)
+
+    def __repr__(self):
+        return '<Commentable %s>' % id(self)
+
+
+class Question(Commentable):
+    __tablename__ = 'question'
+    id = Column(Integer, ForeignKey('commentable.id'), primary_key=True)
     question_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     query = Column(String(140))
     __mapper_args__ = {'polymorphic_identity': 'question',
-                        'inherit_condition': (id == Posting.id)}
+                        'inherit_condition': (id == Commentable.id)}
 
     def __init__(self, creation_time, expiration_time, query, user_id, geo_id):
         super(Question, self).__init__(creation_time, expiration_time, user_id, geo_id)
@@ -120,100 +152,41 @@ class Question(Posting):
         return '<Question %s>' % (self.query)
 
 
-class Alert(Posting):
-    __tablename__ = 'alert'
-    id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
-    alert_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
-    message = Column(String(140))
-    __mapper_args__ = {'polymorphic_identity': 'alert',
-                        'inherit_condition': (id == Posting.id)}
+class Comment(Noncommentable):
+    __tablename__ = 'comment'
+    id = Column(Integer, ForeignKey('noncommentable.id'), primary_key=True)
+    comment_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    text = Column(String(140))
+    __mapper_args__ = {'polymorphic_identity': 'comment',
+                        'inherit_condition': (id == Noncommentable.id)}
 
-    def __init__(self, creation_time, expiration_time, message, user_id, geo_id):
-        super(Alert, self).__init__(creation_time, expiration_time, user_id, geo_id)
-        self.message = message
+    def __init__(self, creation_time, expiration_time, text, user_id, geo_id):
+        super(Comment, self).__init__(creation_time, expiration_time, user_id, geo_id)
+        self.text = text
 
     def __repr__(self):
-        return '<Alert %s>' % (self.message)
+        return '<Comment %s>' % (self.text)
+
+
+
+
+
+# class Alert(Posting):
+#     __tablename__ = 'alert'
+#     id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
+#     alert_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+#     message = Column(String(140))
+#     __mapper_args__ = {'polymorphic_identity': 'alert',
+#                         'inherit_condition': (id == Posting.id)}
+
+#     def __init__(self, creation_time, expiration_time, message, user_id, geo_id):
+#         super(Alert, self).__init__(creation_time, expiration_time, user_id, geo_id)
+#         self.message = message
+
+#     def __repr__(self):
+#         return '<Alert %s>' % (self.message)
         
 
-# class Pin(db.Model):
-#     __tablename__ = "pin"
-#     id = db.Column(db.Integer, primary_key=True)
-#     geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))  # True one to one relationship (Implicit child)
-
-#     def __init__(self, geolocation_id):
-#         self.geolocation_id = geolocation_id
-
-#     def __repr__(self):
-#         return '<Pin Object %s>' % id(self)      # Instance id merely useful to differentiate instances.
-
-
-# class User(Pin):
-#     #id = db.Column(db.Integer, primary_key=True)
-#     pin_id = db.Column(db.Integer, db.ForeignKey('pin.id'), primary_key=True)
-#     username = db.Column(db.String(80), unique=True, nullable=False)
-#     password_hash = db.Column(db.String(120), nullable=False)
-#     salt = db.Column(db.String(120), nullable=False)
-#     # Relationships
-#     #posts = db.relationship('Post', backref=db.backref('user'), lazy='dynamic')        #One User to many Postings.
-
-#     def __init__(self, username, password_hash, salt, geolocation_id):
-#         super(Pin, self).__init__(self, geolocation_id)
-#         self.username = username
-#         self.password_hash = password_hash
-#         self.salt = salt
-
-#     def __repr__(self):
-#         return '<User %r>' % self.username
-
-
-
-# class Post(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     creation_time = db.Column(db.DateTime)
-#     expiration_time = db.Column(db.DateTime)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))                           #One user to many posts
-#     geolocation_id = db.Column(db.Integer, db.ForeignKey('geolocation.id'))             
-#     # Relationship References
-#     user = db.relationship
-#     geolocation = db.relationship('Geolocation', backref=db.backref('post', uselist=False))
-    
-#     # Post initialization
-#     def __init__(self, title, body, create_time, expiration_time, user_id, geolocation_id):
-#         self.create_time = create_time
-#         self.expiration_time = expiration_time
-#         self.user_id = user_id
-#         self.geolocation_id = geolocation_id
-#         self.title = title
-#         self.body = body
-
-#     # Post Methods
-#     def __repr__(self):
-#         return '<Post %s>' % self.title
-
-
-
-# # class Query(Post):
-# #   def __init__(self, title, text):
-# #       self.title = title
-# #       self.text = text
-
-
-# # class Event(Post):
-# #   def __init__(self, title, text, start_time, end_time):
-#       self.title = title
-#       self.text = text
-#       self.start_time = start_time
-#       self.end_time = end_time
-
-# class Challenge(Post):
-#   def __init__(self, title, challenge_text):
-#       self.title = title
-
-
-# class Alert(Post):
-#   def __init__(self, alert_msg);
-#       self.alert_msg = alert_msg
 
 
 
