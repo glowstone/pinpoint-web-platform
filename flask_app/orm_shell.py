@@ -82,7 +82,7 @@ g7 = Geolocation(7,8,9)
 db_session.add(g7)
 db_session.commit()
 
-comment1 = Comment(datetime.datetime.now(), datetime.datetime.now(), "Some comment", dalton.user_id, g7.id)
+comment1 = Comment(datetime.datetime.now(), datetime.datetime.now(), "Some comment", dalton.user_id, g7.id, question1.commentable_id)
 db_session.add(comment1)
 db_session.commit()
 
@@ -98,7 +98,7 @@ g9 = Geolocation(9,10,11)
 db_session.add(g9)
 db_session.commit()
 
-comment2 = Comment(datetime.datetime.now(), datetime.datetime.now(), "Tommy's comment", tommy.user_id, g9.id)
+comment2 = Comment(datetime.datetime.now(), datetime.datetime.now(), "Tommy's comment", tommy.user_id, g9.id, question2.commentable_id)
 db_session.add(comment2)
 db_session.commit()
 
@@ -107,13 +107,46 @@ print question1.query
 print question1.user_id
 print question1.geolocation
 print question1.user
-#print question1.comments
+print question1.commentable_id
+print "Show all comments:"
+for comment in question1.comments:
+	print comment
+
 
 print question2
-
+print question2.type
+print question2.geolocation
 
 print comment1
+print comment1.commentable
 print comment2
+print comment2.commentable.type
+
+
+print "\nTesting Phase 3"
+g10 = Geolocation(10,11,12)
+db_session.add(g10)
+db_session.commit()
+
+answer1 = Answer(datetime.datetime.now(), datetime.datetime.now(), dalton.user_id, g10.id, question2.question_id, "Its in 32-123")
+db_session.add(answer1)
+db_session.commit()
+
+g11 = Geolocation(11,12,13)
+db_session.add(g11)
+db_session.commit()
+
+answer2 = Answer(datetime.datetime.now(), datetime.datetime.now(), tommy.user_id, g11.id, question2.question_id, "No, its in 34-101")
+db_session.add(answer2)
+db_session.commit()
+
+
+for answer in question2.answers:
+	print answer
+	print answer.user
+	print answer.type
+	print answer.question
+	print answer.question.type
 
 
 

@@ -109,6 +109,7 @@ class Commentable(Posting):
     id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
     commentable_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     type = Column('type', String(50), nullable=False)
+    comments = relationship('Comment', primaryjoin="(Commentable.commentable_id==Comment.commentable_id)", backref=backref('commentable'), lazy='dynamic')   #One Commentable to many Comments
     __mapper_args__ = {'polymorphic_on': type,
                        'polymorphic_identity': 'commentable',
                        'inherit_condition': (id == Posting.id)}
@@ -141,6 +142,7 @@ class Question(Commentable):
     id = Column(Integer, ForeignKey('commentable.id'), primary_key=True)
     question_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     query = Column(String(140))
+    answers = relationship('Answer', primaryjoin="(Question.question_id==Answer.question_id)", backref=backref('question'), lazy='dynamic')
     __mapper_args__ = {'polymorphic_identity': 'question',
                         'inherit_condition': (id == Commentable.id)}
 
@@ -152,39 +154,64 @@ class Question(Commentable):
         return '<Question %s>' % (self.query)
 
 
+class Answer(Commentable):
+    __tablename__ = 'answer'
+    id = Column(Integer, ForeignKey('commentable.id'), primary_key=True)
+    answer_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    text = Column(String(140))           #Change to something bigger later
+    score = Column(Integer)
+    question_id = Column(Integer, ForeignKey('question.question_id'))        # One Question to many answers
+    __mapper_args__ = {'polymorphic_identity': 'answer',
+                        'inherit_condition': (id == Commentable.id)}
+
+    def __init__(self, creation_time, expiration_time, user_id, geo_id, question_id, text, score=0):
+        super(Answer, self).__init__(creation_time, expiration_time, user_id, geo_id)
+        self.text = text
+        self.score = score
+        self.question_id = question_id
+
+    def __repr__(self):
+        return '<Answer %s>' % (self.text)
+
+    def up_vote():
+        self.score += 1
+
+    def down_vote():
+        self.score -= 1
+
+
 class Comment(Noncommentable):
     __tablename__ = 'comment'
     id = Column(Integer, ForeignKey('noncommentable.id'), primary_key=True)
     comment_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     text = Column(String(140))
+    commentable_id = Column(Integer, ForeignKey('commentable.commentable_id'))   # One Commentable to many Comments
     __mapper_args__ = {'polymorphic_identity': 'comment',
                         'inherit_condition': (id == Noncommentable.id)}
 
-    def __init__(self, creation_time, expiration_time, text, user_id, geo_id):
+    def __init__(self, creation_time, expiration_time, text, user_id, geo_id, commentable_id):
         super(Comment, self).__init__(creation_time, expiration_time, user_id, geo_id)
+        self.commentable_id = commentable_id
         self.text = text
 
     def __repr__(self):
         return '<Comment %s>' % (self.text)
 
 
+class Alert(Noncommentable):
+    __tablename__ = 'alert'
+    id = Column(Integer, ForeignKey('noncommentable.id'), primary_key=True)
+    alert_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    message = Column(String(140))
+    __mapper_args__ = {'polymorphic_identity': 'alert',
+                        'inherit_condition': (id == Noncommentable.id)}
 
+    def __init__(self, creation_time, expiration_time, message, user_id, geo_id):
+        super(Alert, self).__init__(creation_time, expiration_time, user_id, geo_id)
+        self.message = message
 
-
-# class Alert(Posting):
-#     __tablename__ = 'alert'
-#     id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
-#     alert_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
-#     message = Column(String(140))
-#     __mapper_args__ = {'polymorphic_identity': 'alert',
-#                         'inherit_condition': (id == Posting.id)}
-
-#     def __init__(self, creation_time, expiration_time, message, user_id, geo_id):
-#         super(Alert, self).__init__(creation_time, expiration_time, user_id, geo_id)
-#         self.message = message
-
-#     def __repr__(self):
-#         return '<Alert %s>' % (self.message)
+    def __repr__(self):
+        return '<Alert %s>' % (self.message)
         
 
 
