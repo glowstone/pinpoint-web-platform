@@ -1,6 +1,5 @@
 # Define models to be used by the Flask Application
-#from flask import Flask
-#from flask.ext.sqlalchemy import SQLAlchemy
+
 from sqlalchemy import Column, BigInteger, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship, backref, validates
 from web_package.database import Base
