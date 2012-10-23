@@ -32,17 +32,10 @@ def index():
 	return controllers.index()
 
 
-@app.route('/user/signup', methods = ['GET'])
+@app.route('/user/signup', methods = ['GET', 'POST'])
 def user_new():
-	"""Signup form for creating a new user"""
+	"""New user creation"""
 	return controllers.user_new()
-
-# Temporary - will move to API (html version)
-@app.route('/user/signup2', methods = ['POST'])
-def user_new2():
-	"""Create a new user from POSTed form"""
-	return controllers.user_new2()
-
 
 @app.route('/user/login', methods = ['POST'])
 def user_login():

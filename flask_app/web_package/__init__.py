@@ -17,3 +17,4 @@ from web_package.database import db_session
 # Import routes and models at the bottom to prevent circular dependency problems.
 #from web_package import models
 from web_package import routes
+from web_package import api_urls

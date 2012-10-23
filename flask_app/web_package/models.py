@@ -70,8 +70,8 @@ class User(Pin):
     __mapper_args__ = {'polymorphic_identity': 'user',
                        'inherit_condition': (id == Pin.id)}
 
-    def __init__(self, username, password_hash, salt, geo_id):
-        super(User, self).__init__(geo_id)
+    def __init__(self, username, password_hash, salt, geolocation):
+        super(User, self).__init__(geolocation.id)
         self.username = username
         self.password_hash = password_hash
         self.salt = salt

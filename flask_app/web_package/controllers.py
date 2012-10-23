@@ -2,6 +2,7 @@ from flask import render_template, redirect, url_for, session, request, flash
 from utils import *
 from models import *
 from web_package import db_session
+import api_controllers as api
 
 
 def index():
@@ -10,24 +11,17 @@ def index():
 # User Controller Handlers
 
 def user_new():
-	"""Render the template showing the form to create a User"""
-	return render_template('user_new.html')
-
-# Temporary - will move to API eventually
-def user_new2():
-	"""Create User from the POSTed form"""
-	# TODO: check if the user can be created
-	username = request.form['username']
-	password = request.form['password']
-	#Check the form fields
-	# Validate the form
-	user = create_user(username, password)       #Make sure this returns None on failure
-	print user
-	if user:
-		return redirect(url_for('user_view', username = user.username))
+	"""On GET, show form to create a new User and on POST make API request to create the new User"""
+	if request.method == 'GET':
+		return render_template('user_new.html')
 	else:
-		#Flash bad login
-		return redirect(url_for('index'))
+		api_response = api.user_create_json()
+		if api_response.get('success', False):
+			return redirect(url_for('user_view', username = session['username']))
+		else:
+			# TODO show validation errors
+			flash("Bad User creation request")
+			return redirect(url_for('user_new'))
 		
 def create_user(username, password):
 	location = Geolocation(0, 0, 0)
