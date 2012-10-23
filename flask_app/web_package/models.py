@@ -4,6 +4,8 @@ from sqlalchemy import Column, BigInteger, Integer, String, ForeignKey, Float, D
 from sqlalchemy.orm import relationship, backref, validates
 from web_package.database import Base
 
+import datetime
+
 # One to ones relationships are never truly balanced. After all, the implicit parent may access the 
 # child by a property while the implicit child stores the parent_id and accesses the parent via a 
 # a backreference. Now the Geolocation has been made the implicit parent. This allows us to enforce 
@@ -91,12 +93,12 @@ class Posting(Pin):
                        'polymorphic_identity': 'posting',
                         'inherit_condition': (id == Pin.id)}
 
-    def __init__(self, creation_time, expiration_time, user_id, geo_id):
-        super(Posting, self).__init__(geo_id)
+    def __init__(self, user, geolocation):
+        super(Posting, self).__init__(geolocation.id)
         # For now, require creation time to be passed in. May make this default to current time.
-        self.creation_time = creation_time
-        self.expiration_time = expiration_time
-        self.user_id = user_id
+        self.creation_time = datetime.datetime.now()
+        self.expiration_time = self.creation_time #+ expiration_time
+        self.user_id = user.user_id
 
     def __repr__(self):
         #TODO come up with a better representation

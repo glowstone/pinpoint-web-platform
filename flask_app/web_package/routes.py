@@ -37,11 +37,11 @@ def user_new():
 	"""Signup form for creating a new user"""
 	return controllers.user_new()
 
-
-@app.route('/user/create', methods = ['POST'])
-def user_create():
+# Temporary - will move to API (html version)
+@app.route('/user/signup2', methods = ['POST'])
+def user_new2():
 	"""Create a new user from POSTed form"""
-	return controllers.create_user_from_form()
+	return controllers.user_new2()
 
 
 @app.route('/user/login', methods = ['POST'])
@@ -67,69 +67,45 @@ def user_edit(id):
 	"""Edit user settings"""
 	return controllers.user_edit()
 
-
+# Temporary
 @app.route('/user/location', methods = ['GET', 'POST'])
-def set_user_location():
+def user_location():
 	"""Temporary page for setting a user's location"""
-	pass
+	return controllers.user_location()
 
-# Post Resources
+# Posting Resources - Temporary 
 #######################################################
-@app.route('/post/<id>', methods = ['GET'])
-def post_show(id):
-	pass
-	#post = Post.query.filter_by(id=id).first()
-	#return render_template('post_show.html', post=post)
 
-@app.route('/post/<id>/edit', methods = ['GET'])
-def post_edit(id):
-	# TODO
-	#return render_template('post_edit.html')
-	pass
+@app.route('/posting/new', methods = ['GET'])
+def posting_new():
+	"""Route showing form to create a new Posting"""
+	return controllers.posting_new()
 
-@app.route('/post/new', methods = ['GET'])
-def post_new():
-	pass
-	#return render_template('post_new.html')
+# Temporary
+@app.route('/posting/new2', methods = ['POST'])
+def posting_new2():
+	"""Checks posting form submission and redirects as appropriate"""
+	return controllers.posting_new2()
 
 
-@app.route('/post/create', methods = ['POST'])
-def post_create():
-	# user = get_current_user()
-	# if request.method == 'POST':
-	# 	form_names = ['title', 'body', 'tdelta']
-	# 	if not all(request.form.has_key(name) for name in form_names):
-	# 		print "Bad form. Validation error. Do something appropriate"
-	# 		return redirect(url_for('index'))
-	# 	# Copy user's location into a new geolocation object.
-	# 	user_gloc = user.geolocation
-	# 	post_gloc = create_geolocation(user_gloc.latitude, user_gloc.longitude, user_gloc.elevation)
-	# 	create_post(request.form['title'], request.form['body'], request.form['tdelta'], user, post_gloc)		
-	# 	# Need to check success status
-	# 	return redirect(url_for('post_new'))
-	# else:
-	# 	# Do some sort of flash
-	# 	# User not logged in
-	# 	return redirect(url_for('index'))
-	pass
+@app.route('/posting/<id>', methods = ['GET'])
+def posting_view(id):
+	"""Show the posting with id"""
+	return controllers.posting_view(id)
+	
+
+@app.route('/posting/<id>/edit', methods = ['GET'])
+def posting_edit(id):
+	"""Allow editing the posting with id"""
+	return controllers.posting_edit(id)
+
+# Temporary - to be moved to API
+@app.route('/posting/nearby', methods=['GET', 'POST'])
+def posting_nearby():
+	"""Demonstration of ability to query for nearby posts"""
+	return controllers.posting_nearby()
 
 
-# @app.route('/post/nearby', methods = ['GET', 'POST'])
-# @login_required
-# def post_nearby():
-# 	pass
-	# if request.method == 'POST':
-	# 	radius = float(request.form['radius'])
-	# 	location = get_current_user().geolocation
-	# 	posts = closest_posts(location, radius)
-	# 	return render_template('nearby_posts.html', location=location, radius=radius, posts=posts)
-		
-	# elif request.method == 'GET':
-	# 	return render_template('nearby_posts.html')
-
-@app.route('/post/nearby', methods=['GET', 'POST'])
-def post_nearby():
-	pass
 
 
 # # Geolocation Resources

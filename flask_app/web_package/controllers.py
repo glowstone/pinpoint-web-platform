@@ -4,8 +4,6 @@ from models import *
 from web_package import db_session
 
 
-
-
 def index():
 	return render_template('index.html')
 
@@ -13,9 +11,10 @@ def index():
 
 def user_new():
 	"""Render the template showing the form to create a User"""
-	return render_template('user_signup.html')
+	return render_template('user_new.html')
 
-def create_user_from_form():
+# Temporary - will move to API eventually
+def user_new2():
 	"""Create User from the POSTed form"""
 	# TODO: check if the user can be created
 	username = request.form['username']
@@ -49,8 +48,6 @@ def user_login():
 	password = request.form['password']
 	if check_password(username, password):
 		session['username'] = username
-		print session
-		print session['username']
 		return redirect(url_for('user_view', username = username))
 	else:
 		return "Bad login"
@@ -63,7 +60,7 @@ def user_view(username):
 	"""Show the current user's profle or redirect to the page with user login"""
 	user = get_current_user()
 	if user:
-		return render_template('user_profile.html', user=user)
+		return render_template('user_view.html', user=user)
 	else:
 		flash("You're not logged in")
 		return redirect(url_for('index'))	
@@ -71,89 +68,74 @@ def user_view(username):
 def user_edit(id):
 	return render_template('user_edit.html')
 
+# Temporary
+def user_location():
+	user = get_current_user()
+	if request.method == 'GET':
+		return render_template('user_location.html')
+	elif request.method == 'POST':
+		lat = request.form['latitude']
+		lng = request.form['longitude']
+		elev = request.form['elevation']
 
+		user = get_current_user()
 
+		geolocation = user.geolocation
+		geolocation.latitude = lat
+		geolocation.longitude = lng
+		geolocation.elevation = elev
 
-
-
-
-
-
-# @app.route('/user/location', methods = ['GET', 'POST'])
-# def set_user_location():
-# 	user = get_current_user()
-# 	if request.method == 'GET':
-# 		return render_template('user_location.html')
-# 	elif request.method == 'POST':
-# 		lat = request.form['latitude']
-# 		lng = request.form['longitude']
-# 		elev = request.form['elevation']
-
-# 		user = get_current_user()
-
-# 		geolocation = user.geolocation
-# 		geolocation.latitude = lat
-# 		geolocation.longitude = lng
-# 		geolocation.elevation = elev
-
-# 		db.session.commit()
-# 		return "set location"
-
-
-
+		db_session.commit()
+		return "set location"
 
 # Post Controller Handlers
 
+def posting_new():
+	return render_template('posting_new.html')
+
+def posting_new2():
+	user = get_current_user()
+	print user
+	if request.method == 'POST':
+		form_names = ['title', 'body', 'tdelta']
+		if not all(request.form.has_key(name) for name in form_names):
+			print "Bad form. Validation error. Do something appropriate"
+			return redirect(url_for('index'))
+		# Copy user's location into a new geolocation object.
+		user_gloc = user.geolocation
+		post_gloc = Geolocation(user_gloc.latitude, user_gloc.longitude, user_gloc.elevation)
+		db_session.add(post_gloc)
+		db_session.commit()
+		post = Posting(user, post_gloc)		
+		# Need to check success status
+		db_session.add(post)
+		db_session.commit()
+		return redirect(url_for('posting_new'))
+	else:
+		flash("Failed to create Posting")
+		return redirect(url_for('index'))
+
+def posting_view(id):
+	# TODO: Check whether user has permission to view the post
+	# Current permission model - all public, but don't show authors if not authenticated.
+	post = Post.query.filter_by(id=id).first()
+	return render_template('posting_view.html', post=post)
 
 
-# # Post Resources
-# #######################################################
-# @app.route('/post/<id>', methods = ['GET'])
-# def post_show(id):
-# 	post = Post.query.filter_by(id=id).first()
-# 	return render_template('post_show.html', post=post)
+def posting_edit(id):
+	# TODO populate form apprpriately and check permissions
+	return render_template('posting_edit.html')
 
-# @app.route('/post/<id>/edit', methods = ['GET'])
-# def post_edit(id):
-# 	# TODO
-# 	return render_template('post_edit.html')
-
-
-# @app.route('/post/new', methods = ['GET'])
-# def post_new():
-# 	return render_template('post_new.html')
-
-
-# @app.route('/post/create', methods = ['POST'])
-# def post_create():
-# 	user = get_current_user()
-# 	if request.method == 'POST':
-# 		form_names = ['title', 'body', 'tdelta']
-# 		if not all(request.form.has_key(name) for name in form_names):
-# 			print "Bad form. Validation error. Do something appropriate"
-# 			return redirect(url_for('index'))
-# 		# Copy user's location into a new geolocation object.
-# 		user_gloc = user.geolocation
-# 		post_gloc = create_geolocation(user_gloc.latitude, user_gloc.longitude, user_gloc.elevation)
-# 		create_post(request.form['title'], request.form['body'], request.form['tdelta'], user, post_gloc)		
-# 		# Need to check success status
-# 		return redirect(url_for('post_new'))
-# 	else:
-# 		# Do some sort of flash
-# 		# User not logged in
-# 		return redirect(url_for('index'))
-
-
-# @app.route('/post/nearby', methods = ['GET', 'POST'])
-# def post_nearby():
-# 	if request.method == 'POST':
-# 		radius = float(request.form['radius'])
-# 		location = get_current_user().geolocation
-# 		posts = closest_posts(location, radius)
-# 		return render_template('nearby_posts.html', location=location, radius=radius, posts=posts)
+# Temporary - will be moved to API
+def posting_nearby():
+	if request.method == 'POST':
+		radius = float(request.form['radius'])
+		location = get_current_user().geolocation
+		posts = closest_posts(location, radius)
+		return render_template('nearby_posts.html', location=location, radius=radius, posts=posts)
 		
-# 	elif request.method == 'GET':
-# 		return render_template('nearby_posts.html')
+	elif request.method == 'GET':
+		return render_template('nearby_posts.html')
 
 
 # # Geolocation Resources

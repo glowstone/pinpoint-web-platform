@@ -1,16 +1,12 @@
 {% extends 'base.html' %}
-	{% block title %}CodeBlue--New Post{% endblock %}
+	{% block title %}CodeBlue--New Posting{% endblock %}
 
 	{% block body %}
 		{{ super() }}
 
 		<div class="container">
-			<form action="/post/create" method="POST">
-				<legend>Create a Post</legend>
-				<label>Title</label>
-				<input type="text" name="title">
-				<label>Text</label>
-				<input type="text" name="body"><br>
+			<form action="{{url_for('posting_new2')}}" method="POST">
+				<legend>Create a Raw Posting</legend>
 				<fieldset>
 					<legend>Duration:</legend>
 					<input type="radio" name="tdelta" value="3h">3 Hours<br>
