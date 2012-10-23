@@ -31,7 +31,7 @@
             <input class="span2" type="password" placeholder="Password" name="password">
             <button type="submit" class="btn">Sign in</button>
             <br>
-            <a href="/user/new">New user? Sign up here.</a>
+            <a href="/user/signup">New user? Sign up here.</a>
           </form>
         {% else %}
           <form class="navbar-form pull-right" action="{{ url_for('user_logout') }}">

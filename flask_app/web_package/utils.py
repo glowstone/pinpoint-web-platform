@@ -6,36 +6,38 @@ from web_package.models import *
 from flask import session
 #from web_package import db
 
-
-# SALT_LENGTH = 16
-# ALPHANUMERIC = string.letters + string.digits	# List of all characters that can be used to generate a salt
-# EARTH_RADIUS = 6371	# Radius of the earth, in kilometers
-
-# POST_DELTAS = {'3h': datetime.timedelta(hours=3),
-# 			   '6h': datetime.timedelta(hours=6),
-# 			   '12h': datetime.timedelta(hours=12),
-# 			   '1d': datetime.timedelta(days=1),
-# 			   '3d': datetime.timedelta(days=3),
-# 			   'default': datetime.timedelta(hours=6)}
-
-# def hash_password(password, salt=None):
-# 	"""
-# 	Generate a sha256 hash for the given password plus a salt, and return both the hash and the salt.
-# 	"""
-# 	if not salt:
-# 		salt = ''.join([random.choice(ALPHANUMERIC) for i in xrange(SALT_LENGTH)])
-# 	hash = hashlib.sha256(password + salt)
-# 	return (hash.hexdigest(), salt)
+# Utilities should NOT have access to application specific models.
 
 
-# def check_password(username, password):
-# 	# TODO: exception handling
-# 	u = User.query.filter_by(username=username).first()
-# 	password_guess = hash_password(password, u.salt)[0]
-# 	if u.password_hash == password_guess:
-# 		return True
-# 	else:
-# 		return False
+SALT_LENGTH = 16
+ALPHANUMERIC = string.letters + string.digits	# List of all characters that can be used to generate a salt
+EARTH_RADIUS = 6371	# Radius of the earth, in kilometers
+
+POST_DELTAS = {'3h': datetime.timedelta(hours=3),
+			   '6h': datetime.timedelta(hours=6),
+			   '12h': datetime.timedelta(hours=12),
+			   '1d': datetime.timedelta(days=1),
+			   '3d': datetime.timedelta(days=3),
+			   'default': datetime.timedelta(hours=6)}
+
+def hash_password(password, salt=None):
+	"""
+	Generate a sha256 hash for the given password plus a salt, and return both the hash and the salt.
+	"""
+	if not salt:
+		salt = ''.join([random.choice(ALPHANUMERIC) for i in xrange(SALT_LENGTH)])
+	hash = hashlib.sha256(password + salt)
+	return (hash.hexdigest(), salt)
+
+
+def check_password(username, password):
+	# TODO: exception handling
+	u = User.query.filter_by(username=username).first()
+	password_guess = hash_password(password, u.salt)[0]
+	if u.password_hash == password_guess:
+		return True
+	else:
+		return False
 
 
 # def create_user(username, password):
@@ -65,11 +67,8 @@ from flask import session
 
 def get_current_user():
 	"""Queries for User corresponding to current session. Returns User object or None if no user found."""
-	#Handle when session is not defined
-	session['username'] = 'dhubble'
 	username = session.pop('username', None)
-	print username
-	user = User.query.filter_by(username=username).first()
+	user = User.query.filter_by(username=username).first()       
 	return user
 
 # def create_post(title, text, form_tdelta, user, geolocation):

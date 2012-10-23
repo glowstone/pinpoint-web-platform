@@ -1,9 +1,8 @@
-{% include 'header.html' %}
 Welcome {{session['username']}}
 
 All your posts
 <ul>
-{% for post in posts %}
-	<li>Title: {{ post.title }} Body: {{ post.body }} is located at {{ post.geolocation }} and at elevation {{ post.geolocation.evlevation }}</li>
+{% for post in user.posts %}
+	<li>Title: {{ post.title }} Body: {{ post.body }} is located at {{ post.geolocation }} and at elevation {{ post.geolocation.elevation }}</li>
 {% endfor %}
 </ul>
