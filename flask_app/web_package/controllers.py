@@ -1,28 +1,19 @@
-from flask import render_template, redirect, url_for, session, request
+from flask import render_template, redirect, url_for, session, request, flash
 from utils import *
 from models import *
 from web_package import db_session
 
+
+
+
 def index():
 	return render_template('index.html')
 
-
 # User Controller Handlers
 
-def user_view():
-	user = get_current_user()
-	if user:
-		return render_template('user_profile.html', user=user)
-	else:
-		return redirect(url_for('index'))	
-
-def user_edit(id):
-	return render_template('user_edit.html')
-
-
 def user_new():
+	"""Render the template showing the form to create a User"""
 	return render_template('user_signup.html')
-
 
 def create_user_from_form():
 	"""Create User from the POSTed form"""
@@ -53,20 +44,39 @@ def create_user(username, password):
 	session['username'] = username
 	return user
 
-def login():
+def user_login():
 	username = request.form['username']
 	password = request.form['password']
 	if check_password(username, password):
 		session['username'] = username
-		print username
+		print session
+		print session['username']
 		return redirect(url_for('user_view', username = username))
 	else:
 		return "Bad login"
 
-
-def logout():
-	do_logout()
+def user_logout():
+	session.pop('username', None)
 	return redirect(url_for('index'))
+
+def user_view(username):
+	"""Show the current user's profle or redirect to the page with user login"""
+	user = get_current_user()
+	if user:
+		return render_template('user_profile.html', user=user)
+	else:
+		flash("You're not logged in")
+		return redirect(url_for('index'))	
+
+def user_edit(id):
+	return render_template('user_edit.html')
+
+
+
+
+
+
+
 
 
 # @app.route('/user/location', methods = ['GET', 'POST'])

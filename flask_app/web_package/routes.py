@@ -47,26 +47,25 @@ def user_create():
 @app.route('/user/login', methods = ['POST'])
 def user_login():
 	"""Log the user in"""
-	return controllers.login()
+	return controllers.user_login()
 
 
 @app.route('/user/logout', methods = ['GET', 'POST'])
 def user_logout():
 	"""Log the user out"""
-	return controllers.logout()
+	return controllers.user_logout()
 
 
 @app.route('/user/<username>', methods = ['GET'])
 def user_view(username):
 	"""View user profile"""
-	return controllers.user_view()
+	return controllers.user_view(username)
 
 
 @app.route('/user/<id>/settings', methods = ['GET'])
 def user_edit(id):
 	"""Edit user settings"""
 	return controllers.user_edit()
-
 
 
 @app.route('/user/location', methods = ['GET', 'POST'])

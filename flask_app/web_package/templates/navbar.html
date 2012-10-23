@@ -34,10 +34,10 @@
             <a href="/user/signup">New user? Sign up here.</a>
           </form>
         {% else %}
-          <form class="navbar-form pull-right" action="{{ url_for('logout') }}">
+          <form class="navbar-form pull-right" action="{{ url_for('user_logout') }}">
             <button type="submit" class="btn">Log out</button>
           </form>
-          <h4 class="welcome pull-right">Welcome, <a href="{{ url_for('user_profile', username=session['username']) }}">{{ session['username'] }}</a></h4>
+          <h4 class="welcome pull-right">Welcome, <a href="{{ url_for('user_view', username=session['username']) }}">{{ session['username'] }}</a></h4>
         {% endif %}
       </div><!--/.nav-collapse -->
     </div>

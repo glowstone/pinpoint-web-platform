@@ -4,15 +4,10 @@ import string
 import datetime
 from web_package.models import *
 from flask import session
-#from web_package import db
 
 # Utilities should NOT have access to application specific models.
-# =======
-# from web_package.models import User, Post, Geolocation
-# from flask import session, redirect, url_for, request
-# from functools import wraps
-# >>>>>>> 643e69f612025d53fddfc0ef358ac0be986e0432
 
+# from functools import wraps
 
 SALT_LENGTH = 16
 ALPHANUMERIC = string.letters + string.digits	# List of all characters that can be used to generate a salt
@@ -83,7 +78,7 @@ def check_password(username, password):
 
 def get_current_user():
 	"""Queries for User corresponding to current session. Returns User object or None if no user found."""
-	username = session.pop('username', None)
+	username = session.get('username', None)
 	user = User.query.filter_by(username=username).first()       
 	return user
 
