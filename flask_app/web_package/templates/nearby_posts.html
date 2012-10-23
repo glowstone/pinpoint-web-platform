@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>CodeBlue--New Post</title>
+{% extends 'base.html' %}
+	{% block title %}CodeBlue--Nearby Posts{% endblock %}
 
-		<link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap.css')}}">
-		<link rel="stylsheet" href="{{url_for('static', filename='bootstrap/css/bootstrap-responsive.css')}}">
-	</head>
-
-	<body>
-		{% include 'header.html' %}
+	{% block body %}
+		{{ super() }}
 
 		<div class="container">
 			<form action="/post/nearby" method="POST">
@@ -19,18 +12,15 @@
 				<input type="submit" class="btn" value="Get"></input>
 			</form>
 		</div>
-		{% if posts %}
-		<div class="container">
-			<h2>Posts within {{ radius }} kilometers of {{ location }}</h2>
-			<ul>
-			{% for loc in posts %}
-				<li>{{ loc[0] }} is {{ loc[1] }} kilometer(s) away</li>
-			{% endfor %}
-			</ul>
+		<div class="container row">
+			<div class="span3 offset1">
+				<h4>Posts within <span id="radius">{{ radius }}</span> meter(s) of {{ location }}</h4>
+				<ul>
+				{% for post in posts %}
+					<li class="post" latitude="{{ post.latitude }}" longitude="{{ post.longitude }}">{{ post.post }} is {{ post.distance }} meter(s) away</li>
+				{% endfor %}
+				</ul>
+			</div>
 		</div>
-		{% endif %}
 
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
-		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
-	</body>
-</html>
+	{% endblock %}

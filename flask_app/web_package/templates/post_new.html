@@ -1,15 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>CodeBlue--New Post</title>
+{% extends 'base.html' %}
+	{% block title %}CodeBlue--New Post{% endblock %}
 
-		<link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap.css')}}">
-		<link rel="stylsheet" href="{{url_for('static', filename='bootstrap/css/bootstrap-responsive.css')}}">
-	</head>
-
-	<body>
-		{% include 'header.html' %}
+	{% block body %}
+		{{ super() }}
 
 		<div class="container">
 			<form action="/post/create" method="POST">
@@ -30,7 +23,4 @@
 			</form>
 		</div>
 
-		<script src="http://code.jquery.com/jquery-latest.js"></script>
-		<script src="{{url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
-	</body>
-</html>
+	{% endblock %}

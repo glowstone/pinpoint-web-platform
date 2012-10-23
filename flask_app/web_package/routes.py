@@ -69,11 +69,6 @@ def user_edit(id):
 
 
 
-
-
-
-
-
 @app.route('/user/location', methods = ['GET', 'POST'])
 def set_user_location():
 	"""Temporary page for setting a user's location"""
@@ -120,9 +115,10 @@ def post_create():
 	pass
 
 
-@app.route('/post/nearby', methods = ['GET', 'POST'])
-def post_nearby():
-	pass
+# @app.route('/post/nearby', methods = ['GET', 'POST'])
+# @login_required
+# def post_nearby():
+# 	pass
 	# if request.method == 'POST':
 	# 	radius = float(request.form['radius'])
 	# 	location = get_current_user().geolocation
@@ -131,6 +127,10 @@ def post_nearby():
 		
 	# elif request.method == 'GET':
 	# 	return render_template('nearby_posts.html')
+
+@app.route('/post/nearby', methods=['GET', 'POST'])
+def post_nearby():
+	pass
 
 
 # # Geolocation Resources

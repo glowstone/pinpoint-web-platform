@@ -53,17 +53,18 @@ def create_user(username, password):
 	session['username'] = username
 	return user
 
-def user_login():
+def login():
 	username = request.form['username']
 	password = request.form['password']
 	if check_password(username, password):
-		do_login(username)
-		return redirect(url_for('user_profile', username=username))
+		session['username'] = username
+		print username
+		return redirect(url_for('user_view', username = username))
 	else:
 		return "Bad login"
 
 
-def user_logout():
+def logout():
 	do_logout()
 	return redirect(url_for('index'))
 
