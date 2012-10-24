@@ -104,6 +104,35 @@ def posting_nearby():
 		return render_template('nearby_posts.html')
 
 
+
+# Question Controller Handlers
+###############################################################################
+
+def question_new():
+	""""""
+	return render_template('question_new.html')
+
+
+def question_view(id):
+	""""""
+	return render_template('question_view.html')
+
+
+def posting_edit(id):
+	""""""
+	return render_template('question_edit.html')
+
+
+# Answer Controller Handlers
+###############################################################################
+
+def answer_new():
+	""""""
+	return render_template('answer_new.html')
+
+
+
+
 # # Geolocation Resources
 # ###########################################################
 # @app.route('/location/<id>', methods = ['GET'])

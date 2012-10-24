@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+	{% block title %}CodeBlue--New Answer{% endblock %}
+
+	{% block body %}
+		{{ super() }}
+
+		<div class="container">
+			<form action="{{url_for('posting_new')}}" method="POST">
+				<legend>Create a Raw Posting</legend>
+				<fieldset>
+					<legend>Duration:</legend>
+					<input type="radio" name="form_delta" value="3h">3 Hours<br>
+					<input type="radio" name="form_delta" value="6h">6 Hours<br>
+					<input type="radio" name="form_delta" value="12h">12 Hours<br>
+					<input type="radio" name="form_delta" value="1d">1 Day<br>
+					<input type="radio" name="form_delta" value="3d">3 Days<br>
+				</fieldset>
+				<input type="submit" class="btn" value="Post"></input>
+			</form>
+		</div>
+
+	{% endblock %}
