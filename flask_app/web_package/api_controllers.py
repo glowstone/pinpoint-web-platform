@@ -72,19 +72,13 @@ def user_verify_credentials_json():
 	return response
 
 
-def user_current():
+def user_current_json():
 	"""Queries for User corresponding to current session. Returns User object or None if no user found."""
 	response = {}
 	username = session.get('username', None)
 	user = User.query.filter_by(username=username).first()
 	print user.password_hash # TODO: Vulnerability, although at least its hashed. SQLAlchemy should support a mode where protected info is not returned.
 	
-	print "HERE"
-	print user
-	for post in user.postings:
-		print post
-
-
 	if user:
 		response['success'] = True
 		response['user'] = user     # TODO: Big issue. Figure out the cleanest way to serialize SQLAlchemy objects. pickle? dictionary serialize. This has lazy laoding implications for the model as well.
@@ -94,7 +88,33 @@ def user_current():
 	return response
 
 
+def user_set_geolocation_json():
+	"""Update the user location"""
+	response = {}
+	form_names = ['latitude', 'longitude', 'elevation']
+	# TODO - write a better functional style utility that returns which names are missing too.
+	if not all(request.form.has_key(name) for name in form_names):
+		return error_response("Temp message about needing correct names")   #TODO Generalize spec
 
+	latitude = request.form['latitude']
+	longitude = request.form['longitude']
+	elevation = request.form['elevation']
+
+	username = session.get('username', None)
+	user = User.query.filter_by(username=username).first()
+
+	geolocation = user.geolocation
+	geolocation.latitude = latitude
+	geolocation.longitude = longitude
+	geolocation.elevation = elevation
+
+	db_session.commit()
+	response['success'] = True
+	response['latitude'] = latitude
+	response['longitude'] = longitude
+	response['elevation'] = elevation
+
+	return response
 
 
 # API Posting Resource Handlers

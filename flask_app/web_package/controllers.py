@@ -40,9 +40,7 @@ def user_logout():
 
 def user_view(username):
 	"""Show the current user's profle or redirect to the page with user login"""
-	api_response = api.user_current()
-	print api_response
-
+	api_response = api.user_current_json()
 	if api_response.get('success', None):
 		user = api_response['user']
 		return render_template('user_view.html', user=user)
@@ -50,26 +48,22 @@ def user_view(username):
 		flash("You must be logged in to view this profile.")
 		return redirect(url_for('index'))	
 
-def user_edit(id):
+def user_edit(username):
 	return render_template('user_edit.html')
 
-# Temporary
-def user_location():
-	user = util.get_current_user()
+
+def user_geolocation(username):
+	"""On GET, show form to update user location and on POST update User's geolocation"""
 	if request.method == 'GET':
-		return render_template('user_location.html')
+		return render_template('user_geolocation.html')
 	elif request.method == 'POST':
-		lat = request.form['latitude']
-		lng = request.form['longitude']
-		elev = request.form['elevation']
-
-		geolocation = user.geolocation
-		geolocation.latitude = lat
-		geolocation.longitude = lng
-		geolocation.elevation = elev
-
-		db_session.commit()
-		return "set location"
+		api_response = api.user_set_geolocation_json()
+		if api_response.get('success', False):
+			return redirect(url_for('user_view', username = session.get('username', None)))
+		else:
+			# TODO show validation errors
+			flash("Bad geolocation update")
+			return redirect(url_for('user_geolocation', username = session.get('username', None)))
 
 # Posting Controller Handlers
 ###############################################################################

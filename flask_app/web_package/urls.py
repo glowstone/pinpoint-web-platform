@@ -42,16 +42,16 @@ def user_view(username):
 	return controllers.user_view(username)
 
 
-@app.route('/user/<id>/settings', methods = ['GET'])
-def user_edit(id):
+@app.route('/user/<username>/settings', methods = ['GET'])
+def user_edit(username):
 	"""Edit user settings"""
-	return controllers.user_edit()
+	return controllers.user_edit(username)
 
-# Temporary
-@app.route('/user/location', methods = ['GET', 'POST'])
-def user_location():
-	"""Temporary page for setting a user's location"""
-	return controllers.user_location()
+
+@app.route('/user/<username>/location', methods = ['GET', 'POST'])
+def user_geolocation(username):
+	"""Manually update the current User's geolocation"""
+	return controllers.user_geolocation(username)
 
 # Posting Routes
 ###############################################################################
@@ -76,6 +76,33 @@ def posting_edit(id):
 def posting_nearby():
 	"""Demonstration of ability to query for nearby posts"""
 	return controllers.posting_nearby()
+
+
+
+# # Posting Routes
+# ###############################################################################
+
+# @app.route('/posting/new', methods = ['GET', 'POST'])
+# def posting_new():
+# 	"""Route showing form to create a new Posting"""
+# 	return controllers.posting_new()
+
+# @app.route('/posting/<id>', methods = ['GET'])
+# def posting_view(id):
+# 	"""Show the posting with id"""
+# 	return controllers.posting_view(id)
+	
+# @app.route('/posting/<id>/edit', methods = ['GET'])
+# def posting_edit(id):
+# 	"""Allow editing the posting with id"""
+# 	return controllers.posting_edit(id)
+
+# # Temporary - to be moved to API
+# @app.route('/posting/nearby', methods=['GET', 'POST'])
+# def posting_nearby():
+# 	"""Demonstration of ability to query for nearby posts"""
+# 	return controllers.posting_nearby()
+
 
 
 # # Geolocation Routes

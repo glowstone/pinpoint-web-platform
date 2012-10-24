@@ -5,7 +5,7 @@
 		{{ super() }}
 
 		<div class="container">
-			<form action="/user/location" method="POST">
+			<form action="{{ url_for('user_geolocation', username = session['username']) }}" method="POST">
 				<legend>Specify a Location</legend>
 				<label>Latitude</label>
 				<input type="number" name="latitude" step="any">

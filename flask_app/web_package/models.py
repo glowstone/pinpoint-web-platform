@@ -27,13 +27,15 @@ class Geolocation(Base):
     pin = relationship('Pin', uselist=False, backref="geolocation")
 
     @validates('latitude')
-    def validate_latitude(self, key, latitude):              # User-level, not ORM
-        assert (latitude >= -90 and latitude <= 90)
+    def validate_latitude(self, key, unicode_latitude):              # User-level, not ORM. 
+        latitude = float(unicode_latitude)
+        assert (latitude >= -90.0 and latitude <= 90.0)
         return latitude
 
     @validates('longitude')
-    def validate_longitude(self, key, longitude):
-        assert (longitude >= -180 and longitude <= 180)
+    def validate_longitude(self, key, unicode_longitude):
+        longitude = float(unicode_longitude)
+        assert (longitude >= -180.0 and longitude <= 180.0)
         return longitude
      
     def __init__(self, latitude, longitude, elevation):

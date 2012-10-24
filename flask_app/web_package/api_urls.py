@@ -25,14 +25,18 @@ def user_verify_credentials_json():
 
 @app.route('/api/user/current.json', methods=['GET'])
 def user_current():
-	return jsonify(api_controllers.user_current())	
+	return jsonify(api_controllers.user_current())
 
+
+@app.route('/api/user/set_location.json', methods=['GET'])         #Temporarily allow GET for debug
+def user_set_location():
+	return jsonify(api_controllers.user_set_controllers())
 
 
 # Posting Routes
 ###############################################################################
 
-@app.route('/post/create.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+@app.route('/api/post/create.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
 def post_create_json():
 	return jsonify(api_controllers.post_create_json())
 
