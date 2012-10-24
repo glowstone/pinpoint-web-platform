@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 	{% block title %}
-		CodeBlue -- {{ session['username'] }}
+		{{ session['username'] }} on CodeBlue
 	{% endblock %}
 
 	{% block body %}
@@ -9,8 +9,8 @@
 
 		<p>All your posts:</p>
 		<ul>
-			{% for post in user.posts %}
-				<li>Title: {{ post.title }} Body: {{ post.body }} is located at {{ post.geolocation }} and at elevation {{ post.geolocation.elevation }}</li>
+			{% for post in user.postings %}
+				<li>{{ post }} is located at {{ post.geolocation }} and at elevation {{ post.geolocation.elevation }}</li>
 			{% endfor %}
 		</ul>
 	{% endblock %}

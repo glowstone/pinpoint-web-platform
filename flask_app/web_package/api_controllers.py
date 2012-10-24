@@ -72,6 +72,31 @@ def user_verify_credentials_json():
 	return response
 
 
+def user_current():
+	"""Queries for User corresponding to current session. Returns User object or None if no user found."""
+	response = {}
+	username = session.get('username', None)
+	user = User.query.filter_by(username=username).first()
+	print user.password_hash # TODO: Vulnerability, although at least its hashed. SQLAlchemy should support a mode where protected info is not returned.
+	
+	print "HERE"
+	print user
+	for post in user.postings:
+		print post
+
+
+	if user:
+		response['success'] = True
+		response['user'] = user     # TODO: Big issue. Figure out the cleanest way to serialize SQLAlchemy objects. pickle? dictionary serialize. This has lazy laoding implications for the model as well.
+	else:
+		response['success'] = False
+
+	return response
+
+
+
+
+
 # API Posting Resource Handlers
 ###############################################################################
 

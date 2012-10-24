@@ -40,11 +40,14 @@ def user_logout():
 
 def user_view(username):
 	"""Show the current user's profle or redirect to the page with user login"""
-	user = util.get_current_user()
-	if user:
+	api_response = api.user_current()
+	print api_response
+
+	if api_response.get('success', None):
+		user = api_response['user']
 		return render_template('user_view.html', user=user)
 	else:
-		flash("You're not logged in")
+		flash("You must be logged in to view this profile.")
 		return redirect(url_for('index'))	
 
 def user_edit(id):

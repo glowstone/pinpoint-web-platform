@@ -79,6 +79,9 @@ class User(Pin):
     def __repr__(self):
         return '<User %s>' % (self.username)
 
+    def serialize(self):
+        return self.__dict__
+
 
 class Posting(Pin):
     __tablename__ = 'posting'
