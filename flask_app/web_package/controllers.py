@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, session, request, flash
-from utils import *
+import util
 from models import *
-from web_package import db_session
+#from web_package import db_session
 import api_controllers as api
 
 
@@ -9,50 +9,38 @@ def index():
 	return render_template('index.html')
 
 # User Controller Handlers
+###############################################################################
 
 def user_new():
-	"""On GET, show form to create a new User and on POST make API request to create the new User"""
+	"""On GET, show form to create a new User and on POST create the new User"""
 	if request.method == 'GET':
 		return render_template('user_new.html')
 	else:
 		api_response = api.user_create_json()
 		if api_response.get('success', False):
-			return redirect(url_for('user_view', username = session['username']))
+			return redirect(url_for('user_view', username = session.get('username', None)))
 		else:
 			# TODO show validation errors
 			flash("Bad User creation request")
 			return redirect(url_for('user_new'))
 		
-def create_user(username, password):
-	location = Geolocation(0, 0, 0)
-	db_session.add(location)
-	db_session.commit()
-	# Hash the password provided in the new user form. Store the hashed value and the salt used in the hash.
-	hash, salt = hash_password(password)
-	user = User(username, hash, salt, location.id)
-	# Insert the user object into the database
-	db_session.add(user)
-	db_session.commit()
-	# Set the session information for the new user
-	session['username'] = username
-	return user
-
 def user_login():
-	username = request.form['username']
-	password = request.form['password']
-	if check_password(username, password):
-		session['username'] = username
-		return redirect(url_for('user_view', username = username))
+	"""Make API request to log the user in and redirect to the profile page"""
+	api_response = api.user_verify_credentials_json()
+	if api_response.get('success', False):
+		return redirect(url_for('user_view', username = session.get('username', None)))
 	else:
-		return "Bad login"
+		flash("Invalid login")
+		return redirect(url_for('index'))
 
 def user_logout():
+	"""Remove the session username"""
 	session.pop('username', None)
 	return redirect(url_for('index'))
 
 def user_view(username):
 	"""Show the current user's profle or redirect to the page with user login"""
-	user = get_current_user()
+	user = util.get_current_user()
 	if user:
 		return render_template('user_view.html', user=user)
 	else:
@@ -64,15 +52,13 @@ def user_edit(id):
 
 # Temporary
 def user_location():
-	user = get_current_user()
+	user = util.get_current_user()
 	if request.method == 'GET':
 		return render_template('user_location.html')
 	elif request.method == 'POST':
 		lat = request.form['latitude']
 		lng = request.form['longitude']
 		elev = request.form['elevation']
-
-		user = get_current_user()
 
 		geolocation = user.geolocation
 		geolocation.latitude = lat
@@ -82,32 +68,21 @@ def user_location():
 		db_session.commit()
 		return "set location"
 
-# Post Controller Handlers
+# Posting Controller Handlers
+###############################################################################
 
 def posting_new():
-	return render_template('posting_new.html')
-
-def posting_new2():
-	user = get_current_user()
-	print user
-	if request.method == 'POST':
-		form_names = ['title', 'body', 'tdelta']
-		if not all(request.form.has_key(name) for name in form_names):
-			print "Bad form. Validation error. Do something appropriate"
-			return redirect(url_for('index'))
-		# Copy user's location into a new geolocation object.
-		user_gloc = user.geolocation
-		post_gloc = Geolocation(user_gloc.latitude, user_gloc.longitude, user_gloc.elevation)
-		db_session.add(post_gloc)
-		db_session.commit()
-		post = Posting(user, post_gloc)		
-		# Need to check success status
-		db_session.add(post)
-		db_session.commit()
-		return redirect(url_for('posting_new'))
+	"""On GET show form to create Posting or on POST create new Posting"""
+	if request.method == 'GET':
+		return render_template('posting_new.html')
 	else:
-		flash("Failed to create Posting")
-		return redirect(url_for('index'))
+		api_response = api.posting_create_json()
+		if api_response.get('success', False):
+			return redirect(url_for('user_view', username = session.get('username', None)))
+		else:
+			# TODO show validation errors
+			flash("Bad Posting creation request")
+			return redirect(url_for('posting_new'))
 
 def posting_view(id):
 	# TODO: Check whether user has permission to view the post

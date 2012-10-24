@@ -1,30 +1,13 @@
-# Environment Imports
-from flask import render_template, redirect, url_for, g, session, request
-
-# Library Imports
-import datetime
-
-# Package Modules
-from web_package.models import *
-#from utils import *
-import controllers
+# Web Interface URLs
 
 # Package Variables
 from web_package import app
-from web_package.database import db_session
+
+# Package Modules
+import controllers
 
 
-# Before Request / Teardown may access the db_session directly
-@app.before_request
-def before_request():
-	pass
-
-@app.teardown_request
-def teardown_request(exception):
-	db_session.remove()                    #Shutdown SQLAlchemy db session.
-
-
-# URL Routes (Pair URL Routes with Controller Functions)
+# Pair URL routes with Controller functions
 
 @app.route('/')
 def index():
@@ -32,20 +15,24 @@ def index():
 	return controllers.index()
 
 
+# User Routes
+################################################################################
+
 @app.route('/user/signup', methods = ['GET', 'POST'])
 def user_new():
 	"""New user creation"""
 	return controllers.user_new()
 
+
 @app.route('/user/login', methods = ['POST'])
 def user_login():
-	"""Log the user in"""
+	"""Verify and login the user"""
 	return controllers.user_login()
 
 
-@app.route('/user/logout', methods = ['GET', 'POST'])
+@app.route('/user/logout', methods = ['GET'])
 def user_logout():
-	"""Log the user out"""
+	"""Logout the current user"""
 	return controllers.user_logout()
 
 
@@ -66,27 +53,19 @@ def user_location():
 	"""Temporary page for setting a user's location"""
 	return controllers.user_location()
 
-# Posting Resources - Temporary 
-#######################################################
+# Posting Routes
+###############################################################################
 
-@app.route('/posting/new', methods = ['GET'])
+@app.route('/posting/new', methods = ['GET', 'POST'])
 def posting_new():
 	"""Route showing form to create a new Posting"""
 	return controllers.posting_new()
-
-# Temporary
-@app.route('/posting/new2', methods = ['POST'])
-def posting_new2():
-	"""Checks posting form submission and redirects as appropriate"""
-	return controllers.posting_new2()
-
 
 @app.route('/posting/<id>', methods = ['GET'])
 def posting_view(id):
 	"""Show the posting with id"""
 	return controllers.posting_view(id)
 	
-
 @app.route('/posting/<id>/edit', methods = ['GET'])
 def posting_edit(id):
 	"""Allow editing the posting with id"""
@@ -99,10 +78,8 @@ def posting_nearby():
 	return controllers.posting_nearby()
 
 
-
-
-# # Geolocation Resources
-# ###########################################################
+# # Geolocation Routes
+# #############################################################################
 # @app.route('/location/<id>', methods = ['GET'])
 # def geolocation_show(id):
 # 	geolocation = Geolocation.query.filter_by(id=id).first()

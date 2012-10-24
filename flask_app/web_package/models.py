@@ -93,11 +93,11 @@ class Posting(Pin):
                        'polymorphic_identity': 'posting',
                         'inherit_condition': (id == Pin.id)}
 
-    def __init__(self, user, geolocation):
+    def __init__(self, tdelta, user, geolocation, creation_time=datetime.datetime.now()):
         super(Posting, self).__init__(geolocation.id)
         # For now, require creation time to be passed in. May make this default to current time.
-        self.creation_time = datetime.datetime.now()
-        self.expiration_time = self.creation_time #+ expiration_time
+        self.creation_time = creation_time
+        self.expiration_time = self.creation_time + tdelta
         self.user_id = user.user_id
 
     def __repr__(self):

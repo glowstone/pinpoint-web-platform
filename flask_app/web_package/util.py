@@ -2,7 +2,7 @@ import hashlib
 import random
 import string
 import datetime
-from web_package.models import *            # To be removed
+from web_package.models import *
 from flask import session
 
 # Utilities should NOT have access to application specific models.
@@ -12,6 +12,14 @@ from flask import session
 SALT_LENGTH = 16
 ALPHANUMERIC = string.letters + string.digits	# List of all characters that can be used to generate a salt
 EARTH_RADIUS_METERS = 6371000	# Radius of the earth, in kilometers
+
+POST_DELTAS = {'3h': datetime.timedelta(hours=3),
+			   '6h': datetime.timedelta(hours=6),
+			   '12h': datetime.timedelta(hours=12),
+			   '1d': datetime.timedelta(days=1),
+			   '3d': datetime.timedelta(days=3),
+			   'default': datetime.timedelta(hours=6)}
+
 
 def login_required(f):
 	@wraps(f)
@@ -32,7 +40,7 @@ def hash_password(password, salt=None):
 	hash = hashlib.sha256(password + salt)
 	return (hash.hexdigest(), salt)
 
-# TODO - change so that models are not used
+
 def check_password(username, password):
 	# TODO: exception handling
 	u = User.query.filter_by(username=username).first()
@@ -42,16 +50,72 @@ def check_password(username, password):
 	else:
 		return False
 
-# Temporary
+
+# def create_user(username, password):
+# 	# Create a new location for the User
+# 	location = create_geolocation(None, None, None)
+# 	db.session.add(location)
+# 	db.session.commit()
+# 	# Hash the password provided in the new user form. Store the hashed value and the salt used in the hash.
+# 	hash, salt = hash_password(password)
+# 	user = User(username, hash, salt, location.id)
+# 	# Insert the user object into the database
+# 	db.session.add(user)
+# 	db.session.commit()
+# 	# Set the session information for the new user
+# 	do_login(username)
+
+
+# def do_login(username):
+# 	session['username'] = username
+# 	session['logged_in'] = True          
+
+
+# def do_logout():
+# 	session.pop('username', None)        #Remove username from session, if its defined.
+# 	session['logged_in'] = False
+
+
 def get_current_user():
 	"""Queries for User corresponding to current session. Returns User object or None if no user found."""
 	username = session.get('username', None)
 	user = User.query.filter_by(username=username).first()       
 	return user
 
+# def create_post(title, text, form_tdelta, user, geolocation):
+# 	"""
+# 	Attempts to create Post object belonging to a user and pinned to a geolocation. Returns the newly 
+# 	created Post or None upon failure.
+# 	Requires: user, geolocation objects already exist in db
+# 	Affects: Post object table
+# 	""" 
+# 	creation_time = datetime.datetime.now()
+
+# 	# TODO: Do Browser datetime to Python datetime conversion instead maybe
+# 	if form_tdelta in POST_DELTAS:
+# 		tdelta = POST_DELTAS[form_tdelta]
+# 	else:
+# 		tdelta = POST_DELTAS['default']
+
+# 	expiration_time = creation_time + tdelta
+
+# 	# Create Post object belonging to current user and positioned at a specific geolocation.
+# 	post = Post(title, text, creation_time, expiration_time, user.id, geolocation.id)
+# 	db.session.add(post)
+# 	db.session.commit()
+# 	return post
 
 
-
+# def create_geolocation(latitude, longitude, elevation):
+# 	"""
+# 	Attempts to create and return a new Geolocation obj. Returns None upon failure
+# 	Requires: 
+# 	Affects: Geolocation object table
+# 	""" 
+# 	gloc = Geolocation(latitude, longitude, elevation)
+# 	db.session.add(gloc)
+# 	db.session.commit()
+# 	return gloc
 
 
 # def get_sql_distance_query(location, radius, num):
@@ -106,6 +170,42 @@ def get_current_user():
 # 	except:
 # 		user = None
 # 	return user
+
+# def create_post(title, text, form_tdelta, user, geolocation):
+# 	"""
+# 	Attempts to create Post object belonging to a user and pinned to a geolocation. Returns the newly 
+# 	created Post or None upon failure.
+# 	Requires: user, geolocation objects already exist in db
+# 	Affects: Post object table
+# 	""" 
+# 	creation_time = datetime.datetime.now()
+
+# 	# TODO: Do Browser datetime to Python datetime conversion instead maybe
+# 	if form_tdelta in POST_DELTAS:
+# 		tdelta = POST_DELTAS[form_tdelta]
+# 	else:
+# 		tdelta = POST_DELTAS['default']
+
+# 	expiration_time = creation_time + tdelta
+
+# 	# Create Post object belonging to current user and positioned at a specific geolocation.
+# 	post = Post(title, text, creation_time, expiration_time, user.id, geolocation.id)
+# 	db.session.add(post)
+# 	db.session.commit()
+# 	return post
+
+
+# def create_geolocation(latitude, longitude, elevation):
+# 	"""
+# 	Attempts to create and return a new Geolocation obj. Returns None upon failure
+# 	Requires: 
+# 	Affects: Geolocation object table
+# 	""" 
+# 	gloc = Geolocation(latitude, longitude, elevation)
+# 	db.session.add(gloc)
+# 	db.session.commit()
+# 	return gloc
+
 
 # def get_sql_distance_query(location, radius, num):
 # 	"""
