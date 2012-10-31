@@ -162,7 +162,48 @@ def error_response(message):
 	return {'success': False, \
 			'error': message}
 
+# Question
+###############################################################################
 
+def question_create_json():
+	"""Create a Question from a Form or from Android"""
+	user = util.get_current_user()                 # Determine current User
+	response = {}
+
+	form_names = ['title', 'query', 'form_delta']
+	if not all(request.form.has_key(name) for name in form_names):
+		print "Bad form. Validation error. Do something appropriate"
+		return error_response('Invalid form names')
+
+	form_delta = request.form['form_delta']
+	if form_delta in POSTING_DELTAS:
+		tdelta = POSTING_DELTAS[form_delta]
+	else:
+		tdelta = POSTING_DELTAS['default']
+
+	title = request.form['title']
+	query = request.form['query']
+	# Copy user's location into a new geolocation object.
+	user_loc = user.geolocation
+	question_loc = Geolocation(user_loc.latitude, user_loc.longitude, user_loc.elevation)
+	db_session.add(question_loc)
+	db_session.commit()
+
+	question = Question(tdelta, user, question_loc, title, query)	
+	# Need to check success status
+	db_session.add(question)
+	db_session.commit()
+
+	response['success'] = True
+	response['error'] = None
+	return response
+
+
+
+
+# Answer
+###############################################################################
+	
 
 
 

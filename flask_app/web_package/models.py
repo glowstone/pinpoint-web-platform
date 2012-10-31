@@ -100,7 +100,6 @@ class Posting(Pin):
 
     def __init__(self, tdelta, user, geolocation, creation_time=datetime.datetime.now()):
         super(Posting, self).__init__(geolocation.id)
-        # For now, require creation time to be passed in. May make this default to current time.
         self.creation_time = creation_time
         self.expiration_time = self.creation_time + tdelta
         self.user_id = user.user_id
@@ -120,8 +119,8 @@ class Commentable(Posting):
                        'polymorphic_identity': 'commentable',
                        'inherit_condition': (id == Posting.id)}
 
-    def __init__(self, creation_time, expiration_time, user_id, geo_id):
-        super(Commentable, self).__init__(creation_time, expiration_time, user_id, geo_id)
+    def __init__(self, tdelta, user, geolocation):
+        super(Commentable, self).__init__(tdelta, user, geolocation)
 
     def __repr__(self):
         return '<Commentable %s>' % id(self)
@@ -136,8 +135,8 @@ class Noncommentable(Posting):
                        'polymorphic_identity': 'noncommentable',
                        'inherit_condition': (id == Posting.id)}
 
-    def __init__(self, creation_time, expiration_time, user_id, geo_id):
-        super(Noncommentable, self).__init__(creation_time, expiration_time, user_id, geo_id)
+    def __init__(self, tdelta, user, geolocation):
+        super(Noncommentable, self).__init__(tdelta, user, geolocation)
 
     def __repr__(self):
         return '<Commentable %s>' % id(self)
@@ -147,13 +146,15 @@ class Question(Commentable):
     __tablename__ = 'question'
     id = Column(Integer, ForeignKey('commentable.id'), primary_key=True)
     question_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    title = Column(String(140))
     query = Column(String(140))
     answers = relationship('Answer', primaryjoin="(Question.question_id==Answer.question_id)", backref=backref('question'), lazy='dynamic')
     __mapper_args__ = {'polymorphic_identity': 'question',
                         'inherit_condition': (id == Commentable.id)}
 
-    def __init__(self, creation_time, expiration_time, query, user_id, geo_id):
-        super(Question, self).__init__(creation_time, expiration_time, user_id, geo_id)
+    def __init__(self, tdelta, user, geolocation, title, query):
+        super(Question, self).__init__(tdelta, user, geolocation)
+        self.title = title
         self.query = query
 
     def __repr__(self):
@@ -170,8 +171,8 @@ class Answer(Commentable):
     __mapper_args__ = {'polymorphic_identity': 'answer',
                         'inherit_condition': (id == Commentable.id)}
 
-    def __init__(self, creation_time, expiration_time, user_id, geo_id, question_id, text, score=0):
-        super(Answer, self).__init__(creation_time, expiration_time, user_id, geo_id)
+    def __init__(self, tdelta, user, geolocation, text, score=0):
+        super(Answer, self).__init__(tdelta, user, geolocation)
         self.text = text
         self.score = score
         self.question_id = question_id
@@ -195,8 +196,8 @@ class Comment(Noncommentable):
     __mapper_args__ = {'polymorphic_identity': 'comment',
                         'inherit_condition': (id == Noncommentable.id)}
 
-    def __init__(self, creation_time, expiration_time, text, user_id, geo_id, commentable_id):
-        super(Comment, self).__init__(creation_time, expiration_time, user_id, geo_id)
+    def __init__(self, tdelta, user, geolocation, text):
+        super(Comment, self).__init__(tdelta, user, geolocation)
         self.commentable_id = commentable_id
         self.text = text
 
@@ -212,8 +213,8 @@ class Alert(Noncommentable):
     __mapper_args__ = {'polymorphic_identity': 'alert',
                         'inherit_condition': (id == Noncommentable.id)}
 
-    def __init__(self, creation_time, expiration_time, message, user_id, geo_id):
-        super(Alert, self).__init__(creation_time, expiration_time, user_id, geo_id)
+    def __init__(self, tdelta, user, geolocation, message):
+        super(Alert, self).__init__(tdelta, user, geolocation, message)
         self.message = message
 
     def __repr__(self):

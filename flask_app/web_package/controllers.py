@@ -18,13 +18,7 @@ def user_new():
     else:
         api_response = api.user_create_json()
         if api_response.get('success', False):
-            username = session.get('username', None)
-            if username:
-                return redirect(url_for('user_view', username=username)
-            else:
-                # TODO handle this case. Session was not set correctly
-                flash('Server Error')
-                return redirect(url_for('user_new'))
+            return redirect(url_for('user_view', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad User creation request")
@@ -91,7 +85,7 @@ def posting_new():
 def posting_view(id):
     # TODO: Check whether user has permission to view the post
     # Current permission model - all public, but don't show authors if not authenticated.
-    post = Post.query.filter_by(id=id).first()
+    #post = Post.query.filter_by(id=id).first()
     return render_template('posting_view.html', post=post)
 
 
@@ -120,24 +114,25 @@ def question_new():
     if request.method == 'GET':
         return render_template('question_new.html')
     else:
-        api_response = api.posting_create_json()
+        api_response = api.question_create_json()
         if api_response.get('success', False):
             return redirect(url_for('user_view', username = session.get('username', None)))
         else:
             # TODO show validation errors
-            flash("Bad Posting creation request")
-            return redirect(url_for('posting_new'))
-    return render_template('question_new.html')
-
+            flash("Bad Question creation request")
+            return redirect(url_for('question_new'))
 
 def question_view(id):
-    """"""
-    return render_template('question_view.html')
+    """Show the Question with 'question_id' id"""
+    # Add API call
+    return render_template('question_view.html', id=id)
 
 
-def posting_edit(id):
-    """"""
-    return render_template('question_edit.html')
+# Temporary
+def question_edit(id):
+    """Edit the Question with 'question_id' id"""
+    # API Call
+    return render_template('question_edit.html', id=id)
 
 
 # Answer Controller Handlers

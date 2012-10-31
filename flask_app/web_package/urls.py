@@ -91,7 +91,7 @@ def question_new():
 
 @app.route('/question/<id>', methods = ['GET'])
 def question_view(id):
-	"""Show the question with question_id id"""
+	"""Show the question with 'question_id' id"""
 	return controllers.question_view(id)
 
 # Temporary

@@ -5,8 +5,12 @@
 		{{ super() }}
 
 		<div class="container">
-			<form action="{{url_for('posting_new')}}" method="POST">
-				<legend>Create a Raw Posting</legend>
+			<form action="{{url_for('question_new')}}" method="POST">
+				<legend>Create a New Question</legend>
+				<label for="question_title">Title<label>
+				<input id="question_title" type="text" name="title">
+				<label for="question_query">Question</label>
+				<textarea id="question_query" name="query" rows="5" cols="25" placeholder="Please enter your question here"></textarea>
 				<fieldset>
 					<legend>Duration:</legend>
 					<input type="radio" name="form_delta" value="3h">3 Hours<br>
