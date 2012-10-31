@@ -4,7 +4,7 @@
 	{% block body %}
 		{{ super() }}
 
-		<h1>Posting: {{posting.title}}</h1>
-		<p>{{posting.body}}</p>
+		<h1>{{ question.title }}</h1>
+		<p>{{ question.text }}</p>
 
 	{% endblock %}

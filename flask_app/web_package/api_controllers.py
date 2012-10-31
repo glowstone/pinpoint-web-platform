@@ -199,26 +199,23 @@ def question_create_json():
 	return response
 
 def question_list_json():
-	print User.query
-	print Question.query
-	questions = User.query.filter_by().all()
+	questions = Question.query.filter_by().all()
 	response = {}
 	response['questions'] = questions
 	response['success'] = True
 	response['error'] = None
-	print questions
-
 	return response
 
-
-
-
-
-
-
-
-
-
+def question_view_json(id):
+	# Maybe easier to just return object or None?
+	response = {}
+	question = Question.query.filter_by(question_id=id).first()
+	if question:
+		response['success'] = True
+		response['question'] = question
+	else:
+		response['success'] = False
+	return response
 
 # Answer
 ###############################################################################
