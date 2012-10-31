@@ -50,6 +50,17 @@ def question_create_json():
 	return jsonify(api_controllers.question_create_json())
 
 
+@app.route('/api/question/list.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+def question_list_json():
+	return jsonify(api_controllers.question_list_json())
+
+
+# @app.route('/api/question/view.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+# def question_list_json():
+# 	return jsonify(api_controllers.question_list_json())
+
+
+
 # Answer Routes
 ###############################################################################
 

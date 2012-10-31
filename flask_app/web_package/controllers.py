@@ -122,6 +122,15 @@ def question_new():
             flash("Bad Question creation request")
             return redirect(url_for('question_new'))
 
+def question_list():
+    api_response = api.question_list_json()
+    if api_response.get('success', False):
+        questions = api_response['questions']
+        return render_template('question_list.html')
+    else:
+        # Log an error. 
+        return redirect(url_for('user_view', username = session.get('username', None)))
+
 def question_view(id):
     """Show the Question with 'question_id' id"""
     # Add API call

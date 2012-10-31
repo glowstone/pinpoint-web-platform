@@ -10,7 +10,8 @@
       <div class="nav-collapse collapse">
         <ul class="nav">
           <li><a href="{{ url_for('index') }}">Home</a></li>
-          <li><a href="{{ url_for('posting_new') }}">New Post</a></li>
+          <li><a href="{{ url_for('question_list') }}">Show Questions</a></li>
+          <li><a href="{{ url_for('question_new') }}">New Question</a></li>
           <li><a href="{{ url_for('user_geolocation', username=session['username'])}}">Update Location</a></li>
           <li><a href="{{ url_for('posting_nearby') }}">View Posts</a></li>
           <li class="dropdown">

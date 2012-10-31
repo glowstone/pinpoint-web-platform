@@ -89,6 +89,12 @@ def question_new():
 	"""New Question creation"""
 	return controllers.question_new()
 
+@app.route('/question/', methods=['GET'])
+def question_list():
+	"""List all the Questions near to the current User"""
+	# TODO Just dumps all questions for now
+	return controllers.question_list()
+
 @app.route('/question/<id>', methods = ['GET'])
 def question_view(id):
 	"""Show the question with 'question_id' id"""

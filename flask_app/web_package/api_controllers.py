@@ -198,6 +198,19 @@ def question_create_json():
 	response['error'] = None
 	return response
 
+def question_list_json():
+	print User.query
+	print Question.query
+	questions = User.query.filter_by().all()
+	response = {}
+	response['questions'] = questions
+	response['success'] = True
+	response['error'] = None
+	print questions
+
+	return response
+
+
 
 
 

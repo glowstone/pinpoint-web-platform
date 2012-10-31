@@ -147,18 +147,18 @@ class Question(Commentable):
     id = Column(Integer, ForeignKey('commentable.id'), primary_key=True)
     question_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
     title = Column(String(140))
-    query = Column(String(140))
+    text = Column(String(140))
     answers = relationship('Answer', primaryjoin="(Question.question_id==Answer.question_id)", backref=backref('question'), lazy='dynamic')
     __mapper_args__ = {'polymorphic_identity': 'question',
                         'inherit_condition': (id == Commentable.id)}
 
-    def __init__(self, tdelta, user, geolocation, title, query):
+    def __init__(self, tdelta, user, geolocation, title, text):
         super(Question, self).__init__(tdelta, user, geolocation)
         self.title = title
-        self.query = query
+        self.text = text
 
     def __repr__(self):
-        return '<Question %s>' % (self.query)
+        return '<Question %s>' % (self.text)
 
 
 class Answer(Commentable):
@@ -175,8 +175,8 @@ class Answer(Commentable):
         super(Answer, self).__init__(tdelta, user, geolocation)
         self.text = text
         self.score = score
-        #self.question_id = question.question_id
-        self.question_id = question     #temp
+        self.question_id = question.question_id
+        #self.question_id = question     #temp
 
     def __repr__(self):
         return '<Answer %s>' % (self.text)
@@ -197,9 +197,9 @@ class Comment(Noncommentable):
     __mapper_args__ = {'polymorphic_identity': 'comment',
                         'inherit_condition': (id == Noncommentable.id)}
 
-    def __init__(self, tdelta, user, geolocation, text):
+    def __init__(self, tdelta, user, geolocation, commentable, text):
         super(Comment, self).__init__(tdelta, user, geolocation)
-        self.commentable_id = commentable_id
+        self.commentable_id = commentable.commentable_id
         self.text = text
 
     def __repr__(self):
