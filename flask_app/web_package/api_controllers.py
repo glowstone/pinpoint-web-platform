@@ -201,11 +201,48 @@ def question_create_json():
 
 
 
+
+
+
+
+
+
 # Answer
 ###############################################################################
 	
 
+def answer_create_json():
+	"""Create an Answer from a Form or from Android"""
+	user = util.get_current_user()                 # Determine current User
+	response = {}
 
+	form_names = ['text', 'form_delta']
+	if not all(request.form.has_key(name) for name in form_names):
+		print "Bad form. Validation error. Do something appropriate"
+		return error_response('Invalid form names')
+
+	form_delta = request.form['form_delta']
+	if form_delta in POSTING_DELTAS:
+		tdelta = POSTING_DELTAS[form_delta]
+	else:
+		tdelta = POSTING_DELTAS['default']
+
+	text = request.form['text']
+	question_id = request.form['question_id']
+	# Copy user's location into a new geolocation object.
+	user_loc = user.geolocation
+	answer_loc = Geolocation(user_loc.latitude, user_loc.longitude, user_loc.elevation)
+	db_session.add(answer_loc)
+	db_session.commit()
+
+	answer = Answer(tdelta, user, answer_loc, question_id, text)	
+	# Need to check success status
+	db_session.add(answer)
+	db_session.commit()
+
+	response['success'] = True
+	response['error'] = None
+	return response
 
 
 

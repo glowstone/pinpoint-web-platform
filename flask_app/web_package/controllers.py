@@ -139,9 +139,23 @@ def question_edit(id):
 ###############################################################################
 
 def answer_new():
-    """"""
-    return render_template('answer_new.html')
+    """On GET show form to create Answer or on POST create new Answer"""
+    # Temporary - will make answers from question view page
+    if request.method == 'GET':
+        return render_template('answer_new.html')
+    else:
+        api_response = api.answer_create_json()
+        if api_response.get('success', False):
+            return redirect(url_for('user_view', username = session.get('username', None)))
+        else:
+            # TODO show validation errors
+            flash("Failed to create the Answer")
+            return redirect(url_for('answer_new'))
 
+def answer_new_async():
+    # TODO
+    pass
+    
 
 # Testing
 def test():

@@ -171,11 +171,12 @@ class Answer(Commentable):
     __mapper_args__ = {'polymorphic_identity': 'answer',
                         'inherit_condition': (id == Commentable.id)}
 
-    def __init__(self, tdelta, user, geolocation, text, score=0):
+    def __init__(self, tdelta, user, geolocation, question, text, score=0):
         super(Answer, self).__init__(tdelta, user, geolocation)
         self.text = text
         self.score = score
-        self.question_id = question_id
+        #self.question_id = question.question_id
+        self.question_id = question     #temp
 
     def __repr__(self):
         return '<Answer %s>' % (self.text)
