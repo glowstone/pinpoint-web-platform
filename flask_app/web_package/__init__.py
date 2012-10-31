@@ -23,7 +23,6 @@ def teardown_request(exception):
 	db_session.remove()                    #Shutdown SQLAlchemy db session.
 
 
-
 # Import urls at the bottom to prevent cyclic dependencies
 from web_package import urls
 from web_package import api_urls

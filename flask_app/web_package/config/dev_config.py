@@ -15,7 +15,7 @@ dialect = "mysql://"
 host = "sql.mit.edu"
 #db_name = "tgarv+code_blue"           #Add this back once we just have one db
  
-SQLALCHEMY_DATABASE_URI = dialect + username + ":" + password + "@" + host + "/" + db_name
+#SQLALCHEMY_DATABASE_URI = dialect + username + ":" + password + "@" + host + "/" + db_name
 #print "SQLALCHEMY_DATABASE_URI: %s" % SQLALCHEMY_DATABASE_URI
 
 # Eventually move this to a separate file

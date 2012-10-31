@@ -48,6 +48,7 @@ def user_edit(username):
 	return controllers.user_edit(username)
 
 
+#Temporary
 @app.route('/user/<username>/location', methods = ['GET', 'POST'])
 def user_geolocation(username):
 	"""Manually update the current User's geolocation"""
@@ -73,6 +74,7 @@ def posting_edit(id):
 	return controllers.posting_edit(id)
 
 # Temporary - to be moved to API
+# TODO - move this functionality
 @app.route('/posting/nearby', methods=['GET', 'POST'])
 def posting_nearby():
 	"""Demonstration of ability to query for nearby posts"""
@@ -84,14 +86,15 @@ def posting_nearby():
 
 @app.route('/question/new', methods = ['GET', 'POST'])
 def question_new():
-	"""Route showing form to create a new Question"""
+	"""New Question creation"""
 	return controllers.question_new()
 
 @app.route('/question/<id>', methods = ['GET'])
 def question_view(id):
 	"""Show the question with question_id id"""
 	return controllers.question_view(id)
-	
+
+# Temporary
 @app.route('/question/<id>/edit', methods = ['GET'])
 def question_edit(id):
 	"""Allow editing the question with question_id id"""
@@ -120,7 +123,19 @@ def answer_new():
 # 	return controllers.answer_edit(id)
 
 
+# Testing
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+	return controllers.test()
 
+
+
+# Web Interface Error Handlers
+###############################################################################
+
+@app.errorhandler(404)
+def page_not_found(error):
+    return controllers.error_404(error)
 
 
 # # Geolocation Routes
