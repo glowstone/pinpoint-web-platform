@@ -161,6 +161,7 @@ class Question(Commentable):
         return '<Question %s>' % (self.text)
 
 
+
 class Answer(Commentable):
     __tablename__ = 'answer'
     id = Column(Integer, ForeignKey('commentable.id'), primary_key=True)
