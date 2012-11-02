@@ -176,7 +176,6 @@ class Answer(Commentable):
         self.text = text
         self.score = score
         self.question_id = question.question_id
-        #self.question_id = question     #temp
 
     def __repr__(self):
         return '<Answer %s>' % (self.text)

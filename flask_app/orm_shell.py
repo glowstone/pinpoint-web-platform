@@ -139,7 +139,7 @@ g10 = Geolocation(10,11,12)
 db_session.add(g10)
 db_session.commit()
 
-answer1 = Answer(datetime.datetime.now(), datetime.datetime.now(), dalton.user_id, g10.id, question2.question_id, "Its in 32-123")
+answer1 = Answer(datetime.timedelta(hours=6), dalton, g10, question2, "Its in 32-123")
 db_session.add(answer1)
 db_session.commit()
 
@@ -147,7 +147,7 @@ g11 = Geolocation(11,12,13)
 db_session.add(g11)
 db_session.commit()
 
-answer2 = Answer(datetime.datetime.now(), datetime.datetime.now(), tommy.user_id, g11.id, question2.question_id, "No, its in 34-101")
+answer2 = Answer(datetime.timedelta(days=1), tommy, g11, question2, "No, its in 34-101")
 db_session.add(answer2)
 db_session.commit()
 
@@ -158,72 +158,6 @@ for answer in question2.answers:
 	print answer.type
 	print answer.question
 	print answer.question.type
-
-
-
-
-# gp = Geolocation(10,9,9)
-# db_session.add(gp)
-# db_session.commit()
-
-# b = Alert(datetime.datetime.now(), datetime.datetime.now(), "Flood!!", d.user_id, gp.id)
-# db_session.add(b)
-# db_session.commit()
-
-# gq = Geolocation(11,11,9)
-# db_session.add(gq)
-# db_session.commit()
-
-# c = Question(datetime.datetime.now(), datetime.datetime.now(), "Are you there?", d.user_id, gq.id)
-# db_session.add(c)
-# db_session.commit()
-
-# print "d Object"
-# print d.username
-# print d.geolocation
-# print d.type
-
-# print "p object"
-# print p
-# print p.geolocation
-# print p.creation_time
-# print p.type
-
-# # print r
-# # print r.geolocation
-# # print r.creation_time
-
-# print "Posts"
-# for post in d.posts:
-# 	print post
-
-
-# for post in Posting.query.all():
-# 	print post
-# 	print post.user
-
-# print "a object"
-# print a
-# print a.user
-# print a.type
-# print a.posting_id
-# print a.geolocation
-# print a.message
-# print a.user.geolocation
-
-# print "b object"
-# print b
-# print b.user
-# print b.geolocation
-# print b.message
-# print b.user.geolocation
-
-# print "c object"
-# print c
-# print c.query
-# print c.type
-
-
 
 
 os.environ['PYTHONINSPECT'] = 'True'
