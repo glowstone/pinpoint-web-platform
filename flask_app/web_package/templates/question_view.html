@@ -13,6 +13,16 @@
 			<p>{{ comment.user.username }}</p>
 		{% endfor %}
 
+		<div class="container">
+			<form action="{{url_for('comment_new')}}" method="POST">
+				<legend>Create a New Comment</legend>
+				<label for="answer_text">Comment</label>
+				<textarea id="comment_text" name="text" rows="5" cols="25" placeholder="Please enter your answer here"></textarea>
+				<input type="hidden" name="commentable_id" value={{ question.commentable_id }}>
+				<input type="submit" class="btn" value="Post"></input>
+			</form>
+		</div>
+
 
 		<h1>Answers</h1>
 		<div class="container">
@@ -37,6 +47,16 @@
 				<p>{{ comment.text }}</p>
 				<p>{{ comment.user.username }}</p>
 			{% endfor %}
+
+			<div class="container">
+			<form action="{{url_for('comment_new')}}" method="POST">
+				<legend>Create a New Comment</legend>
+				<label for="answer_text">Comment</label>
+				<textarea id="comment_text" name="text" rows="5" cols="25" placeholder="Please enter your answer here"></textarea>
+				<input type="hidden" name="commentable_id" value={{ answer.commentable_id }}>
+				<input type="submit" class="btn" value="Post"></input>
+			</form>
+		</div>
 		{% endfor %}
 		</ul>
 

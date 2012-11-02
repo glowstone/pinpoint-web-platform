@@ -116,18 +116,16 @@ def answer_new():
 	"""Route showing form to create a new Answer"""
 	return controllers.answer_new()
 
-# Temporary
-# @app.route('/question/<id>', methods = ['GET'])
-# def answer_view(id):
-# 	"""Show the question with id"""
-# 	return controllers.question_view(id)
-	
-# Temporary - merge onto the Question View for the web interface
-# @app.route('/answer/<id>/edit', methods = ['GET'])
-# def answer_edit(id):
-# 	"""Allow editing the Answer with answer_id id"""
-# 	return controllers.answer_edit(id)
+# Comment Routes
+###############################################################################
 
+@app.route('/comment/new', methods = ['GET', 'POST'])
+def comment_new():
+	"""Route for creating a Comment"""
+	return controllers.comment_new()
+
+
+###############################################################################
 
 # Testing
 @app.route('/test', methods=['GET', 'POST'])

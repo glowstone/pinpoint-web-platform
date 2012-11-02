@@ -67,3 +67,10 @@ def question_view_json():
 @app.route('/api/answer/create.json', methods=['GET', 'POST'])        #Temporarily allow GET for debug
 def answer_create_json():
 	return jsonify(api_controllers.answer_create_json())
+
+
+# Comment Routes
+###############################################################################
+@app.route('/api/comment/create.json', methods=['GET', 'POST'])       # Temporarily allow GET
+def comment_create_json():
+	return jsonify(api_controllers.comment_create_json())

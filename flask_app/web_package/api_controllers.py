@@ -222,7 +222,7 @@ def question_view_json(id):
     
 
 def answer_create_json():
-    """Create an Answer from a Form or from Android"""
+    """Create an Answer from a form or from Android"""
     user = util.get_current_user()                 # Determine current User
     response = {}
 
@@ -248,6 +248,40 @@ def answer_create_json():
     answer = Answer(tdelta, user, answer_loc, question, text)    
     # Need to check success status
     db_session.add(answer)
+    db_session.commit()
+
+    response['success'] = True
+    response['error'] = None
+    return response
+
+
+def comment_create_json():
+    """Create a Comment from a form or from Android"""
+    user = util.get_current_user()                 # Determine current User
+    response = {}
+
+    form_names = ['commentable_id', 'text']
+
+    if not all(request.form.has_key(name) for name in form_names):
+        print "Bad form. Validation error. Do something appropriate"
+        return error_response('Invalid form names')
+
+    commentable_id = int(request.form['commentable_id'])
+    commentable = Commentable.query.filter_by(commentable_id=commentable_id).first()
+    # Use the question's tdelta
+    tdelta = commentable.expiration_time - commentable.creation_time
+
+    text = request.form['text']
+    
+    # Copy user's location into a new geolocation object.
+    user_loc = user.geolocation
+    comment_loc = Geolocation(user_loc.latitude, user_loc.longitude, user_loc.elevation)
+    db_session.add(comment_loc)
+    db_session.commit()
+
+    comment = Comment(tdelta, user, comment_loc, commentable, text)
+    # Need to check success status
+    db_session.add(comment)
     db_session.commit()
 
     response['success'] = True

@@ -165,6 +165,28 @@ def answer_new_async():
     pass
     
 
+
+
+# Comment Controller Handler
+###############################################################################
+
+def comment_new():
+    """On GET show form to create Comment or on POST create new Answer"""
+    # Temporary - will make comments from question view page
+    if request.method == 'GET':
+        return render_template('comment_new.html')
+    else:
+        api_response = api.comment_create_json()
+        if api_response.get('success', False):
+            return redirect(url_for('user_view', username = session.get('username', None)))
+        else:
+            # TODO show validation errors
+            flash("Failed to create the Answer")
+            return redirect(url_for('answer_new'))
+
+
+
+
 # Testing
 def test():
     abort(404)
@@ -177,38 +199,4 @@ def test():
 def error_404(error):
     """Show the page not found error page"""
     return render_template('page_not_found.html'), 404
-
-
-
-
-# # Geolocation Resources
-# ###########################################################
-# @app.route('/location/<id>', methods = ['GET'])
-# def geolocation_show(id):
-#   geolocation = Geolocation.query.filter_by(id=id).first()
-#   return render_template('geolocation_show.html', geolocation=geolocation)
-
-# @app.route('/location/new', methods = ['GET'])
-# def geolocation_new():
-#   return render_template('geolocation_new.html')
-
-# @app.route('/location/create', methods = ['POST'])
-# def geolocation_create():
-#   user = get_current_user()
-#   return redirect(url_for('index'))
-
-# #############################################################
-# @app.route('/test', methods = ['GET'])
-# def test():
-#   username = session['username']
-#   print "All your Posts"
-#   user = User.query.filter_by(username=username).first()
-
-#   print user.posts
-#   for post in user.posts:
-
-#       print post
-#       print post.geolocation
-
-#   return render_template('test.html', posts=user.posts)
 
