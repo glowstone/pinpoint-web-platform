@@ -46,6 +46,13 @@ class Geolocation(Base):
     def __repr__(self):
         return '<Geolocation %s, %s>' % (self.latitude, self.longitude)
 
+    def serialize(self):
+        return {
+            'latitude' : self.latitude,
+            'longitude': self.longitude,
+            'elevation': self.elevation
+        }
+
 
 class Pin(Base):
     __tablename__ = 'pin'
@@ -63,8 +70,8 @@ class Pin(Base):
 class User(Pin):
     __tablename__ = 'user'
     # Customary to combine the primary key and foreign key to parent under the column name id or parent_id
-    id = Column(Integer, ForeignKey('pin.id'), primary_key=True)
-    user_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    user_id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('pin.id'))
     username = Column(String(80), unique=True)
     password_hash = Column(String(120))
     salt = Column(String(120))
@@ -87,9 +94,8 @@ class User(Pin):
 
 class Posting(Pin):
     __tablename__ = 'posting'
-    id = Column(Integer, ForeignKey('pin.id'), primary_key=True)
-
-    posting_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    posting_id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('pin.id'))
     creation_time = Column(DateTime)
     expiration_time = Column(DateTime)
     user_id = Column(Integer, ForeignKey('user.user_id'))           # One User to many Postings
@@ -111,8 +117,8 @@ class Posting(Pin):
 
 class Commentable(Posting):
     __tablename__ = 'commentable'
-    id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
-    commentable_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    commentable_id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('posting.id'))
     type = Column('type', String(50), nullable=False)
     comments = relationship('Comment', primaryjoin="(Commentable.commentable_id==Comment.commentable_id)", backref=backref('commentable'), lazy='dynamic')   #One Commentable to many Comments
     __mapper_args__ = {'polymorphic_on': type,
@@ -128,8 +134,8 @@ class Commentable(Posting):
 
 class Noncommentable(Posting):
     __tablename__ = 'noncommentable'
-    id = Column(Integer, ForeignKey('posting.id'), primary_key=True)
-    noncommentable_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    noncommentable_id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('posting.id'))
     type = Column('type', String(50), nullable=False)
     __mapper_args__ = {'polymorphic_on': type,
                        'polymorphic_identity': 'noncommentable',
@@ -144,8 +150,8 @@ class Noncommentable(Posting):
 
 class Question(Commentable):
     __tablename__ = 'question'
-    id = Column(Integer, ForeignKey('commentable.id'), primary_key=True)
-    question_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    question_id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('commentable.id'))
     title = Column(String(140))
     text = Column(String(140))
     answers = relationship('Answer', primaryjoin="(Question.question_id==Answer.question_id)", backref=backref('question'), lazy='dynamic')
@@ -160,12 +166,21 @@ class Question(Commentable):
     def __repr__(self):
         return '<Question %s>' % (self.text)
 
+    def serialize(self):
+        return {
+            'question_id'   : self.question_id,
+            'title'         : self.title,
+            'text'          : self.text,
+            'commentable_id': self.commentable_id,
+            'user_id'       : self.user_id
+        }
+
 
 
 class Answer(Commentable):
     __tablename__ = 'answer'
-    id = Column(Integer, ForeignKey('commentable.id'), primary_key=True)
-    answer_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    answer_id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('commentable.id'))
     text = Column(String(140))           #Change to something bigger later
     score = Column(Integer)
     question_id = Column(Integer, ForeignKey('question.question_id'))        # One Question to many answers
@@ -190,8 +205,8 @@ class Answer(Commentable):
 
 class Comment(Noncommentable):
     __tablename__ = 'comment'
-    id = Column(Integer, ForeignKey('noncommentable.id'), primary_key=True)
-    comment_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    comment_id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('noncommentable.id'))
     text = Column(String(140))
     commentable_id = Column(Integer, ForeignKey('commentable.commentable_id'))   # One Commentable to many Comments
     __mapper_args__ = {'polymorphic_identity': 'comment',
@@ -208,8 +223,8 @@ class Comment(Noncommentable):
 
 class Alert(Noncommentable):
     __tablename__ = 'alert'
-    id = Column(Integer, ForeignKey('noncommentable.id'), primary_key=True)
-    alert_id = Column(Integer, autoincrement=True, primary_key=True, unique=True)
+    alert_id = Column(Integer, primary_key=True)
+    id = Column(Integer, ForeignKey('noncommentable.id'))
     message = Column(String(140))
     __mapper_args__ = {'polymorphic_identity': 'alert',
                         'inherit_condition': (id == Noncommentable.id)}

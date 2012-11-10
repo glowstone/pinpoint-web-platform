@@ -1,5 +1,6 @@
 # API Interface URLs
 from flask import jsonify, redirect
+import json
 
 # Package Variables
 from web_package import app
@@ -52,13 +53,15 @@ def question_create_json():
 
 @app.route('/api/question/list.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
 def question_list_json():
-	return jsonify(api_controllers.question_list_json())
-
+	question_list = api_controllers.question_list_json2()
+	return "Hello!"
+	return jsonify(question_list = [question.serialize() for question in question_list])
+	#return jsonify(result = {'this': 'that'}))
 
 @app.route('/api/question/view.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
 def question_view_json():
-	return jsonify(api_controllers.question_view_json())
-
+	#question = api_controllers.question_view_json2(id)
+	return jsonify(question.serialize())
 
 
 # Answer Routes
@@ -74,3 +77,5 @@ def answer_create_json():
 @app.route('/api/comment/create.json', methods=['GET', 'POST'])       # Temporarily allow GET
 def comment_create_json():
 	return jsonify(api_controllers.comment_create_json())
+
+

@@ -206,6 +206,11 @@ def question_list_json():
     response['error'] = None
     return response
 
+def question_list_json2():
+    questions = Question.query.filter_by().all()
+    return questions
+
+
 def question_view_json(id):
     # Maybe easier to just return object or None?
     response = {}
@@ -216,6 +221,12 @@ def question_view_json(id):
     else:
         response['success'] = False
     return response
+
+
+def question_view_json2(id):
+    # Maybe easier to just return object or None?
+    question = Question.query.filter_by(question_id=id).first()
+    return question
 
 # Answer
 ###############################################################################
