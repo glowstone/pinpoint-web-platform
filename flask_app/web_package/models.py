@@ -205,9 +205,10 @@ class Answer(Commentable):
 
     def serialize(self):
         return {
+            'answer_id'     : self.answer_id,
             'question_id'   : self.question_id,
-            'title'         : self.text,
-            'text'          : self.score,
+            'text'          : self.text,
+            'score'         : self.score,
             'commentable_id': self.commentable_id,
             'user_id'       : self.user_id,
             'pin_id'        : self.id
@@ -230,6 +231,15 @@ class Comment(Noncommentable):
 
     def __repr__(self):
         return '<Comment %s>' % (self.text)
+
+    def serialize(self):
+        return {
+            'comment_id'    : self.comment_id,
+            'commentable_id': self.commentable_id,            
+            'text'          : self.text,
+            'user_id'       : self.user_id,
+            'pin_id'        : self.id
+        }
 
 
 class Alert(Noncommentable):

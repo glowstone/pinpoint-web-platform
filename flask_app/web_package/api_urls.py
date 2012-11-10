@@ -31,7 +31,7 @@ def user_current():
 	return jsonify(api_controllers.user_current_json())
 
 
-@app.route('/api/user/set_location.json', methods=['GET'])         #Temporarily allow GET for debug
+@app.route('/api/user/set_location.json', methods=['GET', 'POST'])         #Temporarily allow GET for debug
 def user_set_location():
 	return jsonify(api_controllers.user_set_geolocation_json())
 
@@ -44,7 +44,7 @@ def question_create_json():
 	return jsonify(api_controllers.question_create_json())
 
 
-@app.route('/api/question/list.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+@app.route('/api/question/list.json', methods=['GET'])     #Temporarily allow GET for debug
 def question_list_json():
 	required_arguments = []
 	arguments = util.unpack_arguments(required_arguments)
@@ -55,9 +55,9 @@ def question_list_json():
 		abort(402)    # TODO change to whatever bad argument error number is 
 
 
-@app.route('/api/question/get.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+@app.route('/api/question/get.json', methods=['GET'])
 def question_view_json():
-	required_arguments = ['id']
+	required_arguments = ['question_id']
 	arguments = util.unpack_arguments(required_arguments)
 	if not arguments == None:
 		question = api_controllers.question_get_json(**arguments)
@@ -74,7 +74,7 @@ def question_view_json():
 def answer_create_json():
 	return jsonify(api_controllers.answer_create_json())
 
-@app.route('/api/answer/list.json', methods=['GET', 'POST'])
+@app.route('/api/answer/list.json', methods=['GET'])
 def answer_list_json():
 	required_arguments = ['question_id']
 	arguments = util.unpack_arguments(required_arguments)
@@ -85,10 +85,11 @@ def answer_list_json():
 		abort(402)
 
 
-@app.route('/api/answer/get.json', methods=['GET', 'POST'])
+@app.route('/api/answer/get.json', methods=['GET'])
 def answer_get_json():
-	required_arguments = ['id']
+	required_arguments = ['answer_id']
 	arguments = util.unpack_arguments(required_arguments)
+	print 'HERE', arguments
 	if not arguments == None:
 		answer = api_controllers.answer_get_json(**arguments)
 		return jsonify(answer = answer.serialize())
@@ -101,6 +102,28 @@ def answer_get_json():
 @app.route('/api/comment/create.json', methods=['GET', 'POST'])       # Temporarily allow GET
 def comment_create_json():
 	return jsonify(api_controllers.comment_create_json())
+
+
+@app.route('/api/comment/list.json', methods=['GET'])
+def comment_list_json():
+	required_arguments = ['commentable_id']
+	arguments = util.unpack_arguments(required_arguments)
+	if not arguments == None:
+		comment_list = api_controllers.comment_list_json(**arguments)
+		return jsonify(comment_list = [comment.serialize() for comment in comment_list])
+	else:
+		abort(402)
+
+
+@app.route('/api/comment/get.json', methods=['GET'])
+def comment_get_json():
+	required_arguments = ['comment_id']
+	arguments = util.unpack_arguments(required_arguments)
+	if not arguments == None:
+		comment = api_controllers.comment_get_json(**arguments)
+		return jsonify(comment = comment.serialize())
+	else:
+		abort(402)   # TODO change to whatever the bad argument error number is
 
 
 

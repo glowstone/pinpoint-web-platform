@@ -203,12 +203,12 @@ def question_list_json(order_by="radius", include_comments=False, include_answer
     questions = Question.query.filter_by().all()
     return questions
 
-def question_get_json(id, include_comments=False, include_answers=False):
+def question_get_json(question_id, include_comments=False, include_answers=False):
     """Retrieve the Question with question_id 'id'."""
     print id, type(id)
     print include_answers, type(include_answers)
     print include_comments, type(include_comments)
-    question = Question.query.filter_by(question_id=id).first()
+    question = Question.query.filter_by(question_id=question_id).first()
     return question
 
 
@@ -248,18 +248,18 @@ def answer_create_json():
     response['error'] = None
     return response
 
-def answer_list_json(question_id, include_comments=False, include_answers=False):
+def answer_list_json(question_id, include_comments=False):
     """Retrieve all answers for a Question with question_id 'question_id'"""
     answers = Answer.query.filter_by(question_id=question_id).all()
     return answers
 
 
-def answer_get_json(id, include_comments=False, include_answers=False):
-    """Retrieve"""
-    print id, type(id)
-    print include_answers, type(include_answers)
+def answer_get_json(answer_id, include_comments=False):
+    print answer_id
+    """Retrieve the Answer with a particular answer_id"""
+    print answer_id, type(id)
     print include_comments, type(include_comments)
-    answer = Answer.query.filter_by(answer_id=id).first()
+    answer = Answer.query.filter_by(answer_id=answer_id).first()
     return answer
 
 
@@ -299,6 +299,19 @@ def comment_create_json():
     response['success'] = True
     response['error'] = None
     return response
+
+
+def comment_list_json(commentable_id):
+    """Retrieve all comments for the Commentable with commentable_id 'commentable_id''"""
+    comments = Comment.query.filter_by(commentable_id=commentable_id).all()
+    return comments
+
+
+def comment_get_json(comment_id):
+    """Retrieve a comment with a particular comment_id"""
+    print comment_id, type(id)
+    comment = Comment.query.filter_by(comment_id=comment_id).first()
+    return comment
 
 
 

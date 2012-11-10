@@ -57,7 +57,6 @@ def unpack_arguments(required_arg_names=[]):
 		for key in request.args.keys():
 			arguments[key] = request.args[key]
 	for arg in required_arg_names:
-		print arg, "Got here"
 		if arg not in arguments:
 			return None
 	return arguments
