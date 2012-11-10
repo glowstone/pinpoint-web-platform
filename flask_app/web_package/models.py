@@ -172,7 +172,8 @@ class Question(Commentable):
             'title'         : self.title,
             'text'          : self.text,
             'commentable_id': self.commentable_id,
-            'user_id'       : self.user_id
+            'user_id'       : self.user_id,
+            'pin_id'        : self.id
         }
 
 
@@ -201,6 +202,16 @@ class Answer(Commentable):
 
     def down_vote():
         self.score -= 1
+
+    def serialize(self):
+        return {
+            'question_id'   : self.question_id,
+            'title'         : self.text,
+            'text'          : self.score,
+            'commentable_id': self.commentable_id,
+            'user_id'       : self.user_id,
+            'pin_id'        : self.id
+        }
 
 
 class Comment(Noncommentable):

@@ -198,19 +198,13 @@ def question_create_json():
     response['error'] = None
     return response
 
-def question_list_json():
-    questions = Question.query.filter_by().all()
-    response = {}
-    response['questions'] = questions
-    response['success'] = True
-    response['error'] = None
-    return response
-
-def question_list_json2():
+def question_list_json(order_by="radius", include_comments=False, include_answers=False):
+    # TODO - make readius work again.
     questions = Question.query.filter_by().all()
     return questions
 
 def question_get_json(id, include_comments=False, include_answers=False):
+    """Retrieve the Question with question_id 'id'."""
     print id, type(id)
     print include_answers, type(include_answers)
     print include_comments, type(include_comments)
@@ -218,27 +212,9 @@ def question_get_json(id, include_comments=False, include_answers=False):
     return question
 
 
-def question_view_json(id):
-    # Maybe easier to just return object or None?
-    response = {}
-    question = Question.query.filter_by(question_id=id).first()
-    if question:
-        response['success'] = True
-        response['question'] = question
-    else:
-        response['success'] = False
-    return response
-
-
-def question_view_json2(id):
-    # Maybe easier to just return object or None?
-    question = Question.query.filter_by(question_id=id).first()
-    return question
-
 # Answer
 ###############################################################################
     
-
 def answer_create_json():
     """Create an Answer from a form or from Android"""
     user = util.get_current_user()                 # Determine current User
@@ -271,6 +247,24 @@ def answer_create_json():
     response['success'] = True
     response['error'] = None
     return response
+
+def answer_list_json(question_id, include_comments=False, include_answers=False):
+    """Retrieve all answers for a Question with question_id 'question_id'"""
+    answers = Answer.query.filter_by(question_id=question_id).all()
+    return answers
+
+
+def answer_get_json(id, include_comments=False, include_answers=False):
+    """Retrieve"""
+    print id, type(id)
+    print include_answers, type(include_answers)
+    print include_comments, type(include_comments)
+    answer = Answer.query.filter_by(answer_id=id).first()
+    return answer
+
+
+# Comments
+###############################################################################
 
 
 def comment_create_json():
