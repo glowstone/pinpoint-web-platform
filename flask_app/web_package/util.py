@@ -62,9 +62,61 @@ def unpack_arguments(required_arg_names=[]):
 	return arguments
 
 
-#class spec_manager
+class AAM(object):
+	"""The API Argument Manager
+	An API Argument Manager which is an abstract representation of the arguments an API
+	function takes, how those unicode passed values should be converted, and which arguments
+	are required/optional""" 
 
+	def __init__(self):
+		self.arguments = []
 
+	def add_argument(self, external_name, internal_name, python_type, optional):
+		api_argument = APIArgument(external_name, internal_name, python_type, optional)
+		self.arguments.append(api_argument)
+
+	def cast_args_to_python(self):
+		"""Cast unicode arguments (possibly from URL get parameters) to Python"""
+		for argument in self.arguments:
+			success = argument.unicode_to_python()
+			if not success:             # API call should fail bc an argument is invalid
+				return None
+		return self.arguments
+
+# TODO 'warning' for errors in optional argument which does not cause total failure of the api call
+
+# TODO add custom error messages or maybe custom requirements (integer has to be in a particular range)
+
+class APIArgument(object):
+	def __init__(self, external_name, internal_name, python_type, optional):
+		"""
+		Represents an API argument object
+		Expects: Name of argument in public API, name of argument in internal functions,
+			Python type passed unicode values should be converted to, whether argument is 
+			optional"""  
+		self.external_name = external_name 
+		self.internal_name = internal_name
+		self.python_type = python_type           # number, string, or boolean
+		# TODO currently assumes you choose a valid python type. Need to enforce.
+		self.optional = optional
+		# TODO - enforce that this is a boolean                 
+		self.arg_value = None
+
+	def unicode_to_python(self):
+		switch(self.python_type):
+			case 'number':
+				#Allow int or float or have separate?
+				pass
+				break
+			case 'string':
+				pass
+				break
+			case 'boolean':
+				pass
+				break
+			case 'default':
+				print 'Bad APIArgument type'
+				break
 
 
 # def create_user(username, password):
