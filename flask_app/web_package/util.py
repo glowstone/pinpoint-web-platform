@@ -3,7 +3,7 @@ import random
 import string
 import datetime
 from web_package.models import *
-from flask import session
+from flask import session, request
 
 # Utilities should NOT have access to application specific models.
 
@@ -49,6 +49,23 @@ def check_password(username, password):
 		return True
 	else:
 		return False
+
+
+def unpack_arguments(required_arg_names=[]):
+	arguments = {}
+	if request.method == "GET":
+		for key in request.args.keys():
+			arguments[key] = request.args[key]
+	for arg in required_arg_names:
+		print arg, "Got here"
+		if arg not in arguments:
+			return None
+	return arguments
+
+
+#class spec_manager
+
+
 
 
 # def create_user(username, password):

@@ -1,5 +1,5 @@
 # API Interface URLs
-from flask import jsonify, redirect
+from flask import jsonify, redirect, abort
 import json
 
 # Package Variables
@@ -7,6 +7,8 @@ from web_package import app
 
 # Package Modules
 import api_controllers
+
+import util
 
 
 # Pair API Routes with API Controller functions
@@ -34,15 +36,6 @@ def user_set_location():
 	return jsonify(api_controllers.user_set_geolocation_json())
 
 
-# Posting Routes
-###############################################################################
-
-@app.route('/api/post/create.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
-def post_create_json():
-	return jsonify(api_controllers.posting_create_json())
-
-
-
 # Question Routes
 ###############################################################################
 
@@ -54,14 +47,19 @@ def question_create_json():
 @app.route('/api/question/list.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
 def question_list_json():
 	question_list = api_controllers.question_list_json2()
-	return "Hello!"
 	return jsonify(question_list = [question.serialize() for question in question_list])
 	#return jsonify(result = {'this': 'that'}))
 
-@app.route('/api/question/view.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+@app.route('/api/question/get.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
 def question_view_json():
-	#question = api_controllers.question_view_json2(id)
-	return jsonify(question.serialize())
+	required_arguments = ['id']
+	arguments = util.unpack_arguments(required_arguments)
+	if not arguments == None:
+		question = api_controllers.question_get_json(**arguments)
+		return jsonify(question.serialize())
+	else:
+		abort(402)   # TODO change to whatever the bad argument error number is
+
 
 
 # Answer Routes
@@ -70,6 +68,10 @@ def question_view_json():
 @app.route('/api/answer/create.json', methods=['GET', 'POST'])        #Temporarily allow GET for debug
 def answer_create_json():
 	return jsonify(api_controllers.answer_create_json())
+
+@app.route('/api/answer/get.json', methods=['GET', 'POST'])
+def answer_get_json():
+	return jsonify(api_controllers.answer_get_json())
 
 
 # Comment Routes

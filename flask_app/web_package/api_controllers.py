@@ -210,6 +210,13 @@ def question_list_json2():
     questions = Question.query.filter_by().all()
     return questions
 
+def question_get_json(id, include_comments=False, include_answers=False):
+    print id, type(id)
+    print include_answers, type(include_answers)
+    print include_comments, type(include_comments)
+    question = Question.query.filter_by(question_id=id).first()
+    return question
+
 
 def question_view_json(id):
     # Maybe easier to just return object or None?
