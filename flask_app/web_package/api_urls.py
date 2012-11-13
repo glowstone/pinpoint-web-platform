@@ -56,7 +56,7 @@ def question_list_json():
 
 
 @app.route('/api/question/get.json', methods=['GET'])
-def question_view_json():
+def question_get_json():
 	required_arguments = ['question_id']
 	arguments = util.unpack_arguments(required_arguments)
 	if not arguments == None:

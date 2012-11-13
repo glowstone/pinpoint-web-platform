@@ -123,15 +123,18 @@ def question_new():
             return redirect(url_for('question_new'))
 
 def question_list():
-    api_response = api.question_list_json()
-    questions = api_response.get('questions', None)
-    return render_template('question_list.html', questions=questions)
+    questions = api.question_list_json()
+    if questions:
+        return render_template('question_list.html', questions=questions)
+    else:
+        abort(404)
 
-def question_view(id):
+def question_get(id):
     """Show the Question with 'question_id' id"""
-    api_response = api.question_view_json(id)
-    if api_response.get('success', False):
-        question = api_response.get('question', None)           # Safe dict lookup
+    question = api.question_get_json(id)
+    # if api_response.get('success', False):
+    #     question = api_response.get('question', None)           # Safe dict lookup
+    if question:
         return render_template('question_view.html', question=question)
     else:
         abort(404)

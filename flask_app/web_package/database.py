@@ -8,8 +8,9 @@ dialect = "mysql://"
 host = "sql.mit.edu" 
 sqlalchemy_database_uri = dialect + username + ":" + password + "@" + host + "/" + db_name
 
-#engine = create_engine(sqlalchemy_database_uri, convert_unicode=True)
-engine = create_engine('sqlite:////tmp/test.db', convert_unicode=True)
+engine = create_engine(sqlalchemy_database_uri, convert_unicode=True)
+# Use Sqlite for offline development
+#engine = create_engine('sqlite:////tmp/test.db', convert_unicode=True)
 
 db_session = scoped_session(sessionmaker(autocommit=False,
                                          autoflush=False,

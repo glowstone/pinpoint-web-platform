@@ -69,6 +69,7 @@ def user_verify_credentials_json():
     else:
         response['success'] = False
         response['error'] = "Invalid Login"
+        flash("Invalid Username or Password.")
     return response
 
 
