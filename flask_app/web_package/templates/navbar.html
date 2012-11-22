@@ -28,13 +28,7 @@
           </li>
         </ul>
         {% if not session['username'] %}
-          <form class="navbar-form pull-right" action="{{ url_for('user_login') }}" method="POST">
-            <input class="span2" type="text" placeholder="Email" name="username" autofocus>
-            <input class="span2" type="password" placeholder="Password" name="password">
-            <button type="submit" class="btn">Sign in</button>
-            <br>
-            <a href="{{url_for('user_new')}}">New user? Sign up here.</a>
-          </form>
+          
         {% else %}
           <form class="navbar-form pull-right" action="{{ url_for('user_logout') }}">
             <button type="submit" class="btn">Log out</button>

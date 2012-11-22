@@ -4,7 +4,7 @@
 
 {% block head_extra %}
   {{ super() }}
-  <link rel="stylesheet" href="{{url_for('static', filename='css/')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
 {% endblock %}
 
 {% block body %}
@@ -25,8 +25,9 @@
         <input class="span2" type="password" placeholder="Password" name="password">
         <br>
         <button type="submit" class="btn">Login</button>
-        <a href="{{url_for('user_new')}}" class="btn">Sign up</a>
       </form>
+
+      <a href="{{url_for('user_new')}}" class="btn">Sign up</a>
     </div>
 
     <hr>
