@@ -31,7 +31,7 @@ def user_current():
 	return jsonify(api_controllers.user_current_json())
 
 
-@app.route('/api/user/set_location.json', methods=['GET', 'POST'])         #Temporarily allow GET for debug
+@app.route('/api/user/set_location.json', methods=['GET', 'POST', 'PUT'])         #Temporarily allow GET for debug
 def user_set_location():
 	return jsonify(api_controllers.user_set_geolocation_json())
 

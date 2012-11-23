@@ -34,8 +34,6 @@ $(document).ready(function() {
 	console.log(SCRIPT_ROOT);
 	var params = {};
 
-
-
 	// Dedicated Web Worker
 	// If file exists at URL, spawn worker thread. Async download the file. 
 	// Otherwise, fails silently.

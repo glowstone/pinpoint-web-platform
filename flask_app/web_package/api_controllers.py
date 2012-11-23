@@ -90,6 +90,8 @@ def user_current_json():
 
 def user_set_geolocation_json():
     """Update the user location"""
+    print "Got here"
+    print request.args
     response = {}
     form_names = ['latitude', 'longitude', 'elevation']
     # TODO - write a better functional style utility that returns which names are missing too.
@@ -99,6 +101,9 @@ def user_set_geolocation_json():
     latitude = request.form['latitude']
     longitude = request.form['longitude']
     elevation = request.form['elevation']
+    print latitude
+    print longitude
+    print elevation
 
     username = session.get('username', None)
     user = User.query.filter_by(username=username).first()
