@@ -28,8 +28,9 @@ def user_new():
         
 def user_login():
     """Make API request to log the user in and redirect to the profile page"""
-    api_response = api.user_verify_credentials_json()
-    print api_response
+    required_arguments = ['username', 'password']
+    arguments = util.unpack_arguments(required_arguments)
+    api_response = api.user_verify_credentials_json(**arguments)
     if api_response.get('success', False):
         return redirect(url_for('user_show', username = session.get('username', None)))
     else:

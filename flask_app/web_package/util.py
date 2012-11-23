@@ -20,6 +20,24 @@ POST_DELTAS = {'3h': datetime.timedelta(hours=3),
                '3d': datetime.timedelta(days=3),
                'default': datetime.timedelta(hours=6)}
 
+#Characters used to generate a hash
+ALPHANUMERIC = string.ascii_letters + string.digits
+# Default salt length (in bytes) equal to 512 bit output of sha512 hash 
+SALT_LENGTH = 64
+
+def random_salt(salt_length=SALT_LENGTH):
+    """Return a string, with random characters, of length salt_length"""
+    return ''.join([random.choice(ALPHANUMERIC) for i in xrange(salt_length)])
+
+def hash_w_salt(password, salt):
+    """Return a hashlib sha512 hash of the combined input password and input salt."""
+    return hashlib.sha512(password + salt).hexdigest()
+
+def is_authorized(attempt, salt, hash):
+    """Returns True if hash of the password attempt and salt 
+    is equal to the provided hash value."""
+    return hashlib.sha512(attempt + salt).hexdigest() == hash
+
 
 def login_required(f):
     @wraps(f)
@@ -31,26 +49,26 @@ def login_required(f):
     return decorated_function
 
 
-def hash_password(password, salt=None):
-    """
-    Generate a sha256 hash for the given password plus a salt, and return both the hash and the salt.
-    """
-    if not salt:
-        salt = ''.join([random.choice(ALPHANUMERIC) for i in xrange(SALT_LENGTH)])
-    hash = hashlib.sha256(password + salt)
-    return (hash.hexdigest(), salt)
+# def hash_password(password, salt=None):
+#     """
+#     Generate a sha256 hash for the given password plus a salt, and return both the hash and the salt.
+#     """
+#     if not salt:
+#         salt = ''.join([random.choice(ALPHANUMERIC) for i in xrange(SALT_LENGTH)])
+#     hash = hashlib.sha256(password + salt)
+#     return (hash.hexdigest(), salt)
 
 
-def check_password(username, password):
-    u = User.query.filter_by(username=username).first()
-    if u == None:
-        return False
-    else:
-        password_guess = hash_password(password, u.salt)[0]
-        if u.password_hash == password_guess:
-            return True
-        else:
-            return False
+# def check_password(username, password):
+#     u = User.query.filter_by(username=username).first()
+#     if u == None:
+#         return False
+#     else:
+#         password_guess = hash_password(password, u.salt)[0]
+#         if u.password_hash == password_guess:
+#             return True
+#         else:
+#             return False
 
 
 def unpack_arguments(required_arg_names=[]):
@@ -63,7 +81,11 @@ def unpack_arguments(required_arg_names=[]):
             return None
     return arguments
 
-def success_response(data, warning=None):
+def success_response(data=None, warning=None):
+    """
+    Returns a dictionary representing a successful API that returns data or which indicates a call succeeded (data=False)
+    Accepts: warning may be provided to warn API users about vulnerabilities or depracation
+    """
     return {"success": True, \
             "data": data, \
             "warning": warning, \

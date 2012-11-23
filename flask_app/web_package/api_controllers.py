@@ -25,8 +25,10 @@ def user_create_json(username, password, password_repeat):
     location = Geolocation(0, 0, 0)
     db_session.add(location)
     db_session.commit()                          # Atomicity is somewhat desired here. TODO
-    hash, salt = util.hash_password(password)
-    user = User(username, hash, salt, location)
+        
+    salt = util.random_salt()
+    password_hash = util.hash_w_salt(password, salt)
+    user = User(username, password_hash, salt, location)
     db_session.add(user)
     db_session.commit()
 
@@ -37,25 +39,16 @@ def user_create_json(username, password, password_repeat):
     return True
 
 
-def user_verify_credentials_json():
-    response = {}
-    # Right now assumes parameters passed as a form. Need to generalize
-    form_names = ['username', 'password']
-    # TODO - write a better functional style utility that returns which names are missing too.
-    if not all(request.form.has_key(name) for name in form_names):
-        return error_response("Temp message about needing correct names")   #TODO Generalize spec
-    
-    username = request.form['username']
-    password = request.form['password']
-
-    if util.check_password(username, password):
-        session['username'] = username
-        session['user_id'] = None     # TODO: util should not be using db_session or models
-        response['success'] = True
+def user_verify_credentials_json(username, password):
+    user = User.query.filter_by(username=username).first()
+    print user
+    if util.is_authorized(password, user.salt, user.password_hash):
+        # Poplate secure Server-Side session storage. Sets cryptographic cookie on client.
+        session['username'] = user.username
+        session['user_id'] = user.user_id
+        return util.success_response()
     else:
-        response['success'] = False
-        response['error'] = "Invalid Login"
-    return response
+        return util.error_response("Invalid Login Attempt")
 
 
 def user_show_json(username):
@@ -95,7 +88,6 @@ def current_session_user():
 
 def user_set_geolocation_json(latitude, longitude, elevation=None):
     """Update's the authenticated user's Geolocation"""
-    print current_session_user()
     user = current_session_user()['data']
     if user:
         user = User.query.filter_by(user_id=user_id).first()

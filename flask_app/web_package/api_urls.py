@@ -27,9 +27,15 @@ def user_create_json():
 		return abort(402)     # Bad argument
 
 
-@app.route('/api/user/verify_credentials.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+@app.route('/api/user/verify_credentials.json', methods=['POST'])
 def user_verify_credentials_json():
-	return jsonify(api_controllers.user_verify_credentials_json())
+	required_arguments = ['username', 'password']
+	arguments = util.unpack_arguments(required_arguments)
+	if arguments:
+		status = api_controllers.user_verify_credentials_json(**arguments)
+		return jsonify(status=status)
+	else:
+		return abort(402)
 
 
 @app.route('/api/user/show.json', methods=['GET'])
