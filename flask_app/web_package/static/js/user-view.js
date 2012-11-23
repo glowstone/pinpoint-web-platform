@@ -33,7 +33,27 @@ $(document).ready(function() {
 	console.log("Got here");
 	console.log(SCRIPT_ROOT);
 	var params = {};
+
+
+
+	// Dedicated Web Worker
+	// If file exists at URL, spawn worker thread. Async download the file. 
+	// Otherwise, fails silently.
+	var worker = new Worker(SCRIPT_ROOT + '/static/js/geo-worker.js');
+
+	// Listen to worker's message events, in case he complains.
+	worker.addEventListener('message', function(event) {
+		console.log('Worker fired a message event!');
+		console.log(event.data);
+	}, false);
+
+	// Start worker by firing 'message' event.
+	worker.postMessage('Hello World');        // Send data to the worker
+	
+	
+
 	ajax_post(SCRIPT_ROOT + '/api/question/list.json', params);
+
 
 // No code below this line. End of enclosing anon. function.
 });
