@@ -28,13 +28,24 @@ def user_verify_credentials_json():
 
 @app.route('/api/user/current.json', methods=['GET'])
 def user_current():
-	return jsonify(api_controllers.user_current_json())
+	required_arguments = []
+	arguments = util.unpack_arguments(required_arguments)
+	if not arguments == None:
+		user_id = api_controllers.user_current.json()
+		return jsonify(user_id = user_id)
+	else:
+		return abort(402)
+		
 
-
-@app.route('/api/user/set_location.json', methods=['GET', 'POST', 'PUT'])         #Temporarily allow GET for debug
+@app.route('/api/user/set_location.json', methods=['GET', 'PUT'])      #Temporarily allow GET for debug
 def user_set_location():
-	return jsonify(api_controllers.user_set_geolocation_json())
-
+	required_arguments = ['latitude', 'longitude']
+	arguments = util.unpack_arguments(required_arguments)
+	if not arguments == None:
+		status = api_controllers.user_set_geolocation_json(**arguments)
+		return jsonify(status=status)
+	else:
+		return abort(402)
 
 # Question Routes
 ###############################################################################

@@ -72,55 +72,33 @@ def user_verify_credentials_json():
     return response
 
 
-def user_current_json():
-    """Queries for User corresponding to current session. Returns User object or None if no user found."""
-    response = {}
+def user_current_json(username):
+    """Queries for User corresponding to current session. Returns user_id or None if no user found."""
     username = session.get('username', None)
     user = User.query.filter_by(username=username).first()
     print user.password_hash # TODO: Vulnerability, although at least its hashed. SQLAlchemy should support a mode where protected info is not returned.
     
     if user:
-        response['success'] = True
-        response['user'] = user     # TODO: Big issue. Figure out the cleanest way to serialize SQLAlchemy objects. pickle? dictionary serialize. This has lazy laoding implications for the model as well.
+        return user.user_id
     else:
-        response['success'] = False
-
-    return response
+        return None
 
 
-def user_set_geolocation_json():
+def user_set_geolocation_json(user_id, latitude, longitude, elevation=None):
     """Update the user location"""
-    print "Got here"
-    print request.args
-    response = {}
-    form_names = ['latitude', 'longitude', 'elevation']
-    # TODO - write a better functional style utility that returns which names are missing too.
-    if not all(request.form.has_key(name) for name in form_names):
-        return error_response("Temp message about needing correct names")   #TODO Generalize spec
-
-    latitude = request.form['latitude']
-    longitude = request.form['longitude']
-    elevation = request.form['elevation']
-    print latitude
-    print longitude
-    print elevation
-
-    username = session.get('username', None)
-    user = User.query.filter_by(username=username).first()
+    user = User.query.filter_by(user_id=user_id).first()
+    latitude = int(latitude)        # Take out when argument manager is created
+    longitude = int(longitude)      # Take out when argument manager is created
 
     geolocation = user.geolocation
     geolocation.latitude = latitude
     geolocation.longitude = longitude
-    geolocation.elevation = elevation
+    if elevation:
+        geolocation.elevation = elevation
 
     db_session.commit()
-    response['success'] = True
-    response['latitude'] = latitude
-    response['longitude'] = longitude
-    response['elevation'] = elevation
 
-    return response
-
+    return True
 
 # API Posting Resource Handlers
 ###############################################################################

@@ -58,6 +58,9 @@ def unpack_arguments(required_arg_names=[]):
     if request.method == "GET":
         for key in request.args.keys():
             arguments[key] = request.args[key]
+    if request.method == "POST" or request.method == "PUT":
+        for key in request.form.keys():
+            arguments[key] = request.form[key]     
     for arg in required_arg_names:
         if arg not in arguments:
             return None

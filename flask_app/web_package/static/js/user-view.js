@@ -30,6 +30,13 @@ $(document).ready(function() {
 	    });
 	};
 
+	var get_location = function() {
+		return {'user_id': 3,
+			'latitude': Math.floor(Math.random()*11),
+				'longitude': Math.floor(Math.random()*11)
+				}
+	}
+
 	console.log("Got here");
 	console.log(SCRIPT_ROOT);
 	var params = {};
@@ -37,7 +44,8 @@ $(document).ready(function() {
 	// Dedicated Web Worker
 	// If file exists at URL, spawn worker thread. Async download the file. 
 	// Otherwise, fails silently.
-	var worker = new Worker(SCRIPT_ROOT + '/static/js/geo-worker.js');
+	
+	/*var worker = new Worker(SCRIPT_ROOT + '/static/js/geo-worker.js');
 
 	// Listen to worker's message events, in case he complains.
 	worker.addEventListener('message', function(event) {
@@ -47,10 +55,10 @@ $(document).ready(function() {
 
 	// Start worker by firing 'message' event.
 	worker.postMessage('Hello World');        // Send data to the worker
+	*/
 	
-	
-
 	ajax_post(SCRIPT_ROOT + '/api/question/list.json', params);
+	ajax_post(SCRIPT_ROOT + '/api/user/set_location.json', get_location())
 
 
 // No code below this line. End of enclosing anon. function.
