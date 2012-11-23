@@ -18,22 +18,9 @@ import datetime
 # API Account Resource Handlers
 ###############################################################################
 
-def user_create_json():
-    """Create a User from a web form or from Android"""
-    response = {}
-
-    # Right now assumes parameters passed as a form. Need to generalize
-    form_names = ['username', 'password', 'password_repeat']
-    # TODO - write a better functional style utility that returns which names are missing too.
-    if not all(request.form.has_key(name) for name in form_names):
-        return error_response("Temp message about needing correct names")   #TODO Generalize spec
-    
-    username = request.form['username']
-    password = request.form['password']
-    password_retry = request.form['password_repeat']
-
+def user_create_json(username, password, password_repeat):
+    """Create a new User"""
     # TODO real validation - return errors in json
-    
     # TODO take optional latitude, longitude, elevation starting values
     location = Geolocation(0, 0, 0)
     db_session.add(location)
@@ -42,14 +29,13 @@ def user_create_json():
     user = User(username, hash, salt, location)
     db_session.add(user)
     db_session.commit()
-    # Set the session information for the new user
 
-    # Can Android store cookies?
+    # Secure Server-Side Session Storage. Sets cryptographic cookie on the client with secure session id.
     session['username'] = username
-
-    response['success'] = True
-    response['username'] = username
-    return response
+    session['user_id'] = user.user_id
+    print username
+    print user.user_id
+    return True
 
 
 def user_verify_credentials_json():
@@ -65,6 +51,7 @@ def user_verify_credentials_json():
 
     if util.check_password(username, password):
         session['username'] = username
+        session['user_id'] = None     # TODO: util should not be using db_session or models
         response['success'] = True
     else:
         response['success'] = False
@@ -72,16 +59,30 @@ def user_verify_credentials_json():
     return response
 
 
-def user_current_json(username):
-    """Queries for User corresponding to current session. Returns user_id or None if no user found."""
-    username = session.get('username', None)
+def user_show_json(username):
+    """Queries for the given user. Check whether that is the current user"""
+    response = {}
     user = User.query.filter_by(username=username).first()
-    print user.password_hash # TODO: Vulnerability, although at least its hashed. SQLAlchemy should support a mode where protected info is not returned.
-    
+    print user
+    print user.user_id
+    print session.get('user_id')
     if user:
-        return user.user_id
+        if session.get('user_id') == user.user_id:     # Current User
+            response['current'] = True
+            response['user'] = user
+            response['success'] = True
+            response['error'] = None
+        else:                                          # Some other user
+            response['current'] = False
+            response['user'] = user
+            response['success'] = True
+            response['error'] = None
     else:
-        return None
+        response['current'] = False
+        response['user'] = None
+        response['success'] = False
+        response['error'] = "No such user"
+    return response
 
 
 def user_set_geolocation_json(user_id, latitude, longitude, elevation=None):

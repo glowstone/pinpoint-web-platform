@@ -16,9 +16,11 @@ def user_new():
     if request.method == 'GET':
         return render_template('user_new.html')
     else:
-        api_response = api.user_create_json()
-        if api_response.get('success', False):
-            return redirect(url_for('user_view', username = session.get('username', None)))
+        required_arguments = ['username', 'password', 'password_repeat']
+        arguments = util.unpack_arguments(required_arguments)
+        success = api.user_create_json(**arguments)
+        if success:
+            return redirect(url_for('user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad User creation request")
@@ -27,8 +29,9 @@ def user_new():
 def user_login():
     """Make API request to log the user in and redirect to the profile page"""
     api_response = api.user_verify_credentials_json()
+    print api_response
     if api_response.get('success', False):
-        return redirect(url_for('user_view', username = session.get('username', None)))
+        return redirect(url_for('user_show', username = session.get('username', None)))
     else:
         # TODO: Handle Invalid logins
         flash("Invalid login")
@@ -39,15 +42,17 @@ def user_logout():
     session.pop('username', None)
     return redirect(url_for('index'))
 
-def user_view(username):
-    """Show the current user's profle or redirect to the page with user login"""
-    api_response = api.user_current_json()
+def user_show(username):
+    """Show the given user's profile or redirect to the page with user login"""
+    api_response = api.user_show_json(username)
     if api_response.get('success', None):
+        print "Is current?", api_response['current']
         user = api_response['user']
-        return render_template('user_view.html', user=user)
+        return render_template('user_show.html', user=user)
     else:
         flash("You must be logged in to view this profile.")
         return redirect(url_for('index'))   
+
 
 def user_edit(username):
     return render_template('user_edit.html')
@@ -60,7 +65,7 @@ def user_geolocation(username):
     elif request.method == 'POST':
         api_response = api.user_set_geolocation_json()
         if api_response.get('success', False):
-            return redirect(url_for('user_view', username = session.get('username', None)))
+            return redirect(url_for('user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad geolocation update")
@@ -76,7 +81,7 @@ def posting_new():
     else:
         api_response = api.posting_create_json()
         if api_response.get('success', False):
-            return redirect(url_for('user_view', username = session.get('username', None)))
+            return redirect(url_for('user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad Posting creation request")
@@ -116,7 +121,7 @@ def question_new():
     else:
         api_response = api.question_create_json()
         if api_response.get('success', False):
-            return redirect(url_for('user_view', username = session.get('username', None)))
+            return redirect(url_for('user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad Question creation request")
@@ -157,7 +162,7 @@ def answer_new():
     else:
         api_response = api.answer_create_json()
         if api_response.get('success', False):
-            return redirect(url_for('user_view', username = session.get('username', None)))
+            return redirect(url_for('user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Failed to create the Answer")
@@ -181,7 +186,7 @@ def comment_new():
     else:
         api_response = api.comment_create_json()
         if api_response.get('success', False):
-            return redirect(url_for('user_view', username = session.get('username', None)))
+            return redirect(url_for('user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Failed to create the Answer")

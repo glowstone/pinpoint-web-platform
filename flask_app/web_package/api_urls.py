@@ -16,9 +16,15 @@ import util
 # User Routes
 ###############################################################################
 
-@app.route('/api/user/create.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+@app.route('/api/user/create.json', methods=['POST'])     
 def user_create_json():
-	return jsonify(api_controllers.user_create_json())
+	required_arguments = ['username', 'password', 'password_repeat']
+	arguments = util.unpack_arguments(required_arguments)
+	if arguments:
+		status = api_controllers.user_create_json(**arguments)
+		return jsonify(status=status)
+	else:
+		return abort(402)     # Bad argument
 
 
 @app.route('/api/user/verify_credentials.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
@@ -26,16 +32,16 @@ def user_verify_credentials_json():
 	return jsonify(api_controllers.user_verify_credentials_json())
 
 
-@app.route('/api/user/current.json', methods=['GET'])
-def user_current():
-	required_arguments = []
+@app.route('/api/user/show.json', methods=['GET'])
+def user_show_json():
+	required_arguments = ['username']
 	arguments = util.unpack_arguments(required_arguments)
-	if not arguments == None:
-		user_id = api_controllers.user_current.json()
-		return jsonify(user_id = user_id)
+	if arguments:
+		api_response = api_controllers.user_show_json(**arguments)
+		return jsonify(api_response = api_response)
 	else:
 		return abort(402)
-		
+
 
 @app.route('/api/user/set_location.json', methods=['GET', 'PUT'])      #Temporarily allow GET for debug
 def user_set_location():

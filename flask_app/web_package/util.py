@@ -55,12 +55,9 @@ def check_password(username, password):
 
 def unpack_arguments(required_arg_names=[]):
     arguments = {}
-    if request.method == "GET":
-        for key in request.args.keys():
-            arguments[key] = request.args[key]
-    if request.method == "POST" or request.method == "PUT":
-        for key in request.form.keys():
-            arguments[key] = request.form[key]     
+    for key in request.values.keys(): # Combined MultiDict of request.form and request.args
+        arguments[key] = request.values[key]
+    # Check for required arguments  
     for arg in required_arg_names:
         if arg not in arguments:
             return None
