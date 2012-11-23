@@ -63,6 +63,21 @@ def unpack_arguments(required_arg_names=[]):
             return None
     return arguments
 
+def success_response(data, warning=None):
+    return {"success": True, \
+            "data": data, \
+            "warning": warning, \
+            "error": None \
+            }
+
+def error_response(error_msg, warning=None):
+    result = {"success": False, \
+              "data": None, \
+              "warning": None, \
+              "error": error_msg \
+             }
+    print 'HERE', result
+    return result
 
 class AAM(object):
     """The API Argument Manager

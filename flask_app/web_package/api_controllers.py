@@ -33,8 +33,7 @@ def user_create_json(username, password, password_repeat):
     # Secure Server-Side Session Storage. Sets cryptographic cookie on the client with secure session id.
     session['username'] = username
     session['user_id'] = user.user_id
-    print username
-    print user.user_id
+    
     return True
 
 
@@ -63,9 +62,6 @@ def user_show_json(username):
     """Queries for the given user. Check whether that is the current user"""
     response = {}
     user = User.query.filter_by(username=username).first()
-    print user
-    print user.user_id
-    print session.get('user_id')
     if user:
         if session.get('user_id') == user.user_id:     # Current User
             response['current'] = True
@@ -84,22 +80,37 @@ def user_show_json(username):
         response['error'] = "No such user"
     return response
 
+def current_session_user():
+    """Internal Method for finding the User object corresponding to the current authenticated request session"""
+    user_id = session.get('user_id', None)
+    if user_id:
+        user = User.query.filter_by(user_id=user_id).first()
+        if user:
+            return util.success_response(user)
+        else:
+            return util.error_response("No user found with Session's user_id")
+    else:
+        return util.error_response("Session does not contain a user_id")
 
-def user_set_geolocation_json(user_id, latitude, longitude, elevation=None):
-    """Update the user location"""
-    user = User.query.filter_by(user_id=user_id).first()
-    latitude = int(latitude)        # Take out when argument manager is created
-    longitude = int(longitude)      # Take out when argument manager is created
 
-    geolocation = user.geolocation
-    geolocation.latitude = latitude
-    geolocation.longitude = longitude
-    if elevation:
-        geolocation.elevation = elevation
+def user_set_geolocation_json(latitude, longitude, elevation=None):
+    """Update's the authenticated user's Geolocation"""
+    print current_session_user()
+    user = current_session_user()['data']
+    if user:
+        user = User.query.filter_by(user_id=user_id).first()
+        latitude = int(latitude)        # Take out when argument manager is created
+        longitude = int(longitude)      # Take out when argument manager is created
 
-    db_session.commit()
+        geolocation = user.geolocation
+        geolocation.latitude = latitude
+        geolocation.longitude = longitude
+        if elevation:
+            geolocation.elevation = elevation
 
-    return True
+        db_session.commit()
+    else:
+        return util.error_response("Session user was not found.")
 
 # API Posting Resource Handlers
 ###############################################################################
@@ -141,10 +152,6 @@ def posting_create_json():
     response['error'] = None
     return response
     
-    
-def error_response(message):
-    return {'success': False, \
-            'error': message}
 
 # Question
 ###############################################################################
@@ -157,7 +164,7 @@ def question_create_json():
     form_names = ['title', 'query', 'form_delta']
     if not all(request.form.has_key(name) for name in form_names):
         print "Bad form. Validation error. Do something appropriate"
-        return error_response('Invalid form names')
+        return util.error_response('Invalid form names')
 
     form_delta = request.form['form_delta']
     if form_delta in POSTING_DELTAS:
