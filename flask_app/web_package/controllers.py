@@ -18,12 +18,12 @@ def user_new():
     else:
         required_arguments = ['username', 'password', 'password_repeat']
         arguments = util.unpack_arguments(required_arguments)
-        success = api.user_create_json(**arguments)
-        if success:
+        api_response = api.user_create_json(**arguments)
+        if api_response['success']:
             return redirect(url_for('user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
-            flash("Bad User creation request")
+            flash("Bad User creation request. " + api_response['error'])
             return redirect(url_for('user_new'))
         
 def user_login():
@@ -39,8 +39,10 @@ def user_login():
         return redirect(url_for('index'))
 
 def user_logout():
-    """Remove the session username"""
+    """Deauthenticate user by popping the user's session instance."""
     session.pop('username', None)
+    session.pop('user_id', None)
+    flash("Logged out")
     return redirect(url_for('index'))
 
 def user_show(username):

@@ -5,6 +5,7 @@ from flask import session, request
 from web_package import db_session
 
 # Package Modules
+#from sqlalchemy.core.exceptions import *
 from models import *
 import util
 
@@ -22,6 +23,13 @@ def user_create_json(username, password, password_repeat):
     """Create a new User"""
     # TODO real validation - return errors in json
     # TODO take optional latitude, longitude, elevation starting values
+    # Crude validation checks
+    print "Top of user_create_json"
+    if len(username) < 3:
+        return util.error_response("Username too short")
+    if password != password_repeat:
+        return util.error_response("Passwords don't match")
+
     location = Geolocation(0, 0, 0)
     db_session.add(location)
     db_session.commit()                          # Atomicity is somewhat desired here. TODO
@@ -30,7 +38,11 @@ def user_create_json(username, password, password_repeat):
     password_hash = util.hash_w_salt(password, salt)
     user = User(username, password_hash, salt, location)
     db_session.add(user)
-    db_session.commit()
+    try:
+        db_session.commit()
+    except Exception:               # SQLAlchemyError would be better, but not sure how to import it.
+        db_session.rollback()       # TODO: Does not rollback geolocation creation as we would like
+        return util.error_response("Database error creating User")
 
     # Secure Server-Side Session Storage. Sets cryptographic cookie on the client with secure session id.
     session['username'] = username
@@ -45,7 +57,6 @@ def user_verify_credentials_json(username, password):
         # Poplate secure Server-Side session storage. Sets cryptographic cookie on client.
         session['username'] = user.username
         session['user_id'] = user.user_id
-        print session
         return util.success_response()
     else:
         return util.error_response("Invalid Login Attempt")
