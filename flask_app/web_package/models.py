@@ -73,7 +73,7 @@ class User(Pin):
     user_id = Column(Integer, primary_key=True)
     id = Column(Integer, ForeignKey('pin.id'))
     username = Column(String(80), unique=True)
-    password_hash = Column(String(120))
+    password_hash = Column(String(140))
     salt = Column(String(120))
     postings = relationship('Posting', primaryjoin="(User.user_id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
     __mapper_args__ = {'polymorphic_identity': 'user',

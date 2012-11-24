@@ -36,12 +36,14 @@ def user_create_json(username, password, password_repeat):
     session['username'] = username
     session['user_id'] = user.user_id
     
-    return True
+    return util.success_response()
 
 
 def user_verify_credentials_json(username, password):
     user = User.query.filter_by(username=username).first()
-    print user
+    print password
+    print util.hash_w_salt(password, user.salt)
+    print user.password_hash
     if util.is_authorized(password, user.salt, user.password_hash):
         # Poplate secure Server-Side session storage. Sets cryptographic cookie on client.
         session['username'] = user.username
@@ -57,21 +59,12 @@ def user_show_json(username):
     user = User.query.filter_by(username=username).first()
     if user:
         if session.get('user_id') == user.user_id:     # Current User
-            response['current'] = True
-            response['user'] = user
-            response['success'] = True
-            response['error'] = None
+            return util.success_response({"user": user, "current": True})
         else:                                          # Some other user
-            response['current'] = False
-            response['user'] = user
-            response['success'] = True
-            response['error'] = None
+            return util.success_response({"user": user, "current": False})
     else:
-        response['current'] = False
-        response['user'] = None
-        response['success'] = False
-        response['error'] = "No such user"
-    return response
+        return error_response("No user with username " + username)
+
 
 def current_session_user():
     """Internal Method for finding the User object corresponding to the current authenticated request session"""
@@ -93,57 +86,24 @@ def user_set_geolocation_json(latitude, longitude, elevation=None):
         user = User.query.filter_by(user_id=user_id).first()
         latitude = int(latitude)        # Take out when argument manager is created
         longitude = int(longitude)      # Take out when argument manager is created
-
+        # Update Geolocation
         geolocation = user.geolocation
         geolocation.latitude = latitude
         geolocation.longitude = longitude
         if elevation:
             geolocation.elevation = elevation
-
         db_session.commit()
+        return util.success_response()
     else:
         return util.error_response("Session user was not found.")
 
-# API Posting Resource Handlers
-###############################################################################
+
 
 POSTING_DELTAS = {'3h': datetime.timedelta(hours=3),
                  '12h': datetime.timedelta(hours=12),
                  '1d': datetime.timedelta(days=1),
                  '3d': datetime.timedelta(days=3),
                  'default': datetime.timedelta(hours=6)}
-
-
-def posting_create_json():
-    user = util.get_current_user()                 # Determine current User
-    response = {}
-
-    form_names = ['form_delta']
-    if not all(request.form.has_key(name) for name in form_names):
-        print "Bad form. Validation error. Do something appropriate"
-        return error_response('Invalid form names')
-
-    form_delta = request.form['form_delta']
-    if form_delta in POSTING_DELTAS:
-        tdelta = POSTING_DELTAS[form_delta]
-    else:
-        tdelta = POSTING_DELTAS['default']
-
-    # Copy user's location into a new geolocation object.
-    user_loc = user.geolocation
-    post_loc = Geolocation(user_loc.latitude, user_loc.longitude, user_loc.elevation)
-    db_session.add(post_loc)
-    db_session.commit()
-
-    posting = Posting(tdelta, user, post_loc)    # Raw postings have no title or text. Won't actually be used.  
-    # Need to check success status
-    db_session.add(posting)
-    db_session.commit()
-
-    response['success'] = True
-    response['error'] = None
-    return response
-    
 
 # Question
 ###############################################################################

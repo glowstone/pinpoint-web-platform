@@ -48,29 +48,6 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-
-# def hash_password(password, salt=None):
-#     """
-#     Generate a sha256 hash for the given password plus a salt, and return both the hash and the salt.
-#     """
-#     if not salt:
-#         salt = ''.join([random.choice(ALPHANUMERIC) for i in xrange(SALT_LENGTH)])
-#     hash = hashlib.sha256(password + salt)
-#     return (hash.hexdigest(), salt)
-
-
-# def check_password(username, password):
-#     u = User.query.filter_by(username=username).first()
-#     if u == None:
-#         return False
-#     else:
-#         password_guess = hash_password(password, u.salt)[0]
-#         if u.password_hash == password_guess:
-#             return True
-#         else:
-#             return False
-
-
 def unpack_arguments(required_arg_names=[]):
     arguments = {}
     for key in request.values.keys(): # Combined MultiDict of request.form and request.args

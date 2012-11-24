@@ -47,8 +47,8 @@ def user_show(username):
     """Show the given user's profile or redirect to the page with user login"""
     api_response = api.user_show_json(username)
     if api_response.get('success', None):
-        print "Is current?", api_response['current']
-        user = api_response['user']
+        print "Is current?", api_response['data']['current']
+        user = api_response['data']['user']
         return render_template('user_show.html', user=user)
     else:
         flash("You must be logged in to view this profile.")
