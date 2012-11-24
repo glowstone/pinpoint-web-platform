@@ -41,13 +41,11 @@ def user_create_json(username, password, password_repeat):
 
 def user_verify_credentials_json(username, password):
     user = User.query.filter_by(username=username).first()
-    print password
-    print util.hash_w_salt(password, user.salt)
-    print user.password_hash
-    if util.is_authorized(password, user.salt, user.password_hash):
+    if user and util.is_authorized(password, user.salt, user.password_hash):
         # Poplate secure Server-Side session storage. Sets cryptographic cookie on client.
         session['username'] = user.username
         session['user_id'] = user.user_id
+        print session
         return util.success_response()
     else:
         return util.error_response("Invalid Login Attempt")
@@ -55,15 +53,15 @@ def user_verify_credentials_json(username, password):
 
 def user_show_json(username):
     """Queries for the given user. Check whether that is the current user"""
-    response = {}
     user = User.query.filter_by(username=username).first()
+    authenticated_user_id = session.get("user_id", None)
     if user:
-        if session.get('user_id') == user.user_id:     # Current User
-            return util.success_response({"user": user, "current": True})
-        else:                                          # Some other user
-            return util.success_response({"user": user, "current": False})
+        if user.user_id == authenticated_user_id:       # Authenticated User
+            return util.success_response({"user": user, "authenticated": True})
+        else:                                           # Unauthenticated User (public profile will be shown)
+            return util.success_response({"user": user, "authenticated": False})
     else:
-        return error_response("No user with username " + username)
+        return util.error_response("No user with username " + username)
 
 
 def current_session_user():

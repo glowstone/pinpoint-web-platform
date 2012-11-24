@@ -112,7 +112,6 @@ def answer_list_json():
 def answer_get_json():
 	required_arguments = ['answer_id']
 	arguments = util.unpack_arguments(required_arguments)
-	print 'HERE', arguments
 	if not arguments == None:
 		answer = api_controllers.answer_get_json(**arguments)
 		return jsonify(answer = answer.serialize())

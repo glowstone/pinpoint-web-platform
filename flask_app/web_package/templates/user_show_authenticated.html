@@ -5,7 +5,10 @@
 
 	{% block body %}
 		{{ super() }}
-		Welcome {{ session['username'] }}<br>
+		<br>
+		<br>
+		<br>
+		Welcome {{ session['username'] }} {{ session['user_id']}}<br>
 
 		<p>All your posts:</p>
 		<ul>

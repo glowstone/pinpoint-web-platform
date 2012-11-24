@@ -70,13 +70,12 @@ def success_response(data=None, warning=None):
             }
 
 def error_response(error_msg, warning=None):
-    result = {"success": False, \
-              "data": None, \
-              "warning": None, \
-              "error": error_msg \
-             }
-    print 'HERE', result
-    return result
+    return {"success": False, \
+            "data": None, \
+            "warning": None, \
+            "error": error_msg \
+           }
+
 
 class AAM(object):
     """The API Argument Manager
