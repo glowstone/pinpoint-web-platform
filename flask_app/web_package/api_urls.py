@@ -53,6 +53,7 @@ def user_show_json():
 def user_set_location():
 	required_arguments = ['latitude', 'longitude']
 	arguments = util.unpack_arguments(required_arguments)
+	print arguments
 	if not arguments == None:
 		status = api_controllers.user_set_geolocation_json(**arguments)
 		return jsonify(status=status)

@@ -7,7 +7,7 @@ from web_package import app
 import controllers
 
 
-# Pair URL routes with Controller functions
+# Connect URL routes with Controller functions
 
 @app.route('/')
 def index():
@@ -26,13 +26,13 @@ def user_new():
 
 @app.route('/user/login', methods = ['POST'])
 def user_login():
-    """Verify and login the User"""
+    """Verify and set the User authenticated session context"""
     return controllers.user_login()
 
 
 @app.route('/user/logout', methods = ['GET'])
 def user_logout():
-    """Logout the current User"""
+    """Destroy User's authenticated session context"""
     return controllers.user_logout()
 
 
@@ -48,37 +48,38 @@ def user_edit(username):
     return controllers.user_edit(username)
 
 
+
 #Temporary
 @app.route('/user/<username>/location', methods = ['GET', 'POST'])
 def user_geolocation(username):
     """Manually update the current User's geolocation"""
     return controllers.user_geolocation(username)
 
-# Temporary - will be deleted eventually
-# Posting Routes
-###############################################################################
+# # Temporary - will be deleted eventually
+# # Posting Routes
+# ###############################################################################
 
-@app.route('/posting/new', methods = ['GET', 'POST'])
-def posting_new():
-    """Route showing form to create a new Posting"""
-    return controllers.posting_new()
+# @app.route('/posting/new', methods = ['GET', 'POST'])
+# def posting_new():
+#     """Route showing form to create a new Posting"""
+#     return controllers.posting_new()
 
-@app.route('/posting/<id>', methods = ['GET'])
-def posting_view(id):
-    """Show the posting with posting_id id"""
-    return controllers.posting_view(id)
+# @app.route('/posting/<id>', methods = ['GET'])
+# def posting_view(id):
+#     """Show the posting with posting_id id"""
+#     return controllers.posting_view(id)
     
-@app.route('/posting/<id>/edit', methods = ['GET'])
-def posting_edit(id):
-    """Allow editing the posting with posting_id id"""
-    return controllers.posting_edit(id)
+# @app.route('/posting/<id>/edit', methods = ['GET'])
+# def posting_edit(id):
+#     """Allow editing the posting with posting_id id"""
+#     return controllers.posting_edit(id)
 
-# Temporary - to be moved to API
-# TODO - move this functionality
-@app.route('/posting/nearby', methods=['GET', 'POST'])
-def posting_nearby():
-    """Demonstration of ability to query for nearby posts"""
-    return controllers.posting_nearby()
+# # Temporary - to be moved to API
+# # TODO - move this functionality
+# @app.route('/posting/nearby', methods=['GET', 'POST'])
+# def posting_nearby():
+#     """Demonstration of ability to query for nearby posts"""
+#     return controllers.posting_nearby()
 
 
 # Question Routes
@@ -89,16 +90,16 @@ def question_new():
     """New Question creation"""
     return controllers.question_new()
 
-@app.route('/question/', methods=['GET'])
+@app.route('/question', methods=['GET'])
 def question_list():
     """List all the Questions near to the current User"""
     # TODO Just dumps all questions for now
     return controllers.question_list()
 
 @app.route('/question/<id>', methods = ['GET'])
-def question_view(id):
+def question_show(id):
     """Show the question with 'question_id' id"""
-    return controllers.question_view(id)
+    return controllers.question_show(id)
 
 # Temporary
 @app.route('/question/<id>/edit', methods = ['GET'])

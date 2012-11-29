@@ -10,6 +10,7 @@
 		}, function(error) {
 			console.log(error.message);
 		});
+		
 		// Async fine position watcher
 		var positionObject = {enableHighAccuracy: true, maximumAge: 60000, timeout: 60000};
 		var wpid = navigator.geolocation.watchPosition(function(position) {

@@ -29,6 +29,7 @@ Minimal Configuration
 ---------------------
 
 In the web_package/config Python package, include a config_secrets.py module as follows:
+
     username = ""
     password = ""
     db_name = ""
@@ -36,8 +37,8 @@ In the web_package/config Python package, include a config_secrets.py module as 
 Local Testing
 -------------
 
-source blue-env/bin/activate
-cd flask_app
-python setupdb.py               # Initialize the SQL Tables
-python runserver.py             # Run web app at localhost:5000
+    source blue-env/bin/activate
+    cd flask_app
+    python setupdb.py               # Initialize the SQL Tables
+    python runserver.py             # Run web app at localhost:5000
 

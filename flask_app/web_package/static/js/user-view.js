@@ -31,8 +31,7 @@ $(document).ready(function() {
 	};
 
 	var get_location = function() {
-		return {'user_id': 3,
-			'latitude': Math.floor(Math.random()*11),
+		return {'latitude': Math.floor(Math.random()*11),
 				'longitude': Math.floor(Math.random()*11)
 				}
 	}
@@ -57,9 +56,27 @@ $(document).ready(function() {
 	worker.postMessage('Hello World');        // Send data to the worker
 	*/
 	
-	ajax_post(SCRIPT_ROOT + '/api/question/list.json', params);
-	ajax_post(SCRIPT_ROOT + '/api/user/set_location.json', get_location())
 
+	var update_location = function(address, send_update) {
+		if ("geolocation" in navigator) {
+			// Get first-available, coarse position (IP or Wifi location)
+			navigator.geolocation.getCurrentPosition(function(position) {
+				console.log("We found you!");
+				console.log(position);
+				var latitude = position.coords.latitude
+				var longitude = position.coords.longitude
+				var geolocation = {"latitude": latitude, "longitude": longitude}
+				ajax_post(SCRIPT_ROOT + '/api/user/set_location.json', geolocation);
+			}, function(error) {
+				console.log(error.message);
+			});
+		}
+	}
+
+	ajax_post(SCRIPT_ROOT + '/api/question/list.json', params);
+	setInterval(function(){
+		update_location(SCRIPT_ROOT + '/api/user/user_location.json');
+	}, 10000);
 
 // No code below this line. End of enclosing anon. function.
 });

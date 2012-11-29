@@ -1,18 +1,17 @@
+import os
 import hashlib
-import random
 import string
+import random
 import datetime
-from web_package.models import *
+#from web_package.models import *
 from flask import session, request
 
-# Utilities should NOT have access to application specific models.
 
-# from functools import wraps
-
-SALT_LENGTH = 16
-ALPHANUMERIC = string.letters + string.digits   # List of all characters that can be used to generate a salt
+#Characters used to generate a hash
+ALPHANUMERIC = string.ascii_letters + string.digits
+# Default salt length (in bytes) equal to 512 bit output of sha512 hash 
+SALT_LENGTH = 64
 EARTH_RADIUS_METERS = 6371000   # Radius of the earth, in kilometers
-
 POST_DELTAS = {'3h': datetime.timedelta(hours=3),
                '6h': datetime.timedelta(hours=6),
                '12h': datetime.timedelta(hours=12),
@@ -20,14 +19,13 @@ POST_DELTAS = {'3h': datetime.timedelta(hours=3),
                '3d': datetime.timedelta(days=3),
                'default': datetime.timedelta(hours=6)}
 
-#Characters used to generate a hash
-ALPHANUMERIC = string.ascii_letters + string.digits
-# Default salt length (in bytes) equal to 512 bit output of sha512 hash 
-SALT_LENGTH = 64
+
 
 def random_salt(salt_length=SALT_LENGTH):
-    """Return a string, with random characters, of length salt_length"""
+    """Return a salt_length string of cryptographically random bytes."""
     return ''.join([random.choice(ALPHANUMERIC) for i in xrange(salt_length)])
+    #return os.urandom(salt_length)
+
 
 def hash_w_salt(password, salt):
     """Return a hashlib sha512 hash of the combined input password and input salt."""

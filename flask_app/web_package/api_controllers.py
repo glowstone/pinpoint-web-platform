@@ -92,9 +92,8 @@ def user_set_geolocation_json(latitude, longitude, elevation=None):
     """Update's the authenticated user's Geolocation"""
     user = current_session_user()['data']
     if user:
-        user = User.query.filter_by(user_id=user_id).first()
-        latitude = int(latitude)        # Take out when argument manager is created
-        longitude = int(longitude)      # Take out when argument manager is created
+        latitude = float(latitude)        # Take out when argument manager is created
+        longitude = float(longitude)      # Take out when argument manager is created
         # Update Geolocation
         geolocation = user.geolocation
         geolocation.latitude = latitude

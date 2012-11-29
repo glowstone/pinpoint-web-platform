@@ -142,13 +142,13 @@ def question_list():
     else:
         abort(404)
 
-def question_get(id):
+def question_show(id):
     """Show the Question with 'question_id' id"""
     question = api.question_get_json(id)
     # if api_response.get('success', False):
     #     question = api_response.get('question', None)           # Safe dict lookup
     if question:
-        return render_template('question_view.html', question=question)
+        return render_template('question_show.html', question=question)
     else:
         abort(404)
 
