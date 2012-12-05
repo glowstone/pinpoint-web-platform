@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+	{% block title %}
+		{{ session['username'] }} on CodeBlue
+	{% endblock %}
+
+	{% block body %}
+		{{ super() }}
+		Welcome {{ session['username'] }}<br>
+
+		<p>All your posts:</p>
+		<ul>
+			{% for post in user.postings %}
+				<li>{{ post }} is located at {{ post.geolocation }} and at elevation {{ post.geolocation.elevation }}</li>
+			{% endfor %}
+		</ul>
+	{% endblock %}
+
+	{% block scripts_extra %}
+		<script src="{{url_for('static', filename='js/message-protocol.js')}}"></script>
+		<script src="{{url_for('static', filename='js/user-view.js')}}"></script>
+		<!--<script src="{{url_for('static', filename='js/geotest.js')}}"></script>-->
+	{% endblock %}
