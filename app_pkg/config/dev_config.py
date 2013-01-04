@@ -8,6 +8,7 @@ from config_secrets import username, password, db_name
 # SQLALCHEMY_DATABASE_URI = dialect + os.path.join(os.path.dirname(os.path.dirname(__file__)), "db", db_name)
 
 dialect = "mysql://"
+
 # Username and password to be moved to a secret file. DB will have independent user management
 #username = "tgarv"
 #password = "lam63sot"	# This is a random password only used for sql.mit.edu, should probably store it somewhere else

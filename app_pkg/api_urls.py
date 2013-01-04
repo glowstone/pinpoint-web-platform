@@ -3,7 +3,7 @@ from flask import jsonify, redirect, abort
 import json
 
 # Package Variables
-from web_package import app
+from app_pkg import app
 
 # Package Modules
 import api_controllers

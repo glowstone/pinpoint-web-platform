@@ -3,17 +3,15 @@ from flask import Flask
 # Create the Flask Application
 app = Flask(__name__)
 
-
-# Configure the app
-# First load configuration from 
-app.config.from_object('web_package.config.dev_config')
-# Override configuration with values within the file pointed to in Deployment Environment
-app.config.from_envvar('DEPLOYMENT_CONFIG', silent=True)
-
-from web_package.database import db_session
+# Configure the app with default settings 
+app.config.from_object('app_pkg.config.default')
+# Override default settings with values from environment-pointed-to config file.
+app.config.from_envvar('APP_CONFIG_FILE')
 
 
 # Default Request Before / Teardown Behavior 
+from app_pkg.database import db_session
+
 @app.before_request
 def before_request():
 	pass
@@ -24,5 +22,5 @@ def teardown_request(exception):
 
 
 # Import urls at the bottom to prevent cyclic dependencies
-from web_package import urls
-from web_package import api_urls
+from app_pkg import urls
+from app_pkg import api_urls

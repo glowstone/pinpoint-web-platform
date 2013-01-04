@@ -1,7 +1,7 @@
 # Web Interface URLs
 
 # Package Variables
-from web_package import app
+from app_pkg import app
 
 # Package Modules
 import controllers

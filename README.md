@@ -1,44 +1,30 @@
 
-Code Blue Web Platform
-======================
+# Code Blue Web Platform
 
-
-Versioning
-==========
+# Versioning
 
 Alpha. No compatability guarantees of any kind.
 
-Getting Started
-===============
-
-Local Setup
------------
-
-    sudo apt-get install build-essential
-    sudo apt-get install python-dev
-    sudo easy_install -U distribute
-    sudo apt-get install libmysqlclient-dev      # Needed for MySQL-python PyPI package
+# Quickstart
 
     git clone git@github.com:dghubble/code-blue-web-platform.git
     cd code-blue-web-platform
     virtualenv blue-env --distribute
     source blue-env/bin/activate
-    pip install -r pip-env-reqs.txt
+    pip install -r requirements.txt
+    export APP_CONFIG_FILE=config/local.py
+    python setupdb.py                 # Re-create Model tables
+    python bootstrapdb.py             # Initialize some data in the tables
+    python runserver.py               # Run local server
 
-Minimal Configuration
----------------------
+# Local MySQL Database Setup
 
-In the web_package/config Python package, include a config_secrets.py module as follows:
+    mysql -u root -p
+    CREATE USER username@localhost IDENTIFIED BY 'password';
+    CREATE DATABASE code_blue_db;
+    GRANT ALL PRIVILEGES ON code_blue_db.* TO username@localhost;
 
-    username = ""
-    password = ""
-    db_name = ""
+Fill out the Database Settings in app_pkg/config/local.py to correspond to your local setup.
 
-Local Testing
--------------
 
-    source blue-env/bin/activate
-    cd flask_app
-    python setupdb.py               # Initialize the SQL Tables
-    python runserver.py             # Run web app at localhost:5000
 

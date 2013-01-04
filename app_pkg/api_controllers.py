@@ -2,7 +2,7 @@
 from flask import session, request
 
 # Package Variables
-from web_package import db_session
+from app_pkg import db_session
 
 # Package Modules
 #from sqlalchemy.core.exceptions import *

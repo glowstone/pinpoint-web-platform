@@ -2,7 +2,7 @@
 
 from sqlalchemy import Column, BigInteger, Integer, String, ForeignKey, Float, DateTime
 from sqlalchemy.orm import relationship, backref, validates
-from web_package.database import Base
+from app_pkg.database import Base
 
 import datetime
 

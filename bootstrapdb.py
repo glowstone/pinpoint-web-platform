@@ -1,5 +1,5 @@
-from web_package import db_session
-from web_package.models import *
+from app_pkg import db_session
+from app_pkg.models import *
 
 import datetime
 
