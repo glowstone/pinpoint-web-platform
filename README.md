@@ -26,5 +26,16 @@ Alpha. No compatability guarantees of any kind.
 
 Fill out the Database Settings in app_pkg/config/local.py to correspond to your local setup.
 
+# MySQL Installation
+
+    sudo apt-get install mysql-server
+
+When setting up the MySQL server, you will be prompted to create a password for the root user.
+
+To secure the installation by removing anonymous users, disallowing remote root logins, removing test database, and reloading the privileges table run the following. You will be prompted for a root password.
+
+    sudo mysql_secure_installation
+    sudo apt-get install mysql-client
+
 
 
