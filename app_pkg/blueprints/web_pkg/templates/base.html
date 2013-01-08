@@ -8,14 +8,14 @@
     <meta name="author" content="">
 
     {% block head_extra %}
-    <link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap.css')}}">
     <style type="text/css">
       body {
         padding-top: 60px;
         padding-bottom: 40px;
       }
     </style>
-    <link rel="stylesheet" href="{{url_for('static', filename='bootstrap/css/bootstrap-responsive.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='vendor/bootstrap/css/bootstrap-responsive.css')}}">
     {% endblock %}
 
     <!-- HTML5 Shims -->
@@ -35,7 +35,7 @@
 
     <!-- Scripts -->
     <script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script src="{{url_for('static', filename='bootstrap/js/bootstrap.js')}}"></script>
+    <script src="{{url_for('static', filename='vendor/bootstrap/js/bootstrap.js')}}"></script>
     <script type="text/javascript">
       SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
       USERNAME = {{ session['username'] }}
