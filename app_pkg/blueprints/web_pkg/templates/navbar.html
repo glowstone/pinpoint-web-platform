@@ -6,13 +6,13 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </a>
-      <a class="brand" href="{{ url_for('index') }}">CodeBlue</a>
+      <a class="brand" href="{{ url_for('web.index') }}">CodeBlue</a>
       <div class="nav-collapse collapse">
         <ul class="nav">
-          <li><a href="{{ url_for('index') }}">Home</a></li>
-          <li><a href="{{ url_for('question_list') }}">Show Questions</a></li>
-          <li><a href="{{ url_for('question_new') }}">New Question</a></li>
-          <li><a href="{{ url_for('user_geolocation', username=session['username'])}}">Update Location</a></li>
+          <li><a href="{{ url_for('web.index') }}">Home</a></li>
+          <li><a href="{{ url_for('web.question_list') }}">Show Questions</a></li>
+          <li><a href="{{ url_for('web.question_new') }}">New Question</a></li>
+          <li><a href="{{ url_for('web.user_geolocation', username=session['username'])}}">Update Location</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
             <ul class="dropdown-menu">
@@ -29,10 +29,10 @@
         {% if not session['username'] %}
           
         {% else %}
-          <form class="navbar-form pull-right" action="{{ url_for('user_logout') }}">
+          <form class="navbar-form pull-right" action="{{ url_for('web.user_logout') }}">
             <button type="submit" class="btn">Log out</button>
           </form>
-          <h4 class="welcome pull-right">Welcome, <a href="{{ url_for('user_show', username=session['username']) }}">{{ session['username'] }}</a></h4>
+          <h4 class="welcome pull-right">Welcome, <a href="{{ url_for('web.user_show', username=session['username']) }}">{{ session['username'] }}</a></h4>
         {% endif %}
       </div><!--/.nav-collapse -->
     </div>

@@ -1,12 +1,8 @@
-# API Interface URLs
 from flask import jsonify, redirect, abort
-import json
-
-# Package Variables
-from app_pkg import app
+from app_pkg.blueprints.api_pkg import api
 
 # Package Modules
-import api_controllers
+import controllers
 
 import util
 
@@ -16,7 +12,7 @@ import util
 # User Routes
 ###############################################################################
 
-@app.route('/api/user/create.json', methods=['POST'])     
+@api.route('/api/user/create.json', methods=['POST'])     
 def user_create_json():
 	required_arguments = ['username', 'password', 'password_repeat']
 	arguments = util.unpack_arguments(required_arguments)
@@ -27,7 +23,7 @@ def user_create_json():
 		return abort(402)     # Bad argument
 
 
-@app.route('/api/user/verify_credentials.json', methods=['POST'])
+@api.route('/api/user/verify_credentials.json', methods=['POST'])
 def user_verify_credentials_json():
 	required_arguments = ['username', 'password']
 	arguments = util.unpack_arguments(required_arguments)
@@ -38,7 +34,7 @@ def user_verify_credentials_json():
 		return abort(402)
 
 
-@app.route('/api/user/show.json', methods=['GET'])
+@api.route('/api/user/show.json', methods=['GET'])
 def user_show_json():
 	required_arguments = ['username']
 	arguments = util.unpack_arguments(required_arguments)
@@ -49,7 +45,7 @@ def user_show_json():
 		return abort(402)
 
 
-@app.route('/api/user/set_location.json', methods=['GET', 'PUT'])      #Temporarily allow GET for debug
+@api.route('/api/user/set_location.json', methods=['GET', 'PUT'])      #Temporarily allow GET for debug
 def user_set_location():
 	required_arguments = ['latitude', 'longitude']
 	arguments = util.unpack_arguments(required_arguments)
@@ -63,12 +59,12 @@ def user_set_location():
 # Question Routes
 ###############################################################################
 
-@app.route('/api/question/create.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
+@api.route('/api/question/create.json', methods=['GET', 'POST'])     #Temporarily allow GET for debug
 def question_create_json():
 	return jsonify(api_controllers.question_create_json())
 
 
-@app.route('/api/question/list.json', methods=['GET'])     #Temporarily allow GET for debug
+@api.route('/api/question/list.json', methods=['GET'])     #Temporarily allow GET for debug
 def question_list_json():
 	required_arguments = []
 	arguments = util.unpack_arguments(required_arguments)
@@ -79,7 +75,7 @@ def question_list_json():
 		abort(402)    # TODO change to whatever bad argument error number is 
 
 
-@app.route('/api/question/get.json', methods=['GET'])
+@api.route('/api/question/get.json', methods=['GET'])
 def question_get_json():
 	required_arguments = ['question_id']
 	arguments = util.unpack_arguments(required_arguments)
@@ -94,11 +90,11 @@ def question_get_json():
 # Answer Routes
 ###############################################################################
 
-@app.route('/api/answer/create.json', methods=['GET', 'POST'])        #Temporarily allow GET for debug
+@api.route('/api/answer/create.json', methods=['GET', 'POST'])        #Temporarily allow GET for debug
 def answer_create_json():
 	return jsonify(api_controllers.answer_create_json())
 
-@app.route('/api/answer/list.json', methods=['GET'])
+@api.route('/api/answer/list.json', methods=['GET'])
 def answer_list_json():
 	required_arguments = ['question_id']
 	arguments = util.unpack_arguments(required_arguments)
@@ -109,7 +105,7 @@ def answer_list_json():
 		abort(402)
 
 
-@app.route('/api/answer/get.json', methods=['GET'])
+@api.route('/api/answer/get.json', methods=['GET'])
 def answer_get_json():
 	required_arguments = ['answer_id']
 	arguments = util.unpack_arguments(required_arguments)
@@ -122,12 +118,12 @@ def answer_get_json():
 
 # Comment Routes
 ###############################################################################
-@app.route('/api/comment/create.json', methods=['GET', 'POST'])       # Temporarily allow GET
+@api.route('/api/comment/create.json', methods=['GET', 'POST'])       # Temporarily allow GET
 def comment_create_json():
 	return jsonify(api_controllers.comment_create_json())
 
 
-@app.route('/api/comment/list.json', methods=['GET'])
+@api.route('/api/comment/list.json', methods=['GET'])
 def comment_list_json():
 	required_arguments = ['commentable_id']
 	arguments = util.unpack_arguments(required_arguments)
@@ -138,7 +134,7 @@ def comment_list_json():
 		abort(402)
 
 
-@app.route('/api/comment/get.json', methods=['GET'])
+@api.route('/api/comment/get.json', methods=['GET'])
 def comment_get_json():
 	required_arguments = ['comment_id']
 	arguments = util.unpack_arguments(required_arguments)

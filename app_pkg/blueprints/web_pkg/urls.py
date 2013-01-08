@@ -1,7 +1,7 @@
 # Web Interface URLs
-
+from flask import render_template, redirect, url_for
 # Package Variables
-from app_pkg import app
+from app_pkg.blueprints.web_pkg import web 
 
 # Package Modules
 import controllers
@@ -9,7 +9,7 @@ import controllers
 
 # Connect URL routes with Controller functions
 
-@app.route('/')
+@web.route('/')
 def index():
     """Show the web interface home page"""
     return controllers.index()
@@ -18,31 +18,31 @@ def index():
 # User Routes
 ################################################################################
 
-@app.route('/user/signup', methods = ['GET', 'POST'])
+@web.route('/user/signup', methods = ['GET', 'POST'])
 def user_new():
     """New user creation"""
     return controllers.user_new()
 
 
-@app.route('/user/login', methods = ['POST'])
+@web.route('/user/login', methods = ['POST'])
 def user_login():
     """Verify and set the User authenticated session context"""
     return controllers.user_login()
 
 
-@app.route('/user/logout', methods = ['GET'])
+@web.route('/user/logout', methods = ['GET'])
 def user_logout():
     """Destroy User's authenticated session context"""
     return controllers.user_logout()
 
 
-@app.route('/user/<username>', methods = ['GET'])
+@web.route('/user/<username>', methods = ['GET'])
 def user_show(username):
     """Show User profile of user with username 'username'"""
     return controllers.user_show(username)
 
 
-@app.route('/user/<username>/settings', methods = ['GET'])
+@web.route('/user/<username>/settings', methods = ['GET'])
 def user_edit(username):
     """Edit User with username 'username'"""
     return controllers.user_edit(username)
@@ -50,7 +50,7 @@ def user_edit(username):
 
 
 #Temporary
-@app.route('/user/<username>/location', methods = ['GET', 'POST'])
+@web.route('/user/<username>/location', methods = ['GET', 'POST'])
 def user_geolocation(username):
     """Manually update the current User's geolocation"""
     return controllers.user_geolocation(username)
@@ -85,24 +85,24 @@ def user_geolocation(username):
 # Question Routes
 ###############################################################################
 
-@app.route('/question/new', methods = ['GET', 'POST'])
+@web.route('/question/new', methods = ['GET', 'POST'])
 def question_new():
     """New Question creation"""
     return controllers.question_new()
 
-@app.route('/question', methods=['GET'])
+@web.route('/question', methods=['GET'])
 def question_list():
     """List all the Questions near to the current User"""
     # TODO Just dumps all questions for now
     return controllers.question_list()
 
-@app.route('/question/<id>', methods = ['GET'])
+@web.route('/question/<id>', methods = ['GET'])
 def question_show(id):
     """Show the question with 'question_id' id"""
     return controllers.question_show(id)
 
 # Temporary
-@app.route('/question/<id>/edit', methods = ['GET'])
+@web.route('/question/<id>/edit', methods = ['GET'])
 def question_edit(id):
     """Allow editing the question with question_id id"""
     return controllers.question_edit(id)
@@ -112,7 +112,7 @@ def question_edit(id):
 ###############################################################################
 
 # Temporary - merge this behavior into the Question view.
-@app.route('/answer/new', methods = ['GET', 'POST'])
+@web.route('/answer/new', methods = ['GET', 'POST'])
 def answer_new():
     """Route showing form to create a new Answer"""
     return controllers.answer_new()
@@ -120,7 +120,7 @@ def answer_new():
 # Comment Routes
 ###############################################################################
 
-@app.route('/comment/new', methods = ['GET', 'POST'])
+@web.route('/comment/new', methods = ['GET', 'POST'])
 def comment_new():
     """Route for creating a Comment"""
     return controllers.comment_new()
@@ -129,7 +129,7 @@ def comment_new():
 ###############################################################################
 
 # Testing
-@app.route('/test', methods=['GET', 'POST'])
+@web.route('/test', methods=['GET', 'POST'])
 def test():
     return controllers.test()
 
@@ -138,7 +138,7 @@ def test():
 # Web Interface Error Handlers
 ###############################################################################
 
-@app.errorhandler(404)
+@web.errorhandler(404)
 def page_not_found(error):
     return controllers.error_404(error)
 

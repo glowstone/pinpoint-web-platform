@@ -20,7 +20,11 @@ def before_request():
 def teardown_request(exception):
 	db_session.remove()                    #Shutdown SQLAlchemy db session.
 
+# Import Blueprint Apps
+from app_pkg.blueprints.api_pkg import api as api_bp
+from app_pkg.blueprints.web_pkg import web as web_bp
 
-# Import urls at the bottom to prevent cyclic dependencies
-from app_pkg import urls
-from app_pkg import api_urls
+# Register the Blueprint Apps
+app.register_blueprint(api_bp)
+app.register_blueprint(web_bp)
+

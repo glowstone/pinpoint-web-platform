@@ -5,7 +5,7 @@
 		{{ super() }}
 
 		<div class="container">
-			<form action="{{url_for('question_new')}}" method="POST">
+			<form action="{{url_for('web.question_new')}}" method="POST">
 				<legend>Create a New Question</legend>
 				<label for="question_title">Title</label>
 				<input id="question_title" type="text" name="title">

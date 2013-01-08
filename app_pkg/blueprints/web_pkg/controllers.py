@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, session, request, flash, abort
 import util
-from models import *
-#from web_package import db_session
-import api_controllers as api
+
+from app_pkg.blueprints.api_pkg.models import *
+from app_pkg.blueprints.api_pkg import controllers as api
 
 
 def index():
@@ -20,11 +20,11 @@ def user_new():
         arguments = util.unpack_arguments(required_arguments)
         api_response = api.user_create_json(**arguments)
         if api_response['success']:
-            return redirect(url_for('user_show', username = session.get('username', None)))
+            return redirect(url_for('web.user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad User creation request. " + api_response['error'])
-            return redirect(url_for('user_new'))
+            return redirect(url_for('web.user_new'))
         
 def user_login():
     """Make API request to log the user in and redirect to the profile page"""
@@ -32,18 +32,18 @@ def user_login():
     arguments = util.unpack_arguments(required_arguments)
     api_response = api.user_verify_credentials_json(**arguments)
     if api_response.get('success', False):
-        return redirect(url_for('user_show', username = session.get('username', None)))
+        return redirect(url_for('web.user_show', username = session.get('username', None)))
     else:
         # TODO: Handle Invalid logins
         flash("Invalid login")
-        return redirect(url_for('index'))
+        return redirect(url_for('web.index'))
 
 def user_logout():
     """Deauthenticate user by popping the user's session instance."""
     session.pop('username', None)
     session.pop('user_id', None)
     flash("Logged out")
-    return redirect(url_for('index'))
+    return redirect(url_for('web.index'))
 
 def user_show(username):
     """Show the given user's profile or redirect to the page with user login"""
@@ -58,7 +58,7 @@ def user_show(username):
             return render_template('user_show.html', user=user)
     else:
         flash("No user named " + username)
-        return redirect(url_for('index'))   
+        return redirect(url_for('web.index'))   
 
 
 def user_edit(username):
@@ -73,11 +73,11 @@ def user_geolocation(username):
     elif request.method == 'POST':
         api_response = api.user_set_geolocation_json()
         if api_response.get('success', False):
-            return redirect(url_for('user_show', username = session.get('username', None)))
+            return redirect(url_for('web.user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad geolocation update")
-            return redirect(url_for('user_geolocation', username = session.get('username', None)))
+            return redirect(url_for('web.user_geolocation', username = session.get('username', None)))
 
 # Posting Controller Handlers
 ###############################################################################
@@ -89,11 +89,11 @@ def posting_new():
     else:
         api_response = api.posting_create_json()
         if api_response.get('success', False):
-            return redirect(url_for('user_show', username = session.get('username', None)))
+            return redirect(url_for('web.user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad Posting creation request")
-            return redirect(url_for('posting_new'))
+            return redirect(url_for('web.posting_new'))
 
 def posting_view(id):
     # TODO: Check whether user has permission to view the post

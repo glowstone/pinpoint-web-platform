@@ -1,5 +1,5 @@
-from app_pkg import db_session
-from app_pkg.models import *
+from app_pkg.database import db_session
+from app_pkg.blueprints.api_pkg.models import *
 
 import datetime
 
