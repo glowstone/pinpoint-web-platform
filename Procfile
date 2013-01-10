@@ -1,2 +1,2 @@
 # web: python runserver.py
-web: gunicorn runserver:app -w 3
+web: gunicorn runserver:app -w 1
