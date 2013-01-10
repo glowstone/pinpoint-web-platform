@@ -1,5 +1,5 @@
 from flask import jsonify, redirect, abort
-from app_pkg.blueprints.api_pkg import api
+from app_pkg.blueprints.api import api_bp as api
 
 # Package Modules
 import controllers

@@ -1,8 +1,8 @@
 from flask import render_template, redirect, url_for, session, request, flash, abort
 import util
 
-from app_pkg.blueprints.api_pkg.models import *
-from app_pkg.blueprints.api_pkg import controllers as api
+from app_pkg.blueprints.api.models import *
+from app_pkg.blueprints.api import controllers as api
 
 
 def index():

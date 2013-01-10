@@ -1,7 +1,7 @@
 # Web Interface URLs
 from flask import render_template, redirect, url_for
 # Package Variables
-from app_pkg.blueprints.web_pkg import web 
+from app_pkg.blueprints.web import web_bp as web 
 
 # Package Modules
 import controllers
