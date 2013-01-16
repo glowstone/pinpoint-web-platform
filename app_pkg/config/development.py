@@ -15,7 +15,7 @@ host = "localhost"
 database_name = "code_blue_db"
 username = "dghubble"
 password = "sample"
-raw_connection_string = ""
+raw_connection_string = None
 
 if raw_connection_string:      # Raw Database Connection String Provided
 	SQLALCHEMY_DATABASE_URI = raw_connection_string
