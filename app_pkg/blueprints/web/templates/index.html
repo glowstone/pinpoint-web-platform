@@ -1,47 +1,48 @@
 {% extends 'base.html' %}
 
-{% block title %} CodeBlue {% endblock %}
+{# HEAD #}
 
-{% block head_extra %}
+{% block head %}{{ super() }}{% endblock head%}
+
+{% block title %}CodeBlue{% endblock %}
+
+{% block head_styles %}
   {{ super() }}
     <link rel="stylesheet" href="{{url_for('static', filename='css/index.css')}}">
 {% endblock %}
 
-{% block body %}
+{% block head_scripts %}
   {{ super() }}
-  
-  <div class="container">
-    <!-- Main hero unit for a primary marketing message or call to action -->
-    <div class="hero-unit">
-      <h1>Hello, world!</h1>
-      <p>CodeBlue is the placeholder name for our project, and hopefully it will do some cool stuff soon!</p>
-      <p><a class="btn btn-primary btn-large">Learn more &raquo;</a></p>
-    </div>
+{% endblock head_scripts %}
 
-    <div class="pull-right span4">
-      <form action="{{ url_for('web.user_login') }}" method="POST">
-        <input class="span2" type="text" placeholder="Email" name="username" autofocus>
-        <br>
-        <input class="span2" type="password" placeholder="Password" name="password">
-        <br>
-        <button type="submit" class="btn">Login</button>
-      </form>
+{# BODY #}
 
-      <a href="{{url_for('web.user_new')}}" class="btn">Sign up</a>
-    </div>
+{% block content %}
+  {{ super() }}
 
-    {% with messages = get_flashed_messages() %}
-      {% if messages %}
-        <ul class=flashes>
-        {% for message in messages %}
-          <li>{{ message }}</li>
-        {% endfor %}
-        </ul>
-      {% endif %}
-    {% endwith %}
+  <img src="{{url_for('static', filename='img/touch.png')}}" height=50 width=50 />
 
-    <hr>
+  <div id="map_region"></div>
 
-  </div> <!-- /container -->
+  <a href="{{ url_for('web.user_new') }}">Create an Account Now</a>
+  <br>
+  <a href="{{ url_for('web.user_login') }}">Login</a>
 
-{% endblock %}
+  <form action="{{ url_for('web.user_login') }}" method="POST">
+    <input class="span2" type="text" placeholder="Email" name="username" autofocus>
+    <br>
+    <input class="span2" type="password" placeholder="Password" name="password">
+    <br>
+    <button type="submit" class="btn">Login</button>
+  </form>
+
+{% endblock content %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock footer %}
+
+{% block tail_scripts %}
+    {{ super() }}
+<script data-main="{{url_for('static', filename='js/index.js')}}" src="{{url_for('static', filename='js/require.js')}}"></script>
+{% endblock tail_scripts %}

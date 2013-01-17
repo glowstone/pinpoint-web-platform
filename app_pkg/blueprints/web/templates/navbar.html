@@ -1,40 +1,57 @@
-<div class="navbar navbar-inverse navbar-fixed-top">
+<div class="navbar navbar-static-top">
   <div class="navbar-inner">
     <div class="container">
-      <!--<a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+      <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-      </a>-->
-      <a class="brand" href="{{ url_for('web.index') }}">CodeBlue</a>
+      </a>
+
+      <a class="brand" href="{{ SCRIPT_ROOT }}">Code Blue</a>
+
+      <!--Hidden at 940px or less-->
       <div class="nav-collapse collapse">
+        <ul class="nav pull-right">
+
+          {% if session['username'] %}
+          <li><a href="#">Category 1</a></li>
+          <li><a href="#">Category 2</a></li>
+          <li class="dropdown">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+              <img src="{{ current_user.userprofile.profile_image_url }}&s=20" class="navbar_profile_img"/>
+              {{ current_user.username}}
+            <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="/settings"><i class='icon-wrench'></i>Settings</a></li>
+              <li><a href="/logout"><i class='icon-eject'></i>Logout</a></li>
+            </ul>
+          </li>
+
+          {% else %}
+          <li>
+          <li><button id="login_btn" class="btn btn-primary">Login</button></li>
+          <li><button id="signup_btn" class="btn btn-warning">Signup</button></li>
+          
+          {% endif %}
+        </ul>
+
         <ul class="nav">
+
+          {% if session['username'] %}
+          <form class="navbar-search">
+            <input type="text" class="span2 search-query" placeholder="Search">
+          </form>
           <li><a href="{{ url_for('web.index') }}">Home</a></li>
           <li><a href="{{ url_for('web.question_list') }}">Show Questions</a></li>
           <li><a href="{{ url_for('web.question_new') }}">New Question</a></li>
           <li><a href="{{ url_for('web.user_geolocation', username=session['username'])}}">Update Location</a></li>
-          <li class="dropdown">
-            <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="#">Action</a></li>
-              <li><a href="#">Another action</a></li>
-              <li><a href="#">Something else here</a></li>
-              <li class="divider"></li>
-              <li class="nav-header">Nav header</li>
-              <li><a href="#">Separated link</a></li>
-              <li><a href="#">One more separated link</a></li>
-            </ul>
-          </li>
+
+          {% endif %}
         </ul>
-        {% if not session['username'] %}
-          
-        {% else %}
-          <form class="navbar-form pull-right" action="{{ url_for('web.user_logout') }}">
-            <button type="submit" class="btn">Log out</button>
-          </form>
-          <h4 class="welcome pull-right">Welcome, <a href="{{ url_for('web.user_show', username=session['username']) }}">{{ session['username'] }}</a></h4>
-        {% endif %}
-      </div><!--/.nav-collapse -->
+
+      </div>
     </div>
   </div>
+<!--End of Navbar -->
 </div>

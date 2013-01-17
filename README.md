@@ -26,10 +26,12 @@ Alpha. No compatability guarantees of any kind.
 In your virtualenvwrapper $WORKON_HOME, find the code-blue-env (or whatever you called the virtual environment) and edit <venv_name>/bin/postactivate 
 
     export APP_CONFIG=development
+    export GOOGLE_API_KEY=xxx
 
 and <venv_name>/bin/postdeactivate
 
     unset APP_CONFIG
+    unset GOOGLE_API_KEY
 
 Running 
 
