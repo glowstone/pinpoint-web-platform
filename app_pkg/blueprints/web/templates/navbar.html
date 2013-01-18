@@ -1,4 +1,4 @@
-<div class="navbar navbar-static-top">
+<div class="navbar navbar-static-top navbar-inverse">
   <div class="navbar-inner">
     <div class="container">
       <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
@@ -15,8 +15,6 @@
         <ul class="nav pull-right">
 
           {% if session['user'] %}
-          <li><a href="#">Category 1</a></li>
-          <li><a href="#">Category 2</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               {#<!--<img src="{{ current_user.userprofile.profile_image_url }}&s=20" class="navbar_profile_img"/>-->#}
@@ -42,7 +40,7 @@
           <form class="navbar-search">
             <input type="text" class="span2 search-query" placeholder="Search">
           </form>
-          <li><a href="{{ url_for('web.questions') }}">Answer</a></li>
+          <li><a href="{{ url_for('web.questions') }}">Browser Questions</a></li>
           <li><a href="{{ url_for('web.ask') }}">Ask</a></li>
           {% endif %}
         </ul>

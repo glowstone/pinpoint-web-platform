@@ -4,9 +4,15 @@ import util
 from app_pkg.blueprints.api.models import *
 from app_pkg.blueprints.api import controllers as api
 
+from util import login_required
+
 
 def index():
-    return render_template('index.html')
+    if session.get('user', False):
+        # UI would be confusing is logged in Users could visit the Index page (for Signup/Login)
+        return redirect(url_for('web.questions'))
+    else:
+        return render_template('index.html')
 
 
 def signup():
@@ -24,7 +30,8 @@ def signup():
             return redirect(url_for('web.index'))
     else:
         redirect(url_for('web.index'))
-        
+      
+
 def login():
     """
     Accepts POST only.
@@ -44,14 +51,26 @@ def login():
     else:
         return redirect(url_for('web.index'))
 
+
+@login_required
 def questions():
-    return "Question page"
+    return render_template('questions.html')
 
+
+@login_required
 def ask():
-    return "Asking page"
+    return render_template('ask.html')
+    
 
+@login_required
 def question(question_id):
     return "Showing question " + question_id
+
+
+@login_required
+def settings():
+    return render_template('settings.html')
+
 
 def logout():
     """Deauthenticate user by popping the user's session instance."""
@@ -59,25 +78,53 @@ def logout():
     flash("Logged out")
     return redirect(url_for('web.index'))
 
-def profile(username):
-    """Show the given user's profile or redirect to the page with user login"""
-    api_response = api.user_show_json(username)
-    print "controller", api_response
-    if api_response.get('success', None):
-        if api_response['data']['authenticated']:
-            user = api_response['data']['user']
-            return render_template('user_show_authenticated.html', user=user)
-        else:
-            user = api_response['data']['user']
-            return render_template('profile.html', user=user)
-    else:
-        flash("No user named " + username)
-        return redirect(url_for('web.index'))   
+# def profile(username):
+#     """Show the given user's profile or redirect to the page with user login"""
+#     api_response = api.user_show_json(username)
+#     print "controller", api_response
+#     if api_response.get('success', None):
+#         if api_response['data']['authenticated']:
+#             user = api_response['data']['user']
+#             return render_template('user_show_authenticated.html', user=user)
+#         else:
+#             user = api_response['data']['user']
+#             return render_template('profile.html', user=user)
+#     else:
+#         flash("No user named " + username)
+#         return redirect(url_for('web.index'))   
 
 
-def settings():
-    # TODO
-    return render_template('user_edit.html')
+
+
+
+# Controllers for Footer Linked Pages
+###############################################################################
+
+def about():
+    """About Page"""
+    return render_template('footer/about.html')
+
+
+def contact():
+    """Contact Page"""
+    return render_template('footer/contact.html')
+
+
+def faq():
+    """FAQ Page"""
+    return render_template('footer/faq.html')
+
+
+def privacy():
+    """Privacy Policy Page"""
+    return render_template('footer/privacy.html')
+
+
+
+
+
+
+
 
 
 def user_geolocation(username):

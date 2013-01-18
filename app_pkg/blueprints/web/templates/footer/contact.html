@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{# HEAD #}
+
+{% block head %}{{ super() }}{% endblock head%}
+
+{% block title %}CodeBlue{% endblock %}
+
+{% block head_styles %}
+  {{ super() }}
+{% endblock %}
+
+{% block head_scripts %}
+  {{ super() }}
+{% endblock head_scripts %}
+
+{# BODY #}
+
+{% block content %}
+  {{ super() }}
+
+  <h1>Contact</h1>
+
+  <ul>
+  	<li>Dalton Hubble, dghubble@mit.edu</li>
+  	<li>Thomas garver, tgarv@mit.edu</li>
+  </ul>
+
+{% endblock content %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock footer %}
+
+{% block tail_scripts %}
+    {{ super() }}
+{% endblock tail_scripts %}

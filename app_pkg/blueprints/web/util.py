@@ -1,48 +1,16 @@
-import os
-import hashlib
-import string
-import random
-import datetime
-#from web_package.models import *
 from flask import session, request
+from functools import wraps
 
-
-#Characters used to generate a hash
-ALPHANUMERIC = string.ascii_letters + string.digits
-# Default salt length (in bytes) equal to 512 bit output of sha512 hash 
-SALT_LENGTH = 64
-EARTH_RADIUS_METERS = 6371000   # Radius of the earth, in kilometers
-POST_DELTAS = {'3h': datetime.timedelta(hours=3),
-               '6h': datetime.timedelta(hours=6),
-               '12h': datetime.timedelta(hours=12),
-               '1d': datetime.timedelta(days=1),
-               '3d': datetime.timedelta(days=3),
-               'default': datetime.timedelta(hours=6)}
-
-
-
-def random_salt(salt_length=SALT_LENGTH):
-    """Return a salt_length string of cryptographically random bytes."""
-    return ''.join([random.choice(ALPHANUMERIC) for i in xrange(salt_length)])
-    #return os.urandom(salt_length)
-
-
-def hash_w_salt(password, salt):
-    """Return a hashlib sha512 hash of the combined input password and input salt."""
-    return hashlib.sha512(password + salt).hexdigest()
-
-def is_authorized(attempt, salt, hash):
-    """Returns True if hash of the password attempt and salt 
-    is equal to the provided hash value."""
-    return hashlib.sha512(attempt + salt).hexdigest() == hash
+from flask import redirect, url_for  # Used by login_required decorator
 
 
 def login_required(f):
+    """Checks that the user has an authenticated session. Otherwise redirect
+    to the index page to login"""
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if get_current_user() is None:
-            # TODO: This should probably redirect to a login page rather than index
-            return redirect(url_for('index', next=request.url))
+        if 'user' not in session:
+            return redirect(url_for('web.index'))   #next=request.url
         return f(*args, **kwargs)
     return decorated_function
 
@@ -133,60 +101,6 @@ class APIArgument(object):
         #         print 'Bad APIArgument type'
         #         break
 
-
-# def create_user(username, password):
-#   # Create a new location for the User
-#   location = create_geolocation(None, None, None)
-#   db.session.add(location)
-#   db.session.commit()
-#   # Hash the password provided in the new user form. Store the hashed value and the salt used in the hash.
-#   hash, salt = hash_password(password)
-#   user = User(username, hash, salt, location.id)
-#   # Insert the user object into the database
-#   db.session.add(user)
-#   db.session.commit()
-#   # Set the session information for the new user
-#   do_login(username)
-
-
-# def do_login(username):
-#   session['username'] = username
-#   session['logged_in'] = True          
-
-
-# def do_logout():
-#   session.pop('username', None)        #Remove username from session, if its defined.
-#   session['logged_in'] = False
-
-
-def get_current_user():
-    """Queries for User corresponding to current session. Returns User object or None if no user found."""
-    username = session.get('username', None)
-    user = User.query.filter_by(username=username).first()       
-    return user
-
-# def create_post(title, text, form_tdelta, user, geolocation):
-#   """
-#   Attempts to create Post object belonging to a user and pinned to a geolocation. Returns the newly 
-#   created Post or None upon failure.
-#   Requires: user, geolocation objects already exist in db
-#   Affects: Post object table
-#   """ 
-#   creation_time = datetime.datetime.now()
-
-#   # TODO: Do Browser datetime to Python datetime conversion instead maybe
-#   if form_tdelta in POST_DELTAS:
-#       tdelta = POST_DELTAS[form_tdelta]
-#   else:
-#       tdelta = POST_DELTAS['default']
-
-#   expiration_time = creation_time + tdelta
-
-#   # Create Post object belonging to current user and positioned at a specific geolocation.
-#   post = Post(title, text, creation_time, expiration_time, user.id, geolocation.id)
-#   db.session.add(post)
-#   db.session.commit()
-#   return post
 
 
 # def create_geolocation(latitude, longitude, elevation):

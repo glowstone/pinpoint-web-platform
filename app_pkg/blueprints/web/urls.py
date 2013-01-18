@@ -65,6 +65,33 @@ def logout():
     return controllers.logout()
 
 
+# Footer Linked Pages
+###############################################################################
+
+@web.route('/about', methods = ['GET'])
+def about():
+    """About Page"""
+    return controllers.about()
+
+@web.route('/contact', methods = ['GET'])
+def contact():
+    """Contact Page"""
+    return controllers.contact()
+
+@web.route('/faq', methods = ['GET'])
+def faq():
+    """FAQ Page"""
+    return controllers.faq()
+
+@web.route('/privacy', methods = ['GET'])
+def privacy():
+    """Privacy Policy Page"""
+    return controllers.privacy()
+
+
+
+
+
 
 # #Temporary
 # @web.route('/user/<username>/location', methods = ['GET', 'POST'])

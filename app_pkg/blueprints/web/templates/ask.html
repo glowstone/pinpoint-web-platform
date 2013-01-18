@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{# HEAD #}
+
+{% block head %}{{ super() }}{% endblock head%}
+
+{% block title %}CodeBlue{% endblock %}
+
+{% block head_styles %}
+  {{ super() }}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/ask.css')}}">
+{% endblock %}
+
+{% block head_scripts %}
+  {{ super() }}
+{% endblock head_scripts %}
+
+{# BODY #}
+
+{% block content %}
+  {{ super() }}
+
+  <p>Asking Page</p>
+
+{% endblock content %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock footer %}
+
+{% block tail_scripts %}
+    {{ super() }}
+<script data-main="{{url_for('static', filename='js/ask.js')}}" src="{{url_for('static', filename='js/require.js')}}"></script>
+{% endblock tail_scripts %}
