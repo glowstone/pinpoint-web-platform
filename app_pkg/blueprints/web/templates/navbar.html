@@ -8,7 +8,7 @@
         <span class="icon-bar"></span>
       </a>
 
-      <a class="brand" href="{{ SCRIPT_ROOT }}">Code Blue</a>
+      <a class="brand" href="{{ ROOT_ADDRESS }}">Code Blue</a>
 
       <!--Hidden at 940px or less-->
       <div class="nav-collapse collapse">
@@ -17,7 +17,7 @@
           {% if session['user'] %}
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              {#<!--<img src="{{ current_user.userprofile.profile_image_url }}&s=20" class="navbar_profile_img"/>-->#}
+              <img src="{{ session['user'].profile_image_url }}&s=20" class="navbar_profile_img"/>
               {{ session['user'].username }}
             <b class="caret"></b></a>
             <ul class="dropdown-menu">

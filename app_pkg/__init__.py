@@ -24,10 +24,10 @@ def before_request():
 def teardown_request(exception):
 	db_session.remove()                    #Shutdown SQLAlchemy db session.
 
-# Custom Context Processor
-@app.context_processor
-def custom_context_processor():
-	return dict(GOOGLE_API_KEY=app.config.get('GOOGLE_API_KEY'))
+# Custom Context Processors
+from app_pkg.blueprints.web.context_processors import external_keys
+from app_pkg.blueprints.web.context_processors import server_info
+
 
 # Import Blueprint Apps
 from app_pkg.blueprints.api import api_bp

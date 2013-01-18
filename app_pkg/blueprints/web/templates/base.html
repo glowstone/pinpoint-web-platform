@@ -76,7 +76,8 @@
         <script src="{{url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js')}}"></script>
         <script>
             SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
-            GOOGLE_API_KEY = "{{ GOOGLE_API_KEY }}"
+            ROOT_ADDRESS = "{{ ROOT_ADDRESS }}";
+            GOOGLE_API_KEY = "{{ GOOGLE_API_KEY }}";
             console.log(SCRIPT_ROOT);
         </script>
         {% endblock tail_scripts %}        

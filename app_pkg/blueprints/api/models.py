@@ -4,6 +4,9 @@ from sqlalchemy import Column, BigInteger, Integer, String, ForeignKey, Float, D
 from sqlalchemy.orm import relationship, backref, validates
 from app_pkg.database import Base
 
+# Libraries for encoding urls and generating md5 hashes for Gravatar
+import urllib, hashlib
+
 import datetime
 
 # One to ones relationships are never truly balanced. After all, the implicit parent may access the 
@@ -76,6 +79,7 @@ class User(Pin):
     email = Column(String(120), unique=True, nullable=False)
     password_hash = Column(String(140), nullable=False)
     salt = Column(String(120))
+    profile_image_url = Column(String(200))
     postings = relationship('Posting', primaryjoin="(User.user_id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
     __mapper_args__ = {'polymorphic_identity': 'user',
                        'inherit_condition': (id == Pin.id)}
@@ -86,6 +90,11 @@ class User(Pin):
         self.email = email
         self.password_hash = password_hash
         self.salt = salt
+        
+        gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode({'d':'identicon'})
+        self.profile_image_url = gravatar_url
+        
 
     def __repr__(self):
         return '<User %s>' % (self.username)
