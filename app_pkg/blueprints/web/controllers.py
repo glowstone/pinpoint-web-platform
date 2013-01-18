@@ -18,12 +18,14 @@ def index():
 def signup():
     """Accepts POST only, to create new User"""
     if request.method == 'POST':
-        required_arguments = ['username', 'password', 'password_repeat']
+        required_arguments = ['username', 'email', 'password']
         arguments = util.unpack_arguments(required_arguments)
-        print arguments
-        api_response = api.user_create_json(**arguments)
-        if api_response['success']:
-            return redirect(url_for('web.user_show', username = session.get('username', None)))
+        api_response = api.user_create(**arguments)
+        print api_response
+        if api_response.get('success', False):
+            user = api_response.get('data', None)
+            session['user'] = user
+            return redirect(url_for('web.questions'))
         else:
             # TODO show validation errors
             flash("Bad User creation request. " + api_response['error'])
@@ -40,9 +42,11 @@ def login():
     if request.method == 'POST':
         required_arguments = ['user_identifier', 'password']
         arguments = util.unpack_arguments(required_arguments)
-
         api_response = api.user_authenticate(**arguments)
+        print api_response
         if api_response.get('success', False):
+            user = api_response.get('data', None)
+            session['user'] = user
             return redirect(url_for('web.questions'))
         else:
             # TODO: Handle Invalid logins

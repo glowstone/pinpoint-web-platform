@@ -14,7 +14,7 @@ import util
 
 @api.route('/api/user/create.json', methods=['POST'])     
 def user_create_json():
-	required_arguments = ['username', 'password', 'password_repeat']
+	required_arguments = ['username', 'email', 'password']
 	arguments = util.unpack_arguments(required_arguments)
 	if arguments:
 		status = api_controllers.user_create_json(**arguments)

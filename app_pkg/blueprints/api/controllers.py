@@ -19,56 +19,50 @@ import datetime
 # API Account Resource Handlers
 ###############################################################################
 
-def user_create_json(username, password, password_repeat):
+def user_create(username, email, password):
     """Create a new User"""
     # TODO real validation - return errors in json
     # TODO take optional latitude, longitude, elevation starting values
     # Crude validation checks
-    print "Top of user_create_json"
     if len(username) < 3:
         return util.error_response("Username too short")
-    if password != password_repeat:
-        return util.error_response("Passwords don't match")
-
+    
     location = Geolocation(0, 0, 0)
     db_session.add(location)
     db_session.commit()                          # Atomicity is somewhat desired here. TODO
         
     salt = util.random_salt()
     password_hash = util.hash_w_salt(password, salt)
-    user = User(username, password_hash, salt, location)
+    user = User(username, email, password_hash, salt, location)
     db_session.add(user)
     try:
         db_session.commit()
     except Exception:               # SQLAlchemyError would be better, but not sure how to import it.
         db_session.rollback()       # TODO: Does not rollback geolocation creation as we would like
         return util.error_response("Database error creating User")
-
-    # Secure Server-Side Session Storage. Sets cryptographic cookie on the client with secure session id.
-    session['username'] = username
-    session['user_id'] = user.user_id
-    
-    return util.success_response()
+        
+    return util.success_response(data=user)
 
 
 def user_authenticate(user_identifier, password):
+    """Authenticate the user with either email or password"""
     # Try to authenticate with Username
     user = User.query.filter_by(username=user_identifier).first()
     if user is not None:
         if util.is_authenticated(password, user.salt, user.password_hash):
-            session['user'] = user
-            return util.success_response()
+            return util.success_response(data=user)
         else:
-            return util.error_response()
+            return util.error_response('Invalid password')
     # Try to authenticate with Email
     else:
         user = User.query.filter_by(email=user_identifier).first()
         if user is not None:
             if util.is_authenticated(password, user.salt, user.password_hash):
-                session['user'] = user
-                return util.success_response()
+                return util.success_response(data=user)
             else:
-                return util.error_response()
+                return util.error_response('Invalid password')
+        else:
+            return util.error_response('No User with that username or email')
 
 
 

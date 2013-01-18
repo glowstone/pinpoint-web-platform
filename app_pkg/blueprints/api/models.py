@@ -72,16 +72,18 @@ class User(Pin):
     # Customary to combine the primary key and foreign key to parent under the column name id or parent_id
     user_id = Column(Integer, primary_key=True)
     id = Column(Integer, ForeignKey('pin.id'))
-    username = Column(String(80), unique=True)
-    password_hash = Column(String(140))
+    username = Column(String(80), unique=True, nullable=False)
+    email = Column(String(120), unique=True, nullable=False)
+    password_hash = Column(String(140), nullable=False)
     salt = Column(String(120))
     postings = relationship('Posting', primaryjoin="(User.user_id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
     __mapper_args__ = {'polymorphic_identity': 'user',
                        'inherit_condition': (id == Pin.id)}
 
-    def __init__(self, username, password_hash, salt, geolocation):
+    def __init__(self, username, email, password_hash, salt, geolocation):
         super(User, self).__init__(geolocation.id)
         self.username = username
+        self.email = email
         self.password_hash = password_hash
         self.salt = salt
 

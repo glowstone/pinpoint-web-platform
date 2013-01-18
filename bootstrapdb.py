@@ -7,7 +7,7 @@ g1 = Geolocation(1,2,3)
 db_session.add(g1)
 db_session.commit()
 
-dalton = User('dalton', 'dsadsadas', 'dwqeqdsadwq', g1)
+dalton = User('dalton', 'dhubble@mit.com', 'dsadsadas', 'dwqeqdsadwq', g1)
 db_session.add(dalton)
 db_session.commit()
 
@@ -36,7 +36,8 @@ db_session.add(commentable1)
 db_session.commit()
 
 
-print dalton                  
+print dalton    
+print dalton.email              
 print dalton.geolocation
 print dalton.geolocation.pin
 
@@ -65,7 +66,7 @@ g5 = Geolocation(5,6,7)
 db_session.add(g5)
 db_session.commit()
 
-tommy = User('tommy', 'weqeqeqew', 'dasdasda', g5)
+tommy = User('tommy', 'tgarv@mit.com', 'weqeqeqew', 'dasdasda', g5)
 db_session.add(tommy)
 db_session.commit()
 
