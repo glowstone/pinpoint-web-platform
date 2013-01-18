@@ -28,6 +28,21 @@
   <br>
   <a href="{{ url_for('web.login') }}">Login</a>
 
+  
+
+  <a href="{{ url_for('web.signup') }}">Create an Account Now</a>
+
+  <form action="{{url_for('web.signup')}}" method="POST">
+    <legend>Sign up for CodeBlue</legend>
+    <input type="text" name="username" placeholder="Choose a username">
+    <br>
+    <input type="email" name="email" placeholder="Your email">
+    <br>
+    <input type="password" name="password" placeholder="Create a password">
+    <br>
+    <button type="submit" class="btn">Sign Up</button>
+  </form>
+
   <form action="{{ url_for('web.login') }}" method="POST">
     <label for="login_user_identifier">Username or Email</label>
     <input id="login_user_identifier" class="span2" type="text" name="user_identifier" autofocus>
@@ -37,20 +52,6 @@
     <br>
     <button type="submit" class="btn">Login</button>
   </form>
-
-  <a href="{{ url_for('web.signup') }}">Create an Account Now</a>
-  <div class="container">
-      <form action="{{url_for('web.signup')}}" method="POST">
-        <legend>Sign up for CodeBlue</legend>
-        <input type="text" name="username" placeholder="Choose a username">
-        <br>
-        <input type="email" name="email" placeholder="Your email">
-        <br>
-        <input type="password" name="password" placeholder="Create a password">
-        <br>
-        <button type="submit" class="btn">Sign Up</button>
-      </form>
-    </div>
 
 {% endblock content %}
 

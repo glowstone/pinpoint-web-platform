@@ -8,6 +8,7 @@
 
 {% block head_styles %}
   {{ super() }}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/question_list.css')}}">
 {% endblock %}
 
 {% block head_scripts %}
@@ -19,12 +20,7 @@
 {% block content %}
   {{ super() }}
 
-  <h1>Contact</h1>
-
-  <ul>
-  	<li>Dalton Hubble, dhubble@mit.edu</li>
-  	<li>Thomas garver, tgarv@mit.edu</li>
-  </ul>
+  <p>Questions Page</p>
 
 {% endblock content %}
 
@@ -34,4 +30,5 @@
 
 {% block tail_scripts %}
     {{ super() }}
+<script data-main="{{url_for('static', filename='js/question_list.js')}}" src="{{url_for('static', filename='js/require.js')}}"></script>
 {% endblock tail_scripts %}

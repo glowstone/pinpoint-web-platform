@@ -74,6 +74,8 @@
         <!-- Tail Scripts -->
         <script src="http://code.jquery.com/jquery-latest.js"></script>
         <script src="{{url_for('static', filename='vendor/bootstrap/js/bootstrap.min.js')}}"></script>
+        <script src="{{url_for('static', filename='vendor/underscore-min.js')}}"></script>
+        <script src="{{url_for('static', filename='vendor/backbone-min.js')}}"></script>
         <script>
             SCRIPT_ROOT = {{ request.script_root|tojson|safe }};
             ROOT_ADDRESS = "{{ ROOT_ADDRESS }}";

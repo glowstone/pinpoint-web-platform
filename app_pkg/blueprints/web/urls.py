@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for
 from app_pkg.blueprints.web import web_bp as web 
 
 # Package Modules
-import controllers
+from app_pkg.blueprints.web import controllers
 
 
 # Connect URL routes with Controller functions
@@ -13,10 +13,7 @@ import controllers
 def index():
     """Show the web interface home page"""
     return controllers.index()
-
-
-# User Routes
-################################################################################
+    
 
 @web.route('/signup', methods = ['GET', 'POST'])
 def signup():
@@ -30,15 +27,25 @@ def login():
     return controllers.login()
 
 
-# @web.route('/user/<username>', methods = ['GET'])
-# def profile(username):
-#     """Show User profile of user with username 'username'"""
-#     return controllers.profile(username)
+@web.route('/logout', methods = ['GET'])
+def logout():
+    """Destroy User's authenticated session"""
+    return controllers.logout()
+
 
 @web.route('/questions', methods=['GET'])
-def questions():
+def question_list():
     """Show the questions map"""
-    return controllers.questions()
+    return controllers.question_list()
+
+
+@web.route('/question/<int:question_id>', methods=['GET'])
+def question_show(question_id):
+    """Shows a particular question in detail"""
+    print question_id
+    print controllers.question_show
+    print controllers.question_show(question_id)
+    return controllers.question_show(question_id)
 
 
 @web.route('/ask', methods=['GET'])
@@ -46,23 +53,16 @@ def ask():
     """Shows the interface for asking a question"""
     return controllers.ask()
     
-
-@web.route('/question/<int:question_id>', methods=['GET'])
-def question(question_id):
-    """Shows a particular question in detail"""
-    return controllers.question(question_id)
+# @web.route('/user/<username>', methods = ['GET'])
+# def profile(username):
+#     """Show User profile of user with username 'username'"""
+#     return controllers.profile(username)
 
 
 @web.route('/settings', methods = ['GET'])
 def settings():
     """Edit User with username 'username'"""
     return controllers.settings()
-
-
-@web.route('/logout', methods = ['GET'])
-def logout():
-    """Destroy User's authenticated session"""
-    return controllers.logout()
 
 
 # Footer Linked Pages
@@ -89,7 +89,17 @@ def privacy():
     return controllers.privacy()
 
 
+# Web Interface Error Handlers
+###############################################################################
 
+@web.route('/test')
+def test():
+    return controllers.test()
+
+
+@web.errorhandler(404)
+def page_not_found(error):
+    return controllers.error_404(error)
 
 
 
@@ -179,12 +189,7 @@ def privacy():
 
 
 
-# Web Interface Error Handlers
-###############################################################################
 
-@web.errorhandler(404)
-def page_not_found(error):
-    return controllers.error_404(error)
 
 
 # # Geolocation Routes
