@@ -6,6 +6,9 @@ from app_pkg.blueprints.web import web_bp as web
 # Package Modules
 from app_pkg.blueprints.web import controllers
 
+# Web blueprint responsible for general Application errors (404, etc.)
+from app_pkg import app
+
 
 # Connect URL routes with Controller functions
 
@@ -96,9 +99,8 @@ def privacy():
 def test():
     return controllers.test()
 
-
-@web.errorhandler(404)
-def page_not_found(error):
+@app.errorhandler(404)
+def error_404(error):
     return controllers.error_404(error)
 
 

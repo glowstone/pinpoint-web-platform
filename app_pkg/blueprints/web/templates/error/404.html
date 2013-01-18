@@ -3,11 +3,16 @@
   <head>
     <meta charset="utf-8">
     <title>Code Blue</title>
+    <style type="text/css">
+      body { background-color: #fff; color: #666; text-align: center; font-family: arial, sans-serif; }
+      h1   { padding-top: 100px }
+    </style>
   </head>
   <body>
     <h1>404 Not Found</h1>
-    <h2>The page you are looking for is imaginary</h2>
-    <img src="{{url_for('static', filename='img/numberi.jpg')}}" alt="404 image">
+    <img src="{{url_for('static', filename='img/numberi.jpg')}}" alt="404 image" height="200" width="200">
+    <br>
+    <h2>The page you are looking for is imaginary.</h2>
     <a href="{{ ROOT_ADDRESS }}">Back to Reality</a>
   </body>
 </html>

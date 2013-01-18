@@ -37,3 +37,6 @@ from app_pkg.blueprints.web import web_bp
 app.register_blueprint(api_bp)
 app.register_blueprint(web_bp)
 
+
+
+

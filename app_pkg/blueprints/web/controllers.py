@@ -12,7 +12,9 @@ def index():
         # UI would be confusing is logged in Users could visit the Index page (for Signup/Login)
         return redirect(url_for('web.question_list'))
     else:
-        return render_template('index.html')
+        context_vars = {}
+        context_vars['next'] = request.args.get('next', None)
+        return render_template('index.html', custom_vars=context_vars)
 
 
 def signup():
@@ -42,12 +44,19 @@ def login():
     if request.method == 'POST':
         required_arguments = ['user_identifier', 'password']
         arguments = util.unpack_arguments(required_arguments)
-        api_response = api.user_authenticate(**arguments)
+        filtered_arguments = {'user_identifier': arguments['user_identifier'], \
+                              'password': arguments['password']}
+        api_response = api.user_authenticate(**filtered_arguments)
         print api_response
         if api_response.get('success', False):
             user = api_response.get('data', None)
             session['user'] = user
-            return redirect(url_for('web.question_list'))
+            if arguments.get('next', False):
+                # Respect 'next' login input
+                return redirect(arguments['next'])
+            else:
+                # Default landing page after login
+                return redirect(url_for('web.question_list'))
         else:
             # TODO: Handle Invalid logins
             flash("Invalid login")
@@ -126,6 +135,21 @@ def faq():
 def privacy():
     """Privacy Policy Page"""
     return render_template('footer/privacy.html')
+
+
+# Testing
+def test():
+    print "testing"
+    abort(404)
+
+
+
+# Web Interface Error Handlers
+###############################################################################
+
+def error_404(error):
+    """Show the page not found error page"""
+    return render_template('error/404.html'), 404
 
 
 
@@ -272,17 +296,5 @@ def privacy():
 
 
 
-# Testing
-def test():
-    print "testing"
-    abort(404)
 
-
-
-# Web Interface Error Handlers
-###############################################################################
-
-def error_404(error):
-    """Show the page not found error page"""
-    return render_template('error/404.html'), 404
 
