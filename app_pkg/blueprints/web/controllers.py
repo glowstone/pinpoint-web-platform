@@ -8,44 +8,58 @@ from app_pkg.blueprints.api import controllers as api
 def index():
     return render_template('index.html')
 
-# User Controller Handlers
-###############################################################################
 
-def user_new():
-    """On GET, show form to create a new User and on POST create the new User"""
-    if request.method == 'GET':
-        return render_template('user_new.html')
-    else:
+def signup():
+    """Accepts POST only, to create new User"""
+    if request.method == 'POST':
         required_arguments = ['username', 'password', 'password_repeat']
         arguments = util.unpack_arguments(required_arguments)
+        print arguments
         api_response = api.user_create_json(**arguments)
         if api_response['success']:
             return redirect(url_for('web.user_show', username = session.get('username', None)))
         else:
             # TODO show validation errors
             flash("Bad User creation request. " + api_response['error'])
-            return redirect(url_for('web.user_new'))
-        
-def user_login():
-    """Make API request to log the user in and redirect to the profile page"""
-    required_arguments = ['username', 'password']
-    arguments = util.unpack_arguments(required_arguments)
-    api_response = api.user_verify_credentials_json(**arguments)
-    if api_response.get('success', False):
-        return redirect(url_for('web.user_show', username = session.get('username', None)))
+            return redirect(url_for('web.index'))
     else:
-        # TODO: Handle Invalid logins
-        flash("Invalid login")
+        redirect(url_for('web.index'))
+        
+def login():
+    """
+    Accepts POST only.
+    Makes an API request to log the user in and redirect Answer page
+    """
+    if request.method == 'POST':
+        required_arguments = ['user_identifier', 'password']
+        arguments = util.unpack_arguments(required_arguments)
+
+        api_response = api.user_authenticate(**arguments)
+        if api_response.get('success', False):
+            return redirect(url_for('web.questions'))
+        else:
+            # TODO: Handle Invalid logins
+            flash("Invalid login")
+            return redirect(url_for('web.index'))
+    else:
         return redirect(url_for('web.index'))
 
-def user_logout():
+def questions():
+    return "Question page"
+
+def ask():
+    return "Asking page"
+
+def question(question_id):
+    return "Showing question " + question_id
+
+def logout():
     """Deauthenticate user by popping the user's session instance."""
-    session.pop('username', None)
-    session.pop('user_id', None)
+    session.pop('user', None)
     flash("Logged out")
     return redirect(url_for('web.index'))
 
-def user_show(username):
+def profile(username):
     """Show the given user's profile or redirect to the page with user login"""
     api_response = api.user_show_json(username)
     print "controller", api_response
@@ -55,13 +69,13 @@ def user_show(username):
             return render_template('user_show_authenticated.html', user=user)
         else:
             user = api_response['data']['user']
-            return render_template('user_show.html', user=user)
+            return render_template('profile.html', user=user)
     else:
         flash("No user named " + username)
         return redirect(url_for('web.index'))   
 
 
-def user_edit(username):
+def settings():
     # TODO
     return render_template('user_edit.html')
 

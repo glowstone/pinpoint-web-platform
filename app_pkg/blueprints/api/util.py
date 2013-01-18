@@ -31,7 +31,7 @@ def hash_w_salt(password, salt):
     """Return a hashlib sha512 hash of the combined input password and input salt."""
     return hashlib.sha512(password + salt).hexdigest()
 
-def is_authorized(attempt, salt, hash):
+def is_authenticated(attempt, salt, hash):
     """Returns True if hash of the password attempt and salt 
     is equal to the provided hash value."""
     return hashlib.sha512(attempt + salt).hexdigest() == hash

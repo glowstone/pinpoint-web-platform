@@ -18,42 +18,59 @@ def index():
 # User Routes
 ################################################################################
 
-@web.route('/user/signup', methods = ['GET', 'POST'])
-def user_new():
+@web.route('/signup', methods = ['GET', 'POST'])
+def signup():
     """New user creation"""
-    return controllers.user_new()
+    return controllers.signup()
 
 
-@web.route('/user/login', methods = ['POST'])
-def user_login():
+@web.route('/login', methods = ['GET', 'POST'])
+def login():
     """Verify and set the User authenticated session context"""
-    return controllers.user_login()
+    return controllers.login()
 
 
-@web.route('/user/logout', methods = ['GET'])
-def user_logout():
-    """Destroy User's authenticated session context"""
-    return controllers.user_logout()
+# @web.route('/user/<username>', methods = ['GET'])
+# def profile(username):
+#     """Show User profile of user with username 'username'"""
+#     return controllers.profile(username)
+
+@web.route('/questions', methods=['GET'])
+def questions():
+    """Show the questions map"""
+    return controllers.questions()
 
 
-@web.route('/user/<username>', methods = ['GET'])
-def user_show(username):
-    """Show User profile of user with username 'username'"""
-    return controllers.user_show(username)
+@web.route('/ask', methods=['GET'])
+def ask():
+    """Shows the interface for asking a question"""
+    return controllers.ask()
+    
+
+@web.route('/question/<int:question_id>', methods=['GET'])
+def question(question_id):
+    """Shows a particular question in detail"""
+    return controllers.question(question_id)
 
 
-@web.route('/user/<username>/settings', methods = ['GET'])
-def user_edit(username):
+@web.route('/settings', methods = ['GET'])
+def settings():
     """Edit User with username 'username'"""
-    return controllers.user_edit(username)
+    return controllers.settings()
+
+
+@web.route('/logout', methods = ['GET'])
+def logout():
+    """Destroy User's authenticated session"""
+    return controllers.logout()
 
 
 
-#Temporary
-@web.route('/user/<username>/location', methods = ['GET', 'POST'])
-def user_geolocation(username):
-    """Manually update the current User's geolocation"""
-    return controllers.user_geolocation(username)
+# #Temporary
+# @web.route('/user/<username>/location', methods = ['GET', 'POST'])
+# def user_geolocation(username):
+#     """Manually update the current User's geolocation"""
+#     return controllers.user_geolocation(username)
 
 # # Temporary - will be deleted eventually
 # # Posting Routes
@@ -85,53 +102,53 @@ def user_geolocation(username):
 # Question Routes
 ###############################################################################
 
-@web.route('/question/new', methods = ['GET', 'POST'])
-def question_new():
-    """New Question creation"""
-    return controllers.question_new()
+# @web.route('/question/new', methods = ['GET', 'POST'])
+# def question_new():
+#     """New Question creation"""
+#     return controllers.question_new()
 
-@web.route('/question', methods=['GET'])
-def question_list():
-    """List all the Questions near to the current User"""
-    # TODO Just dumps all questions for now
-    return controllers.question_list()
+# @web.route('/question', methods=['GET'])
+# def question_list():
+#     """List all the Questions near to the current User"""
+#     # TODO Just dumps all questions for now
+#     return controllers.question_list()
 
-@web.route('/question/<id>', methods = ['GET'])
-def question_show(id):
-    """Show the question with 'question_id' id"""
-    return controllers.question_show(id)
+# @web.route('/question/<id>', methods = ['GET'])
+# def question_show(id):
+#     """Show the question with 'question_id' id"""
+#     return controllers.question_show(id)
 
-# Temporary
-@web.route('/question/<id>/edit', methods = ['GET'])
-def question_edit(id):
-    """Allow editing the question with question_id id"""
-    return controllers.question_edit(id)
+# # Temporary
+# @web.route('/question/<id>/edit', methods = ['GET'])
+# def question_edit(id):
+#     """Allow editing the question with question_id id"""
+#     return controllers.question_edit(id)
 
 
 # Answer Routes
 ###############################################################################
 
-# Temporary - merge this behavior into the Question view.
-@web.route('/answer/new', methods = ['GET', 'POST'])
-def answer_new():
-    """Route showing form to create a new Answer"""
-    return controllers.answer_new()
+# # Temporary - merge this behavior into the Question view.
+# @web.route('/answer/new', methods = ['GET', 'POST'])
+# def answer_new():
+#     """Route showing form to create a new Answer"""
+#     return controllers.answer_new()
 
-# Comment Routes
-###############################################################################
+# # Comment Routes
+# ###############################################################################
 
-@web.route('/comment/new', methods = ['GET', 'POST'])
-def comment_new():
-    """Route for creating a Comment"""
-    return controllers.comment_new()
+# @web.route('/comment/new', methods = ['GET', 'POST'])
+# def comment_new():
+#     """Route for creating a Comment"""
+#     return controllers.comment_new()
 
 
-###############################################################################
+# ###############################################################################
 
-# Testing
-@web.route('/test', methods=['GET', 'POST'])
-def test():
-    return controllers.test()
+# # Testing
+# @web.route('/test', methods=['GET', 'POST'])
+# def test():
+#     return controllers.test()
 
 
 

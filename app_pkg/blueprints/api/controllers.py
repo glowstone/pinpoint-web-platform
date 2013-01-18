@@ -51,15 +51,25 @@ def user_create_json(username, password, password_repeat):
     return util.success_response()
 
 
-def user_verify_credentials_json(username, password):
-    user = User.query.filter_by(username=username).first()
-    if user and util.is_authorized(password, user.salt, user.password_hash):
-        # Poplate secure Server-Side session storage. Sets cryptographic cookie on client.
-        session['username'] = user.username
-        session['user_id'] = user.user_id
-        return util.success_response()
+def user_authenticate(user_identifier, password):
+    # Try to authenticate with Username
+    user = User.query.filter_by(username=user_identifier).first()
+    if user is not None:
+        if util.is_authenticated(password, user.salt, user.password_hash):
+            session['user'] = user
+            return util.success_response()
+        else:
+            return util.error_response()
+    # Try to authenticate with Email
     else:
-        return util.error_response("Invalid Login Attempt")
+        user = User.query.filter_by(email=user_identifier).first()
+        if user is not None:
+            if util.is_authenticated(password, user.salt, user.password_hash):
+                session['user'] = user
+                return util.success_response()
+            else:
+                return util.error_response()
+
 
 
 def user_show_json(username):

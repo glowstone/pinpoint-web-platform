@@ -14,17 +14,17 @@
       <div class="nav-collapse collapse">
         <ul class="nav pull-right">
 
-          {% if session['username'] %}
+          {% if session['user'] %}
           <li><a href="#">Category 1</a></li>
           <li><a href="#">Category 2</a></li>
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{ current_user.userprofile.profile_image_url }}&s=20" class="navbar_profile_img"/>
-              {{ current_user.username}}
+              {#<!--<img src="{{ current_user.userprofile.profile_image_url }}&s=20" class="navbar_profile_img"/>-->#}
+              {{ session['user'].username }}
             <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li><a href="/settings"><i class='icon-wrench'></i>Settings</a></li>
-              <li><a href="/logout"><i class='icon-eject'></i>Logout</a></li>
+              <li><a href="{{url_for('web.settings')}}"><i class='icon-wrench'></i>Settings</a></li>
+              <li><a href="{{url_for('web.logout')}}"><i class='icon-eject'></i>Logout</a></li>
             </ul>
           </li>
 
@@ -38,15 +38,12 @@
 
         <ul class="nav">
 
-          {% if session['username'] %}
+          {% if session['user'] %}
           <form class="navbar-search">
             <input type="text" class="span2 search-query" placeholder="Search">
           </form>
-          <li><a href="{{ url_for('web.index') }}">Home</a></li>
-          <li><a href="{{ url_for('web.question_list') }}">Show Questions</a></li>
-          <li><a href="{{ url_for('web.question_new') }}">New Question</a></li>
-          <li><a href="{{ url_for('web.user_geolocation', username=session['username'])}}">Update Location</a></li>
-
+          <li><a href="{{ url_for('web.questions') }}">Answer</a></li>
+          <li><a href="{{ url_for('web.ask') }}">Ask</a></li>
           {% endif %}
         </ul>
 
