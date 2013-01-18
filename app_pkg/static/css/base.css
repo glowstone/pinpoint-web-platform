@@ -39,6 +39,11 @@ body {
 	background-image: url('../img/gray_jean.png');
 }
 
+.navbar_profile_img {
+	padding-left: 10px;
+	padding-right: 10px;
+}
+
 .container {
 	margin: 0px;
 }

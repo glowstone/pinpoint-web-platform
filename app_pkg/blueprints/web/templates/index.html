@@ -20,8 +20,6 @@
 {% block content %}
   {{ super() }}
 
-  <img src="{{url_for('static', filename='img/touch.png')}}" height=50 width=50 />
-
   <div id="map_region"></div>
 
   
@@ -34,26 +32,29 @@
 
   <form action="{{url_for('web.signup')}}" method="POST">
     <legend>Sign up for CodeBlue</legend>
-    <input type="text" name="username" placeholder="Choose a username">
+    <input class="span3" type="text" name="username" placeholder="Choose a username">
     <br>
-    <input type="email" name="email" placeholder="Your email">
+    <input class="span3" type="email" name="email" placeholder="Your email">
     <br>
-    <input type="password" name="password" placeholder="Create a password">
+    <input class="span3" type="password" name="password" placeholder="Create a password">
     <br>
-    <button type="submit" class="btn">Sign Up</button>
+    <button class="span3 btn btn-success signup_btn" type="submit">Sign Up</button>
   </form>
 
+  <br>
+
   <form action="{{ url_for('web.login') }}" method="POST">
+    <legend>Login</legend>
     <label for="login_user_identifier">Username or Email</label>
-    <input id="login_user_identifier" class="span2" type="text" name="user_identifier" autofocus>
+    <input id="login_user_identifier" class="span3" type="text" name="user_identifier" autofocus>
     <br>
     <label for="login_password">Password</label>
-    <input id="login_password" class="span2" type="password" name="password">
-    <br>
+    <input id="login_password" class="span3" type="password" name="password">
     {% if custom_vars.next %}
     <input type="hidden" name="next" value="{{ custom_vars.next }}">
     {% endif %}
-    <button type="submit" class="btn">Login</button>
+    <br>
+    <button class="span3 btn btn-primary login_btn" type="submit">Login</button>
   </form>
 
 {% endblock content %}

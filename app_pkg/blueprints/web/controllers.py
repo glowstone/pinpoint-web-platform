@@ -33,7 +33,7 @@ def signup():
             flash("Bad User creation request. " + api_response['error'])
             return redirect(url_for('web.index'))
     else:
-        redirect(url_for('web.index'))
+        return redirect(url_for('web.index'))
       
 
 def login():
@@ -92,7 +92,13 @@ def ask():
 
 @login_required
 def settings():
-    return render_template('settings.html')
+    if request.method == 'GET':
+        return render_template('settings.html')
+    else:
+        print request.form
+        required_arguments = ['old_password', 'new_password', 'new_password_repeat']
+
+        return "Re-setting"
 
 
 # def profile(username):

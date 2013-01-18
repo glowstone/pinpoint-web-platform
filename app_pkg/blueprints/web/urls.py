@@ -18,13 +18,13 @@ def index():
     return controllers.index()
     
 
-@web.route('/signup', methods = ['GET', 'POST'])
+@web.route('/signup', methods = ['POST'])
 def signup():
     """New user creation"""
     return controllers.signup()
 
 
-@web.route('/login', methods = ['GET', 'POST'])
+@web.route('/login', methods = ['POST'])
 def login():
     """Verify and set the User authenticated session context"""
     return controllers.login()
@@ -62,9 +62,9 @@ def ask():
 #     return controllers.profile(username)
 
 
-@web.route('/settings', methods = ['GET'])
+@web.route('/settings', methods = ['GET', 'POST'])
 def settings():
-    """Edit User with username 'username'"""
+    """Change the settings for the current User"""
     return controllers.settings()
 
 
