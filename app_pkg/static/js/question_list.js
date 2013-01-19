@@ -1,48 +1,90 @@
 
 require(['location'], function(location) {
 
-
+	Backbone.sync = function(method, model, success, error){
+		success();
+	}
 
 	var Question = Backbone.Model.extend({
 		defaults: {
 			title: "Default Title",
 			text: "Default Text",
-			answer_count: 0,
+			user: {
+				fullname: 'Full Name',
+				username: 'username',
+				email: 'user@sample.com',
+			},
+			coords: {
+				latitude: 42,
+				longitude: -70,
+			},
+			date: 324243242,
 		},
-		get_answer_count: function() {
-			return this.answer_count;
+		initialize: function() {	
 		},
-		initialize: function() {
-			this.on('click', function() {
-				alert('Clicked ' + this.count);
-			})
-		}
+	});
+
+	var QuestionView = Backbone.View.extend({
+		tagName: 'li',
+		// Source of events to delegateEvents
+		events: {
+			'click span.swap': 'swap',
+			'click span.delete': 'remove',
+		},
+		initialize: function(question_model) {
+			// All QuestionView methods will have 'this' set to the QuestionView.
+			_.bindAll(this, 'render', 'unrender', 'swap', 'remove');
+			this.model = question_model   // Quesiton model instance provided at initialize.
+		
+			// Bind model events to corresponding view handlers
+			this.model.bind('change', this.render);
+			this.model.bind('remove', this.unrender);
+		},
+		render: function() {
+			$(this.el).html('<span>'+this.model.get('title')+this.model.get('text')+"</span>" + "<span class=swap>Swap</span><span class=delete>Delete</span>");
+			return this;
+		},
+		unrender: function() {
+			console.log('unrender');
+			$(this.el).remove();
+		},
+		swap: function() {
+			var swapped = {
+				title: this.model.get('text'),
+				text: this.model.get('title'),
+			}
+			this.model.set(swapped);
+		},
+		remove: function() {
+			console.log("Calling remove");
+			this.model.destroy();
+		},
+		
 	});
 
 
-	var QuestionList = Backbone.Collection.extend({
+	var QuestionCollection =  Backbone.Collection.extend({
+		// A collection of Question model 'items'
 		model: Question,
-		initialize: function() {
-		},
 	});
 
 
-	var QuestionListView = Backbone.View.extend({
-		el: $('#play'),
-		//Source of events to delegateEvents
+	var QuestionCollectionView = Backbone.View.extend({
+		el: $('#play'),      // Attaches to existing element
+		// Source of events to delegateEvents
 		events: {
 			'click button#add': 'addItem'
 		},
-		initialize: function() {
+		initialize: function(question_collection) {
+			// All QuestionCollectionView methods will have 'this' set to the QuestionView.
 			_.bindAll(this, 'render', 'addItem', 'appendItem')
-			this.collection = new QuestionList();
-			// Bind collection's add event to the views appendItem method
+
+			this.collection = question_collection;    //QuestionCollection instance provided during initialize.
+
+			// Bind collection events to corresponding view handlers
 			this.collection.on('add', this.appendItem);
-			//_.bindAll(this, 'render');
 
 			this.counter = 0;
-			//Self-rendering view
-			this.render()
 		},
 		render: function() {
 			var self = this;
@@ -61,15 +103,32 @@ require(['location'], function(location) {
 				title: 'Title',
 				count: this.counter,
 			});
-			this.collection.add(question);   //add question to collection. View is updated via event 'add'.
+			this.collection.add(question);   // Add question to the question collection.
 		},
 		appendItem: function(item) {
-			$('ul', this.el).append("<li>" + item.get('title') + ":" + item.get('text') + item.get('count') + "</li>");
+			console.log("QuestionCollectionView appendItem called.");
+			// Delegate rendering of item to the ItemView
+			var question_view = new QuestionView(item);
+			console.log(question_view);
+			$('ul', this.el).append(question_view.render().el);
 		}
 	});
 
 	//window.question = new Question({title: "my title!!", special: "my special attribute"});
-	var body = new QuestionListView();
+	var question_collection = new QuestionCollection();
+	var question_collection_view = new QuestionCollectionView(question_collection);
+	question_collection_view.render();
+
+	var question = new Question();
+	console.log(question_collection);
+	var question2 = new Question();
+	question_collection.add(question);
+	question_collection.add(question2);
+	question_collection.remove(question2);
+
+
+	
+
 
 	// console.log(question.get('title'));
 	// console.log(question.attributes);
