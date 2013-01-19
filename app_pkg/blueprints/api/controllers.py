@@ -153,6 +153,23 @@ def question_create_json():
     response['error'] = None
     return response
 
+
+class TestQuestion():
+    def __init__(self):
+        self.title = 'server title'
+        self.text = 'server text'
+
+
+def questions():
+    """Retrieve all questions, possibly filtered by some selectors"""
+    questions = Question.query.filter_by().all()
+    questions = [TestQuestion(), TestQuestion()]
+    questions = [{'title': 'thing', 'text': 'that'}]
+    print "Got the questions"
+    print questions
+    return questions
+
+
 def question_list_json(order_by="radius", include_comments=False, include_answers=False):
     # TODO - make readius work again.
     questions = Question.query.filter_by().all()

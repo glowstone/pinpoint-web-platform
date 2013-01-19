@@ -1,9 +1,9 @@
 
 require(['location'], function(location) {
 
-	Backbone.sync = function(method, model, success, error){
-		success();
-	}
+	// Backbone.sync = function(method, model, success, error){
+	// 	success();
+	// }
 
 	var Question = Backbone.Model.extend({
 		defaults: {
@@ -25,6 +25,7 @@ require(['location'], function(location) {
 	});
 
 	var QuestionView = Backbone.View.extend({
+		name: 'QuestionView',
 		tagName: 'li',
 		// Source of events to delegateEvents
 		events: {
@@ -39,6 +40,7 @@ require(['location'], function(location) {
 			// Bind model events to corresponding view handlers
 			this.model.bind('change', this.render);
 			this.model.bind('remove', this.unrender);
+			this.bind('all', this.all);
 		},
 		render: function() {
 			$(this.el).html('<span>'+this.model.get('title')+this.model.get('text')+"</span>" + "<span class=swap>Swap</span><span class=delete>Delete</span>");
@@ -59,17 +61,22 @@ require(['location'], function(location) {
 			console.log("Calling remove");
 			this.model.destroy();
 		},
-		
+		all: function(event_name) {
+			console.log(event_name);
+		}
 	});
 
 
 	var QuestionCollection =  Backbone.Collection.extend({
 		// A collection of Question model 'items'
 		model: Question,
+		url: '/api/questions',
+		name: 'QuestionCollection',
 	});
 
 
 	var QuestionCollectionView = Backbone.View.extend({
+		name: 'QuestionCollectionView',
 		el: $('#play'),      // Attaches to existing element
 		// Source of events to delegateEvents
 		events: {
@@ -83,6 +90,8 @@ require(['location'], function(location) {
 
 			// Bind collection events to corresponding view handlers
 			this.collection.on('add', this.appendItem);
+			this.collection.on('remove', this.dependItem);
+			this.collection.on('reset', this.reset);
 
 			this.counter = 0;
 		},
@@ -94,6 +103,18 @@ require(['location'], function(location) {
 				self.appendItem(item);
 			}, this);
 			return this;
+		},
+		reset: function(models, options) {
+
+			console.log('Reset was fired!');
+			console.log(options);
+			console.log(models);
+			_(options.previousModels).each(function(item) {
+				item.trigger('remove');
+			});
+			console.log("Here");
+			console.log(this);
+
 		},
 		addItem: function() {
 			console.log('addItem was called');
@@ -111,6 +132,10 @@ require(['location'], function(location) {
 			var question_view = new QuestionView(item);
 			console.log(question_view);
 			$('ul', this.el).append(question_view.render().el);
+		},
+		dependItem: function(item) {
+			console.log("Got to dependItem");
+			item.trigger('remove');
 		}
 	});
 
@@ -122,9 +147,37 @@ require(['location'], function(location) {
 	var question = new Question();
 	console.log(question_collection);
 	var question2 = new Question();
+	var question3 = new Question();
+	var question4 = new Question();
+	var question5 = new Question();
 	question_collection.add(question);
 	question_collection.add(question2);
-	question_collection.remove(question2);
+	question_collection.add(question3);
+	question_collection.add(question4);
+	question_collection.add(question5);
+
+
+	var on_success = function(collection, response, options) {
+		console.log('success');
+		console.log(collection);
+		console.log(response);
+		console.log(options);
+		console.log(question_collection)
+	}
+
+	var on_failure = function(collection, xhr, options) {
+		console.log('Failure')
+		console.log(collection);
+		console.log(xhr);
+		console.log(options);
+	}
+
+	var jqxhr = question_collection.fetch({
+		success: on_success, 
+		error: on_failure,
+	});
+	console.log(question_collection);
+	console.log(jqxhr);
 
 
 	
