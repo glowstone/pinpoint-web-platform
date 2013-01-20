@@ -4,10 +4,11 @@
 
 {% block head %}{{ super() }}{% endblock head%}
 
-{% block title %}CodeBlue{% endblock %}
+{% block title %}Code Blue{% endblock %}
 
 {% block head_styles %}
   {{ super() }}
+  <link rel="stylesheet" href="{{url_for('static', filename='css/meta.css')}}">
 {% endblock %}
 
 {% block head_scripts %}
@@ -19,9 +20,15 @@
 {% block content %}
   {{ super() }}
 
-  <h1>Privacy Policy</h1>
+  <div class="row-fluid">
 
-  <p>We're not going to distribute, sell, or do sketchy things with data you generate on our site. That's not how we work.</p>
+    <div class="hero-unit span11 offset1 front-panel">
+      <h1>FAQ List</h1>
+      <br>
+      <p>None yet, feel free to <a href="{{url_for('web.contact')}}">contact</a/> us if you have questions.</p>      
+
+    </div> 
+  </div>  
 
 {% endblock content %}
 

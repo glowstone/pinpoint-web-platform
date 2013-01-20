@@ -56,11 +56,6 @@ def ask():
     """Shows the interface for asking a question"""
     return controllers.ask()
     
-# @web.route('/user/<username>', methods = ['GET'])
-# def profile(username):
-#     """Show User profile of user with username 'username'"""
-#     return controllers.profile(username)
-
 
 @web.route('/settings', methods = ['GET', 'POST'])
 def settings():

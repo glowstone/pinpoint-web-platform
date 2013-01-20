@@ -101,46 +101,27 @@ def settings():
         return "Re-setting"
 
 
-# def profile(username):
-#     """Show the given user's profile or redirect to the page with user login"""
-#     api_response = api.user_show_json(username)
-#     print "controller", api_response
-#     if api_response.get('success', None):
-#         if api_response['data']['authenticated']:
-#             user = api_response['data']['user']
-#             return render_template('user_show_authenticated.html', user=user)
-#         else:
-#             user = api_response['data']['user']
-#             return render_template('profile.html', user=user)
-#     else:
-#         flash("No user named " + username)
-#         return redirect(url_for('web.index'))   
-
-
-
-
-
-# Controllers for Footer Linked Pages
+# Controllers for Meta Pages
 ###############################################################################
 
 def about():
     """About Page"""
-    return render_template('footer/about.html')
+    return render_template('meta/about.html')
 
 
 def contact():
     """Contact Page"""
-    return render_template('footer/contact.html')
+    return render_template('meta/contact.html')
 
 
 def faq():
     """FAQ Page"""
-    return render_template('footer/faq.html')
+    return render_template('meta/faq.html')
 
 
 def privacy():
     """Privacy Policy Page"""
-    return render_template('footer/privacy.html')
+    return render_template('meta/privacy.html')
 
 
 # Testing

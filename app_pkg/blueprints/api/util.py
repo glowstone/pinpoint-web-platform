@@ -44,7 +44,7 @@ def unpack_arguments(required_arg_names=[]):
 def success_response(data=None, warning=None):
     """
     Returns a dictionary representing a successful API that returns data or which indicates a call succeeded (data=False)
-    Accepts: warning may be provided to warn API users about vulnerabilities or depracation
+    Accepts: warning may be provided to warn API users about vulnerabilities or deprecation
     """
     return {"success": True, \
             "data": data, \

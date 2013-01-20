@@ -4,10 +4,11 @@
 
 {% block head %}{{ super() }}{% endblock head%}
 
-{% block title %}CodeBlue{% endblock %}
+{% block title %}Code Blue{% endblock %}
 
 {% block head_styles %}
   {{ super() }}
+  <link rel="stylesheet" href="{{url_for('static', filename='css/meta.css')}}">
 {% endblock %}
 
 {% block head_scripts %}
@@ -19,12 +20,15 @@
 {% block content %}
   {{ super() }}
 
-  <h1>Contact</h1>
+  <div class="row-fluid">
 
-  <ul>
-  	<li>Dalton Hubble, dhubble@mit.edu</li>
-  	<li>Thomas garver, tgarv@mit.edu</li>
-  </ul>
+    <div class="hero-unit span11 offset1 front-panel">
+      <h1>About Us</h1>
+      <br>
+      <p>Code Blue was built as a part of a student UROP project at CSAIL.</p>
+
+    </div> 
+  </div> 
 
 {% endblock content %}
 

@@ -178,6 +178,7 @@ require(['location'], function(location) {
 	});
 	console.log(question_collection);
 	console.log(jqxhr);
+	//question_collection.sync();
 
 
 	
