@@ -1,4 +1,6 @@
 from flask import Flask
+from flask.ext.restless import APIManager
+
 import os
 
 # Create the Flask Application
@@ -15,6 +17,14 @@ elif app_config == 'production':
 
 # Default Request Before / Teardown Behavior 
 from app_pkg.database import db_session
+
+# Flask Restless
+from app_pkg.blueprints.api.models import Moduser, Profile
+manager = APIManager(app, session=db_session)   # Pure SQLAlchemy instantiation style.
+# Define and autoregister API blueprints
+moduser_blueprint = manager.create_api(Moduser, methods=['GET', 'POST', 'DELETE'], url_prefix='/api_v2')
+profile_blueprint = manager.create_api(Profile, url_prefix='/api_v2')
+
 
 @app.before_request
 def before_request():
@@ -36,6 +46,8 @@ from app_pkg.blueprints.web import web_bp
 # Register the Blueprint Apps
 app.register_blueprint(api_bp)
 app.register_blueprint(web_bp)
+
+
 
 
 

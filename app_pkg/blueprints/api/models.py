@@ -1,6 +1,6 @@
 # Define models to be used by the Flask Application
 
-from sqlalchemy import Column, BigInteger, Integer, String, ForeignKey, Float, DateTime
+from sqlalchemy import Column, BigInteger, Integer, String, ForeignKey, Float, DateTime, Unicode
 from sqlalchemy.orm import relationship, backref, validates
 from app_pkg.database import Base
 
@@ -18,6 +18,26 @@ import datetime
 
 # Creating a raw Pin or Posting object is now fine. Null polymorphic types shoudl never be allowed
 # at any level of representing an object. Represents the exact (leaf) type of an ORM object.
+
+
+class Moduser(Base):
+    __tablename__ = "moduser"
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(80), unique=True)
+
+
+class Profile(Base):
+    __tablename__ = "profile"
+    id = Column(Integer, primary_key=True)
+    name = Column(Unicode(80), unique=True)
+    user = Column(Integer, ForeignKey('moduser.id'))
+
+
+
+
+
+
+
 
 
 class Geolocation(Base):
