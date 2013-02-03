@@ -51,7 +51,7 @@ def success_response(data):
     return response
 
 
-def error_response(error_msg):
+def error_response(error):
     """
     Returns a dictionary representing a failed internal API call.
     Accepts: an error message that should be included in the dictionary response.

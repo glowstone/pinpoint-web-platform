@@ -14,6 +14,9 @@ db_session.add(g1)
 db_session.commit()
 
 
+print User.query.all()
+
+
 
 # dalton = User('dalton', 'dhubble@mit.com', 'dsadsadas', 'dwqeqdsadwq', g1)
 # db_session.add(dalton)

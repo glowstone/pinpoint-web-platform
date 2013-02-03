@@ -29,9 +29,9 @@ def logout():
 
 
 @web.route('/user/<username>', methods=['GET'])
-def question_list():
+def question_list(username):
     """Show the question listing page"""
-    return controllers.question_list()
+    return controllers.question_list(username)
 
 
 @web.route('/question/<int:question_id>', methods=['GET'])

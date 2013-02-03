@@ -23,6 +23,7 @@ def user_create(username, email, password):
     salt = util.random_salt()
     password_hash = util.hash_w_salt(password, salt)
     user = User(username, email, password_hash, salt)
+    print user
     db_session.add(user)
     try:
         db_session.commit()

@@ -13,8 +13,9 @@ def index():
     is already authenticated.
     """
     if session.get('user', False):
+        user = session.get('user')
         # UI would be confusing is logged in Users could visit the Index page (for Signup/Login)
-        return redirect(url_for('web.question_list'))
+        return redirect(url_for('web.question_list', username=user.username))
     else:
         context_vars = {}
         context_vars['next'] = request.args.get('next', None)
@@ -35,7 +36,7 @@ def signup():
         if api_response.get('success', False):
             user = api_response.get('data', None)
             session['user'] = user
-            return redirect(url_for('web.question_list'))
+            return redirect(url_for('web.question_list', username=user.username))
         else:
             # TODO show validation errors
             flash("Bad User creation request. " + api_response['error'])
@@ -64,7 +65,7 @@ def login():
                 return redirect(arguments['next'])
             else:
                 # Default landing page after login
-                return redirect(url_for('web.question_list'))
+                return redirect(url_for('web.question_list', username=user.username))
         else:
             # TODO: Handle Invalid logins
             flash("Invalid login")
@@ -81,8 +82,10 @@ def logout():
 
 
 @login_required
-def question_list():
-    """Show the question listing page"""
+def question_list(username):
+    """
+    Show the question listing page for the User with the given username.
+    """
     return render_template('question_list.html')
 
 

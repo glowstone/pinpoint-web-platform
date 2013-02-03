@@ -27,9 +27,25 @@ class User(Base):
     email = Column(String(120), unique=True, nullable=False)
     password_hash = Column(String(140), nullable=False)
     salt = Column(String(120))
-    #profile_image_url = Column(String(200))
+    profile_image_url = Column(String(200))
     # Relationships
     geolocation = relationship('Geolocation', uselist=False, backref='user')
+
+    def __init__(self, username, email, password_hash, salt, *args, **kwargs):
+        self.username = username
+        self.email = email
+        self.password_hash = password_hash
+        self.salt = salt
+        self.set_gravatar_profile_img(email)
+        super(User, self).__init__(*args, **kwargs)
+        
+    def set_gravatar_profile_img(self, email):
+        gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
+        gravatar_url += urllib.urlencode({'d':'identicon'})
+        self.profile_image_url = gravatar_url
+
+    def __repr__(self):
+        return '<User %s>' % (self.username)
 
     #postings = relationship('Posting', primaryjoin="(User.user_id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
     
@@ -39,7 +55,6 @@ class Geolocation(Base):
     latitude = Column(Float)
     longitude = Column(Float)
     # Relationships
-
     user_id = Column(Integer, ForeignKey('user.id'))           # One Geolocation to one User
     question_id = Column(Integer, ForeignKey('question.id'))   # One Geolocation to one Question
     # Note either user_id or question_id is null. Users and Questions have their own Geolocation objects. 
