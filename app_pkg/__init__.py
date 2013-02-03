@@ -43,14 +43,16 @@ from app_pkg.blueprints.web.context_processors import server_info
 from app_pkg.blueprints.api import api_bp
 from app_pkg.blueprints.web import web_bp
 # Rest API Blueprints
-from app_pkg.blueprints.api.restful_api import moduser_rest_app
-from app_pkg.blueprints.api.restful_api import profile_rest_app
+from app_pkg.blueprints.api.restful_api import user_rest_app
+#from app_pkg.blueprints.api.restful_api import geolocation_rest_app
+from app_pkg.blueprints.api.restful_api import question_rest_app
+#from app_pkg.blueprints.api.restful_api import answer_rest_app
 
 # Register the Blueprint Apps
-app.register_blueprint(api_bp)
+#app.register_blueprint(api_bp)
 app.register_blueprint(web_bp)
-app.register_blueprint(moduser_rest_app)
-app.register_blueprint(profile_rest_app)
+app.register_blueprint(user_rest_app)
+app.register_blueprint(question_rest_app)
 
 
 

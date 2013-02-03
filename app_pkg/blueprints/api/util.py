@@ -41,23 +41,24 @@ def unpack_arguments(required_arg_names=[]):
             return None
     return arguments
 
-def success_response(data=None, warning=None):
+def success_response(data):
     """
-    Returns a dictionary representing a successful API that returns data or which indicates a call succeeded (data=False)
-    Accepts: warning may be provided to warn API users about vulnerabilities or deprecation
+    Returns a dictionary representing a successful API that returns some data.
+    Accepts: data that should be send in the 'data' field.
     """
-    return {"success": True, \
-            "data": data, \
-            "warning": warning, \
-            "error": None \
-            }
+    response = {'success': True, 'error': None}
+    response['data'] = data
+    return response
 
-def error_response(error_msg, warning=None):
-    return {"success": False, \
-            "data": None, \
-            "warning": None, \
-            "error": error_msg \
-           }
+
+def error_response(error_msg):
+    """
+    Returns a dictionary representing a failed internal API call.
+    Accepts: an error message that should be included in the dictionary response.
+    """
+    response = {'success': False, 'data': None}
+    response['error'] = error
+    return response
 
 
 class AAM(object):
