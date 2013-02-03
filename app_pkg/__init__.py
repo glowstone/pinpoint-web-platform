@@ -1,5 +1,5 @@
 from flask import Flask
-from flask.ext.restless import APIManager
+# from flask.ext.restless import APIManager
 
 import os
 
@@ -19,11 +19,11 @@ elif app_config == 'production':
 from app_pkg.database import db_session
 
 # Flask Restless
-from app_pkg.blueprints.api.models import Moduser, Profile
-manager = APIManager(app, session=db_session)   # Pure SQLAlchemy instantiation style.
-# Define and autoregister API blueprints
-moduser_blueprint = manager.create_api(Moduser, methods=['GET', 'POST', 'DELETE'], url_prefix='/api_v2')
-profile_blueprint = manager.create_api(Profile, url_prefix='/api_v2')
+# from app_pkg.blueprints.api.models import Moduser, Profile
+# manager = APIManager(app, session=db_session)   # Pure SQLAlchemy instantiation style.
+# # Define and autoregister API blueprints
+# moduser_blueprint = manager.create_api(Moduser, methods=['GET', 'POST', 'DELETE'], url_prefix='/api_v2')
+# profile_blueprint = manager.create_api(Profile, url_prefix='/api_v2')
 
 
 @app.before_request
@@ -42,10 +42,15 @@ from app_pkg.blueprints.web.context_processors import server_info
 # Import Blueprint Apps
 from app_pkg.blueprints.api import api_bp
 from app_pkg.blueprints.web import web_bp
+# Rest API Blueprints
+from app_pkg.blueprints.api.restful_api import moduser_rest_app
+from app_pkg.blueprints.api.restful_api import profile_rest_app
 
 # Register the Blueprint Apps
 app.register_blueprint(api_bp)
 app.register_blueprint(web_bp)
+app.register_blueprint(moduser_rest_app)
+app.register_blueprint(profile_rest_app)
 
 
 
