@@ -28,15 +28,30 @@ class User(Base):
     password_hash = Column(String(140), nullable=False)
     salt = Column(String(120))
     #profile_image_url = Column(String(200))
+    # Relationships
+    geolocation = relationship('Geolocation', uselist=False, backref='user')
 
     #postings = relationship('Posting', primaryjoin="(User.user_id==Posting.user_id)", backref=backref('user'), lazy='dynamic')   #One User to many Postings.
     
+class Geolocation(Base):
+    __tablename__ = 'geolocation'
+    id = Column(Integer, primary_key=True)
+    latitude = Column(Float)
+    longitude = Column(Float)
+    # Relationships
+
+    user_id = Column(Integer, ForeignKey('user.id'))           # One Geolocation to one User
+    question_id = Column(Integer, ForeignKey('question.id'))   # One Geolocation to one Question
+    # Note either user_id or question_id is null. Users and Questions have their own Geolocation objects. 
+
 
 class Question(Base):
     __tablename__ = 'question'
     id = Column(Integer, primary_key=True)
     title = Column(String(140))
     text = Column(String(140))
+    # Relationships
+    answers = relationship("Answer", backref="question")    # One Question to many Answers
     #answers = relationship('Answer', primaryjoin="(Question.question_id==Answer.question_id)", backref=backref('question'), lazy='dynamic')
     #__mapper_args__ = {'polymorphic_identity': 'question',
                         # 'inherit_condition': (id == Commentable.id)}
@@ -49,15 +64,14 @@ class Question(Base):
     def __repr__(self):
         return '<Question %s>' % (self.text)
 
-    # def serialize(self):
-    #     return {
-    #         'question_id'   : self.question_id,
-    #         'title'         : self.title,
-    #         'text'          : self.text,
-    #         'commentable_id': self.commentable_id,
-    #         'user_id'       : self.user_id,
-    #         'pin_id'        : self.id
-    #     }
+
+class Answer(Base):
+    __tablename__ = 'answer'
+    id = Column(Integer, primary_key=True)
+    text = Column(String(140))           #Change to something bigger later
+    score = Column(Integer)
+    # Relationships
+    question_id = Column(Integer, ForeignKey('question.id'))    # One Question to many Answers    
 
 
 
