@@ -20,42 +20,68 @@
 {% block content %}
   {{ super() }}
 
-  <div id="map_region"></div>
+  <div id="map_region">
 
-  
-  <br>
-  <a href="{{ url_for('web.login') }}">Login</a>
+    <div id="signup-div" class="form-panel well">
+      <form action="{{url_for('web.signup')}}" method="POST">
+        <legend>Sign up for CodeBlue</legend>
+        <input class="span3" type="text" name="username" placeholder="Choose a username" autofocus>
+        <br>
+        <input class="span3" type="email" name="email" placeholder="Your email">
+        <br>
+        <input class="span3" type="password" name="password" placeholder="Create a password">
+        <br>
+        <button class="span3 btn btn-success signup_btn" type="submit">Sign Up</button>
+      </form>
+    </div>
 
-  
+    <div id="login-div" class="form-panel well">
+      <form action="{{ url_for('web.login') }}" method="POST">
+        <legend>Login Please</legend>
+        <label for="login_user_identifier">Username or Email</label>
+        <input id="login_user_identifier" class="span3" type="text" name="user_identifier">
+        <br>
+        <label for="login_password">Password</label>
+        <input id="login_password" class="span3" type="password" name="password">
+        {% if custom_vars.next %}
+        <input type="hidden" name="next" value="{{ custom_vars.next }}">
+        {% endif %}
+        <br>
+        <button class="span3 btn btn-primary login_btn" type="submit">Login</button>
+      </form>
+    </div>
 
-  <a href="{{ url_for('web.signup') }}">Create an Account Now</a>
+  </div>
 
-  <form action="{{url_for('web.signup')}}" method="POST">
-    <legend>Sign up for CodeBlue</legend>
-    <input class="span3" type="text" name="username" placeholder="Choose a username">
-    <br>
-    <input class="span3" type="email" name="email" placeholder="Your email">
-    <br>
-    <input class="span3" type="password" name="password" placeholder="Create a password">
-    <br>
-    <button class="span3 btn btn-success signup_btn" type="submit">Sign Up</button>
-  </form>
+  <div id="hero-unit" class="hero-unit">
+      <h1>Geotarget your Q &amp; A</h1><br>
+      <p>Ask Questions of users who are actually able to give you an answer. Help others get their questions answered in real time.</p>
+      <p><a id="learn-more-scroll" class="btn btn-primary btn-large">Learn More <i class='icon-chevron-down'></i></a></p>
+  </div>
 
-  <br>
+  <div class="container-fluid">
 
-  <form action="{{ url_for('web.login') }}" method="POST">
-    <legend>Login</legend>
-    <label for="login_user_identifier">Username or Email</label>
-    <input id="login_user_identifier" class="span3" type="text" name="user_identifier" autofocus>
-    <br>
-    <label for="login_password">Password</label>
-    <input id="login_password" class="span3" type="password" name="password">
-    {% if custom_vars.next %}
-    <input type="hidden" name="next" value="{{ custom_vars.next }}">
-    {% endif %}
-    <br>
-    <button class="span3 btn btn-primary login_btn" type="submit">Login</button>
-  </form>
+      <div id="scroll-landing" class="row-fluid standout-region">
+
+        <div class="span4 well">
+          <h1>Android</h1>
+          <p class="lead">Download the Android Application <a href="#">here</a> so you can easily post and receive notifications about geo-targeted questions and answers while on the go.</p>
+        </div>
+
+        <div class="span4 well">
+          <h1>Collaborative</h1>
+          <p class="lead">Earn karma and help those in your comunity by using your knowldge of what's around you to answer the questions of others.</p>
+        </div>
+
+        <div class="span4 well">
+          <h1>Dynamic</h1>
+          <p class="lead">Never refresh to see live content - its all kept up to date so you can focus on asking and answering.</p>
+        </div>
+
+      </div>
+
+  </div>
+
 
 {% endblock content %}
 
@@ -65,5 +91,12 @@
 
 {% block tail_scripts %}
     {{ super() }}
+<script>
+{% if next %}
+var REDIRECTION = true;
+{% else %}
+var REDIRECTION = false;
+{% endif %}
+</script>
 <script data-main="{{url_for('static', filename='js/index.js')}}" src="{{url_for('static', filename='js/require.js')}}"></script>
 {% endblock tail_scripts %}

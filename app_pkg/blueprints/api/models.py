@@ -59,6 +59,9 @@ class Geolocation(Base):
     question_id = Column(Integer, ForeignKey('question.id'))   # One Geolocation to one Question
     # Note either user_id or question_id is null. Users and Questions have their own Geolocation objects. 
 
+    def __repr__(self):
+        return '<Geolocation %s,%s>' % (self.latitude, self.longitude)
+
 
 class Question(Base):
     __tablename__ = 'question'
@@ -89,6 +92,8 @@ class Answer(Base):
     question_id = Column(Integer, ForeignKey('question.id'))    # One Question to many Answers    
 
 
+    def __repr__(self):
+        return '<Answer %s>'
 
 
 

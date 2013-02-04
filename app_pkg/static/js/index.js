@@ -1,43 +1,65 @@
+require([
+	'lib/location',
+	'lib/google_static_maps'
+	], 
+	function(location, static_map) {
 
-require(['location'], function(location) {
+		var width = $(window).width(),
+			height = Math.round($(window).height()*0.45);
+			
 
-	var google_static_maps_url = "http://maps.googleapis.com/maps/api/staticmap"
-	var key = GOOGLE_API_KEY
-
-	
-	var success_action = function(latitude, longitude) {
-		var img = new Image();
-		var source = google_static_maps_url + "?center=" + latitude + "," + longitude  + "&zoom=13&size=940x400&sensor=true&scale=1" + "&key=" + key
-		img.src = source;
-		//img.height=400;
-		//img.width=950;
-		$(img).addClass("span12");
-		img.class="span4"
-		$("#map_region").prepend(img);
+		var builder = static_map.map_builder($("#map_region"), width, height);
+		// Callback passed in will always be called, either with user coords or with default coords.
+		location.geoplugin_coordinates(builder);
 		
-		console.log(source);
-		console.log(latitude);
-		console.log(longitude);
-		console.log("Success");
+
+		$(document).ready(function() {
+
+			$("#signup_btn").click(function() {
+
+				$("#signup-div").animate({
+					right: '-20px',
+				});
+				$("#login-div").animate({
+					right: '-330px',
+				});
+			});
+
+			$("#login_btn").click(function() {
+				$("#signup-div").animate({
+					right: '-330px',
+				});
+				$("#login-div").animate({
+					right: '-20px',
+				});
+			});
+
+			if (REDIRECTION) {
+				// Flip out the login panel since user was redirected to login.
+				$("#signup-div").animate({
+					right: '-330px',
+				});
+				$("#login-div").animate({
+					right: '-20px',
+				});
+			} else {
+				$("#signup-div").animate({
+					right: '-20px',
+				});
+			}
+
+			$("#learn-more-scroll").click(function() {
+				$('html,body').animate({
+					scrollTop: $("#scroll-landing").offset().top
+				}, 1500);
+
+			});
+
+		
+
+		// End of Document Ready Closure
+		});
+
+	// End of requireJS Closure
 	}
-	
-	// No error_action, because default coordinates will be used if errors occur.
-	location.geoplugin_coordinates(success_action);
-	
-
-	$(document).ready(function() {
-
-		$("#signup_btn").click(function() {
-			window.location = "/signup";
-		});
-
-		$("#login_btn").click(function() {
-			window.location = "/login";
-		});
-
-	
-
-	// End of Document Ready Closure
-	});
-// End of requireJS Closure
-});
+);
