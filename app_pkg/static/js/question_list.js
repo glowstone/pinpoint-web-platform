@@ -31,6 +31,59 @@ require([
 	], 
 	function(google, GMapsHelper, location) {
 
+		var debug = true;
+
+		// Cannot get a reference to the map without being passed along as a callback.
+		var ugly = function(map) {
+			// Posting Components
+
+			// Posting View Generator
+			// var generate_posting_view = function(model, options) {
+			// 	if (model.attributes.author_id == USER_ID) {
+			// 		return new OwnPostingView(options);
+			// 	} 
+			// 	else {
+			// 		return new OtherPostingView(options);
+			// 	}
+			// }
+
+			// posting_collection = new PostingCollection()
+
+			// posting_creator = new PostingCollectionCreatorView({
+			// 	el: $("#posting-creator-region"),
+			// 	collection: posting_collection,
+			// 	map_reference: map,
+			// });
+			// posting_creator.render();
+
+			// posting_display = new PostingCollectionDisplayView({
+			// 	el: $("#posting-display-region"),
+			// 	collection: posting_collection,
+			// 	fetch_data: {
+			// 		filter_mode: 'adventure_postings',
+			// 		adventure_id: ADVENTURE_ID,
+			// 	},
+			// 	generate_posting_view: generate_posting_view,
+			// 	empty_message: "No posts yet."
+			// });
+			// posting_display.render()
+
+			// posting_on_map = new PostingCollectionMapView({
+			// 	el: $(map),
+			// 	collection: posting_collection,
+			// 	//map_reference: map,				
+			// });
+			console.log("Called callback");
+		}
+
+		// Return a function that will build the map and invoke the custom callback after the map is created.
+		build_map = GMapsHelper.get_func_to_build_map_at_latlng_and_call($("#map_canvas"), ugly);
+		location.geoplugin_coordinates(build_map);
+
+
+
+
+
 	// var Question = Backbone.Model.extend({
 	// 	defaults: {
 	// 		title: "Default Title",
