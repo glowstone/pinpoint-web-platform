@@ -27,7 +27,7 @@ class User(Base):
     email = Column(String(120), unique=True, nullable=False)
     password_hash = Column(String(140), nullable=False)
     salt = Column(String(120))
-    profile_image_url = Column(String(200))
+    profile_img_url = Column(String(200))
     # Relationships
     geolocation = relationship('Geolocation', uselist=False, backref='user')
 
@@ -42,7 +42,7 @@ class User(Base):
     def set_gravatar_profile_img(self, email):
         gravatar_url = "http://www.gravatar.com/avatar/" + hashlib.md5(email.lower()).hexdigest() + "?"
         gravatar_url += urllib.urlencode({'d':'identicon'})
-        self.profile_image_url = gravatar_url
+        self.profile_img_url = gravatar_url
 
     def __repr__(self):
         return '<User %s>' % (self.username)

@@ -19,7 +19,7 @@ def index():
     else:
         context_vars = {}
         context_vars['next'] = request.args.get('next', None)
-        return render_template('index.html', custom_vars=context_vars)
+        return render_template('index.html', **context_vars)
 
 
 def signup():
@@ -86,7 +86,15 @@ def question_list(username):
     """
     Show the question listing page for the User with the given username.
     """
-    return render_template('question_list.html')
+    api_response = custom_api.user_show(username)
+    if api_response.get('success', False):
+        user = api_response['data']
+        context_vars = {}
+        context_vars['page_for'] = user
+        return render_template('question_list.html', **context_vars)
+    else:
+        # No User with that username
+        abort(404)
 
 
 @login_required

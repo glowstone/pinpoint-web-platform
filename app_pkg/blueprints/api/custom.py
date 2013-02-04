@@ -57,29 +57,15 @@ def user_authenticate(user_identifier, password):
 
 
 def user_show(username):
-    """Queries for the given user. Check whether that is the current user"""
-    user = User.query.filter_by(username=username).first()
-    authenticated_user_id = session.get("user_id", None)
+    """
+    Queries for a user with the given username and returns the user as 'data' if found.
+    """
+    user = User.query.filter_by(username=username).first()    # Returns None if no User found
     if user:
-        if user.user_id == authenticated_user_id:       # Authenticated User
-            return util.success_response({"user": user, "authenticated": True})
-        else:                                           # Unauthenticated User (public profile will be shown)
-            return util.success_response({"user": user, "authenticated": False})
+        return util.success_response(user)
     else:
         return util.error_response("No user with username " + username)
 
-
-def current_session_user():
-    """Internal Method for finding the User object corresponding to the current authenticated request session"""
-    user_id = session.get('user_id', None)
-    if user_id:
-        user = User.query.filter_by(user_id=user_id).first()
-        if user:
-            return util.success_response(user)
-        else:
-            return util.error_response("No user found with Session's user_id")
-    else:
-        return util.error_response("Session does not contain a user_id")
 
 
 def user_set_geolocation_json(latitude, longitude, elevation=None):

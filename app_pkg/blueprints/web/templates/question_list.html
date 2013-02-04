@@ -20,14 +20,57 @@
 {% block content %}
   {{ super() }}
 
-  <p>Questions Page</p>
+  <div id="map_wrap" class="map-collapse">
+    <div id="map_canvas"></div>
+  </div>
 
-  <ul>
-  	<li>Stuff</li>
-  </ul>
+  <div id="expand_bar"></div>
 
-  <div id="play">
-  	<p>Content<p>
+
+  <div class="container-fluid">
+
+    <div class="row-fluid">
+
+      <!--Main Content-->
+      <div id="main_content" class="span8">
+        
+        <div id="question-creator-region" class="well">
+        </div>
+
+        <div id="question-display-region">
+        </div>
+    
+      </div>
+
+      <!--Sidebar Content-->
+      <div id="side_content" class="span4">
+
+        <div id="question-stats-region">
+        </div>
+
+        <div id="user-region">
+          <img class="profile-img img-rounded" src="{{ page_for.profile_img_url }}" alt="Large profile image" width="300" height="300"  /><br>
+          <table>
+            <tr>
+              <td>Username</td>
+              <td><strong></strong></td>
+            </tr>
+            <tr>
+              <td>Last seen</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td>Member since</td>
+              <td></td>
+            </tr>
+          </table> 
+        </div>
+
+      </div>
+  
+    <!--End of row-fluid-->
+    </div>
+  <!--End of container-fluid-->
   </div>
 
 {% endblock content %}

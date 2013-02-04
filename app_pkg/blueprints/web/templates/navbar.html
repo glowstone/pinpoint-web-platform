@@ -17,7 +17,7 @@
           {% if session['user'] %}
           <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-              <img src="{{ session['user'].profile_image_url }}&s=20" class="navbar_profile_img"/>
+              <img src="{{ session['user'].profile_img_url }}&s=20" class="navbar_profile_img"/>
               {{ session['user'].username }}
             <b class="caret"></b></a>
             <ul class="dropdown-menu">
