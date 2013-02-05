@@ -27,27 +27,32 @@ require.config({
 require([
 	'google_maps_loader',
 	'google_maps',         // My Google Maps Helper
-	'lib/location'
+	'lib/location',
+	'models/question',
+	'collections/question_collection',
+	'views/generic_question_view',
+	'views/question_collection_display_view'
 	], 
-	function(google, GMapsHelper, location) {
+	function(google, GMapsHelper, location, Question, QuestionCollection, GenericQuestionView, QuestionCollectionDisplayView) {
 
 		var debug = true;
 
 		// Cannot get a reference to the map without being passed along as a callback.
 		var ugly = function(map) {
-			// Posting Components
+			// Question Components
 
-			// Posting View Generator
-			// var generate_posting_view = function(model, options) {
-			// 	if (model.attributes.author_id == USER_ID) {
-			// 		return new OwnPostingView(options);
-			// 	} 
-			// 	else {
-			// 		return new OtherPostingView(options);
-			// 	}
-			// }
+			// Question View Generator
+			var generate_question_view = function(model, options) {
+				return new GenericQuestionView(options);
+				// if (model.attributes.author_id == USER_ID) {
+				// 	return new OwnPostingView(options);
+				// } 
+				// else {
+				// 	return new OtherPostingView(options);
+				// }
+			}
 
-			// posting_collection = new PostingCollection()
+			question_collection = new QuestionCollection()
 
 			// posting_creator = new PostingCollectionCreatorView({
 			// 	el: $("#posting-creator-region"),
@@ -56,17 +61,15 @@ require([
 			// });
 			// posting_creator.render();
 
-			// posting_display = new PostingCollectionDisplayView({
-			// 	el: $("#posting-display-region"),
-			// 	collection: posting_collection,
-			// 	fetch_data: {
-			// 		filter_mode: 'adventure_postings',
-			// 		adventure_id: ADVENTURE_ID,
-			// 	},
-			// 	generate_posting_view: generate_posting_view,
-			// 	empty_message: "No posts yet."
-			// });
-			// posting_display.render()
+			question_display = new QuestionCollectionDisplayView({
+				el: $("#question-display-region"),
+				collection: question_collection,
+				fetch_data: {
+				},
+				generate_question_view: generate_question_view,
+				empty_message: "No Questions yet. You could be the first to ask one."
+			});
+			question_display.render()
 
 			// posting_on_map = new PostingCollectionMapView({
 			// 	el: $(map),
