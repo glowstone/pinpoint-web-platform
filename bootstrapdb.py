@@ -1,20 +1,65 @@
 from app_pkg.database import db_session
-from app_pkg.blueprints.api.models import *
+from app_pkg.blueprints.api.models import User, Geolocation, Question, Answer
 
 import datetime
 
+# Bootstrap Example Objects. Demonstrate properties of the application's Object model.
 
-u1 = User(username="test", email="test@test.com", password_hash="fdfdfdsfds", salt="fdsfdsfsd")
-db_session.add(u1)
+u1 = User.create_user('bilbo', 'bilbo@gmail.com', 'sample')
+u2 = User.create_user('fili', 'fili@gmail.com', 'sample')
+u3 = User.create_user('kili', 'kili@gmail.com', 'sample')
+u4 = User.create_user('oin', 'oin@gmail.com', 'sample')
+u5 = User.create_user('gloin', 'gloin@gmail.com', 'smog')
+u6 = User.create_user('dwalin', 'dwalin@gmail.com', 'sample')
+u7 = User.create_user('balin', 'balin@gmail.com', 'sample')
+u8 = User.create_user('thorin', 'thorin@gmail.com', 'sample')
+u9 = User.create_user('bifur', 'bifur@gmail.com', 'sample')
+u10 = User.create_user('bofur', 'bofur@gmail.com', 'sample')
+u11 = User.create_user('bombur', 'bombur@gmail.com', 'sample')
+u12 = User.create_user('dori', 'dori@gmail.com', 'sample')
+u13 = User.create_user('nori', 'nori@gmail.com', 'sample')
+u14 = User.create_user('ori', 'ori@gmail.com', 'sample')
+
+user_list = [u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12, u13, u14]
+
+for user in user_list:
+    db_session.add(user)
+    db_session.commit()
+
+print u1.id
+
+
+q1 = Question('Testing title', 'How long is the line at SFO?', u1.id)
+db_session.add(q1)
 db_session.commit()
 
+q2 = Question('Airport line length', 'How long is the line at BOS?', u2.id)
+db_session.add(q2)
+db_session.commit()
 
-g1 = Geolocation(latitude=42.0, longitude=-71.4, user_id=u1.id)
+q3 = Question('Seats at Yogurtland', 'How many seats are currently available at Yogurtland?', u3.id)
+db_session.add(q3)
+db_session.commit()
+
+g1 = Geolocation(34.2, 37.6, None, q1.id)
 db_session.add(g1)
+db_session.commit()
+
+g2 = Geolocation(45.2, 37.6, None, q2.id)
+db_session.add(g2)
+db_session.commit()
+
+g3 = Geolocation(34.2, 38.6, None, q3.id)
+db_session.add(g3)
 db_session.commit()
 
 
 print User.query.all()
+
+print q1.geolocation
+print q1.author
+print q1.author.questions
+
 
 
 
