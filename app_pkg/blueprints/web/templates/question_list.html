@@ -84,8 +84,7 @@
 <script>
       // A change to the web interface urls.py will also update the URL base used by JS for redirection to individual questions and users.
       WEB_QUESTION_URL = "{{url_for('web.question_detail', question_id=0)}}".split("/").slice(0,-1).join('/') + '/';
-      WEB_USER_URL = "{{url_for('web.question_list', username='username')}}".split("/").slice(0,-1).join('/') + '/';
-      
+      WEB_USER_URL = "{{url_for('web.question_list', username='username')}}".split("/").slice(0,-1).join('/') + '/';     
 </script>
 <script data-main="{{url_for('static', filename='js/question_list.js')}}" src="{{url_for('static', filename='js/require.js')}}"></script>
 {% endblock tail_scripts %}

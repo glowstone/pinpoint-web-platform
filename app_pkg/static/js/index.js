@@ -4,6 +4,8 @@ require([
 	], 
 	function(location, static_map) {
 
+		console.log("Loaded index.js");
+
 		var width = $(window).width(),
 			height = Math.round($(window).height()*0.45);
 			

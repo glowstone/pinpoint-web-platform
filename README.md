@@ -16,10 +16,24 @@ Alpha. No compatability guarantees of any kind.
 
 # Local MySQL Database Setup
 
+## MySQL Installation
+
+    sudo apt-get install mysql-server
+
+When setting up the MySQL server, you will be prompted to create a password for the root user.
+
+To secure the installation by removing anonymous users, disallowing remote root logins, removing test database, and reloading the privileges table run the following. You will be prompted for a root password.
+
+    sudo mysql_secure_installation
+    sudo apt-get install mysql-client
+
     mysql -u root -p
     CREATE USER username@localhost IDENTIFIED BY 'password';
-    CREATE DATABASE code_blue_db;
-    GRANT ALL PRIVILEGES ON code_blue_db.* TO username@localhost;
+    CREATE DATABASE codeblue_db;
+    GRANT ALL PRIVILEGES ON codeblue_db.* TO username@localhost;
+
+Fill out the Database Settings in app_pkg/config/development.py to correspond to your local setup.
+
 
 # Environment Variables
 
@@ -42,18 +56,7 @@ Running
     python runserver.py               # Run local server
 
 
-Fill out the Database Settings in app_pkg/config/local.py to correspond to your local setup.
 
-# MySQL Installation
-
-    sudo apt-get install mysql-server
-
-When setting up the MySQL server, you will be prompted to create a password for the root user.
-
-To secure the installation by removing anonymous users, disallowing remote root logins, removing test database, and reloading the privileges table run the following. You will be prompted for a root password.
-
-    sudo mysql_secure_installation
-    sudo apt-get install mysql-client
 
 
 

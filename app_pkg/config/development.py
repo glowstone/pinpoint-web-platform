@@ -12,7 +12,7 @@ PORT = int(os.environ.get('PORT', 5000))
 # Database Settings
 dialect = "mysql://"
 host = "localhost"
-database_name = "code_blue_db"
+database_name = "codeblue_db"
 username = "dghubble"
 password = "sample"
 raw_connection_string = None
