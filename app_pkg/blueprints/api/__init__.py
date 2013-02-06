@@ -8,10 +8,10 @@ from flask import Blueprint         # For creation of custom Blueprints
 
 # Restless API Bleuprints
 manager = APIManager(app, session=db_session)
-user_rest_app = manager.create_api_blueprint(User)
-geolocation_rest_app = manager.create_api_blueprint(Geolocation)
-question_rest_app = manager.create_api_blueprint(Question)
-answer_rest_app = manager.create_api_blueprint(Answer)
+user_rest_app = manager.create_api_blueprint(User, methods=['GET'], url_prefix='/api')
+geolocation_rest_app = manager.create_api_blueprint(Geolocation, methods=['GET'], url_prefix='/api')
+question_rest_app = manager.create_api_blueprint(Question, methods=['GET', 'POST', 'PUT', 'DELETE'], url_prefix='/api')
+answer_rest_app = manager.create_api_blueprint(Answer, methods=['GET', 'POST', 'PUT', 'DELETE'], url_prefix='/api')
 
 
 # Custom API Blueprints

@@ -31,9 +31,10 @@ require([
 	'models/question',
 	'collections/question_collection',
 	'views/generic_question_view',
-	'views/question_collection_display_view'
+	'views/question_collection_display_view',
+	'views/question_collection_creation_view',
 	], 
-	function(google, GMapsHelper, location, Question, QuestionCollection, GenericQuestionView, QuestionCollectionDisplayView) {
+	function(google, GMapsHelper, location, Question, QuestionCollection, GenericQuestionView, QuestionCollectionDisplayView, QuestionCollectionCreatorView) {
 
 		var debug = true;
 
@@ -54,12 +55,12 @@ require([
 
 			question_collection = new QuestionCollection()
 
-			// posting_creator = new PostingCollectionCreatorView({
-			// 	el: $("#posting-creator-region"),
-			// 	collection: posting_collection,
-			// 	map_reference: map,
-			// });
-			// posting_creator.render();
+			question_creator = new QuestionCollectionCreatorView({
+				el: $("#question-creator-region"),
+				collection: question_collection,
+				map_reference: map,
+			});
+			question_creator.render();
 
 			question_display = new QuestionCollectionDisplayView({
 				el: $("#question-display-region"),
