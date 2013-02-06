@@ -1,10 +1,10 @@
 require.config({
 	paths: {
-		'handlebars': 'lib/handlebars',
-		'text': 'lib/require-plugins/text',
-		'async': 'lib/async',
-		'google_maps_loader': 'lib/google_maps_loader',
-		'google_maps': 'lib/google_maps',
+		'handlebars': 'library/handlebars',
+		'text': 'library/require-plugins/text',
+		'async': 'library/async',
+		'google_maps_loader': 'library/google_maps_loader',
+		'google_maps': 'library/google_maps',
 	},
 	shim: {
 		'handlebars': {
@@ -27,7 +27,7 @@ require.config({
 require([
 	'google_maps_loader',
 	'google_maps',         // My Google Maps Helper
-	'lib/location',
+	'library/location',
 	'models/question',
 	'collections/question_collection',
 	'views/generic_question_view',

@@ -1,6 +1,6 @@
 define([
 	'collections/question_collection',
-	'lib/backbone_debug',
+	'library/backbone_debug',
 	'text!templates/empty_message_template',
 	'handlebars',
 	],
