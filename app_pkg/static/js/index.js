@@ -1,6 +1,6 @@
 require([
-	'lib/location',
-	'lib/google_static_maps'
+	'library/location',
+	'library/google_static_maps',
 	], 
 	function(location, static_map) {
 
