@@ -2,13 +2,10 @@
 from flask import session, request
 from flask.ext.restless import APIManager, ProcessingException
 
-
-# Package Variables
 from app_pkg.database import db_session
+from app_pkg.blueprints.api.models import User, Question, Geolocation, Answer
 
-# Package Modules
-#from sqlalchemy.core.exceptions import *
-from models import *
+from app_pkg import app
 import util
 
 # Libraries
@@ -32,7 +29,10 @@ def question_post_preprocessor(data):
     if user:
         print user
         data['user_id'] = user.id
-        data.pop('longitude')
+        data.pop('longitude', None)
+        data.pop('latitude', None)
+        print data
+        print "HERE"
     else:
         raise ProcessingException(message='Not Authorized',
                                   status_code=401)
@@ -45,18 +45,52 @@ def question_post_postprocessor(data):
     This function must return a dictionary representing the JSON to
     return to the client.
     """
-    print "Post Processor"
     print data
     return data
 
 
 
+# RESTless API
+###############################################################################
+
+# Restless API Bleuprints
+manager = APIManager(app, session=db_session)
+
+user_rest_app = manager.create_api_blueprint(
+    model=User, 
+    # Allow GET requests only.
+    methods=['GET'], 
+    url_prefix='/api'
+)
 
 
+geolocation_rest_app = manager.create_api_blueprint(
+    Geolocation, 
+    # Allow GET requests only.
+    methods=['GET'], 
+    url_prefix='/api'
+)
 
 
+question_rest_app = manager.create_api_blueprint(
+    model = Question,
+    # Allow GET, POST, PUT, and DELETE requests.
+    methods=['GET', 'POST', 'PUT', 'DELETE'],
+    url_prefix='/api',
+    preprocessors = {
+        'POST': [question_post_preprocessor],
+    },
+    postprocessors = {
+        'POST': [question_post_postprocessor]
+    }
+)
 
 
+answer_rest_app = manager.create_api_blueprint(
+    Answer,
+    # Allow GET, POST, PUT, and DELETE requests.
+    methods=['GET', 'POST', 'PUT', 'DELETE'], 
+    url_prefix='/api')
 
 
 

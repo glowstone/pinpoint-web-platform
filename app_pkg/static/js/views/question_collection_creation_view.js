@@ -64,7 +64,7 @@ define([
 						_(inputs).each(function(input) {
 							values[input.name] = $(input).val();
 						});
-						//values['latitude'] = this.last_latitude;
+						values['latitude'] = this.last_latitude;
 						values['longitude'] = this.last_longitude;
 						if (values['text'] == "") {
 							values['text'] = " ";
