@@ -48,7 +48,7 @@ define([
 					return this;
 				},
 				posting_creation_handler: function(event) {
-					var inputs = $('#posting-creation-form :input')
+					var inputs = $('#question-creation-form :input')
 					if (this.last_latitude == null || this.last_longitude == null) {
 						//Don't submit the data. Flash the button to choose a location.
 						$("#location-chooser").animate({opacity: .3}, 200, function() {
@@ -64,7 +64,7 @@ define([
 						_(inputs).each(function(input) {
 							values[input.name] = $(input).val();
 						});
-						values['latitude'] = this.last_latitude;
+						//values['latitude'] = this.last_latitude;
 						values['longitude'] = this.last_longitude;
 						if (values['text'] == "") {
 							values['text'] = " ";

@@ -1,5 +1,7 @@
 # Environment Modules
 from flask import session, request
+from flask.ext.restless import APIManager, ProcessingException
+
 
 # Package Variables
 from app_pkg.database import db_session
@@ -14,6 +16,57 @@ import datetime
 
 # May NOT have access to app
 # TODO move form verification and other lengthy code into util. 
+
+# REST API Preprocessors and PostProcessors
+###############################################################################
+
+def question_post_preprocessor(data):
+    """Accepts a single argument, 'data', which is the dictionary of
+    fields to set on the new instance of the model.
+    This function must return a dictionary representing the fields to
+    set on the new instance of the model.
+    """
+    print "!!!!!!!!!!!!!!!!!!!!!!!!!"
+    print data
+    user = session.get('user', False)
+    if user:
+        print user
+        data['user_id'] = user.id
+        data.pop('longitude')
+    else:
+        raise ProcessingException(message='Not Authorized',
+                                  status_code=401)
+    return data
+
+
+def question_post_postprocessor(data):
+    """Accepts a single argument, `data`, which is the dictionary
+    representation of the created instance of the model.
+    This function must return a dictionary representing the JSON to
+    return to the client.
+    """
+    print "Post Processor"
+    print data
+    return data
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 # API Account Resource Handlers
