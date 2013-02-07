@@ -77,6 +77,10 @@ define([
 						this.collection.create(values, {
 							wait: true,
 							success: function(model, response, options) {
+								console.log("Model Created");
+								console.log(model);
+								
+								console.log(response);
 								self.last_longitude = null;
 								self.last_latitude = null;
 								if (self.last_marker) {

@@ -1,6 +1,7 @@
 # Environment Modules
 from flask import session, request
 from flask.ext.restless import APIManager, ProcessingException
+from flask.ext.restless.views import jsonpify
 
 from app_pkg.database import db_session
 from app_pkg.blueprints.api.models import User, Question, Geolocation, Answer
@@ -46,6 +47,9 @@ def question_post_postprocessor(data):
     return to the client.
     """
     print data
+    print "Postprocessor"
+    question = Question.query.get(data['id'])
+    print question
     return data
 
 
@@ -82,7 +86,8 @@ question_rest_app = manager.create_api_blueprint(
     },
     postprocessors = {
         'POST': [question_post_postprocessor]
-    }
+    },
+    results_per_page = -1,      # Disable pagination
 )
 
 
