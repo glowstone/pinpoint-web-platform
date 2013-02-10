@@ -90,20 +90,23 @@ class Geolocation(Base):
 class Question(Base):
     __tablename__ = 'question'
     id = Column(Integer, primary_key=True)
-    title = Column(String(140))
-    text = Column(String(140))
+    title = Column(String(140), nullable=False)
+    text = Column(String(140), nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False)
     # Relationships
-    user_id = Column(Integer, ForeignKey('user.id'))                    # One User to many Questions
+    user_id = Column(Integer, ForeignKey('user.id'))    # One User to many Questions
     answers = relationship("Answer", backref="question")                # One Question to many Answers
-    geolocation = relationship('Geolocation', uselist=False, backref='question') # One Geolocation to one Question
 
-    def __init__(self, title, text, user_id, *args, **kwargs):
+    def __init__(self, title, text, latitude, longitude, user_id, *args, **kwargs):
         """
         RESTless requires that each model have an __init__ method that accepts kwargs since 
         this is used for POST create requests.
         """
         self.title = title
         self.text = text
+        self.latitude = latitude
+        self.longitude = longitude
         self.user_id = user_id
         super(Question, self).__init__(*args, **kwargs)
 

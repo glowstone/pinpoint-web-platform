@@ -24,7 +24,6 @@ def question_post_preprocessor(data):
     This function must return a dictionary representing the fields to
     set on the new instance of the model.
     """
-    print "!!!!!!!!!!!!!!!!!!!!!!!!!"
     print data
     user = session.get('user', False)
     if user:
@@ -33,7 +32,6 @@ def question_post_preprocessor(data):
         data.pop('longitude', None)
         data.pop('latitude', None)
         print data
-        print "HERE"
     else:
         raise ProcessingException(message='Not Authorized',
                                   status_code=401)

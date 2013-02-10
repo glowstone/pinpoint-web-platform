@@ -48,39 +48,39 @@ define([
 					return this;
 				},
 				posting_creation_handler: function(event) {
+					var values = {};
 					var inputs = $('#question-creation-form :input')
+					_(inputs).each(function(input) {
+						values[input.name] = $(input).val();
+					});
+					values['latitude'] = this.last_latitude;
+					values['longitude'] = this.last_longitude;
+
 					if (this.last_latitude == null || this.last_longitude == null) {
 						//Don't submit the data. Flash the button to choose a location.
-						$("#location-chooser").animate({opacity: .3}, 200, function() {
-							$("#location-chooser").animate({opacity: 1}, 200, function() {
-								$("#location-chooser").animate({opacity: .3}, 200, function() {
-									$("#location-chooser").animate({opacity: 1}, 200);
-								});
-							});
-						});						
+						this.missing_location_notification()
+										
 					}
+					// else if (values.title == "" || values.text == ""){
+					// 	if (values.title == "") {
+					// 		this.missing_title_notification()
+					// 	} else {
+					// 		this.missing_text_notification()
+					// 	}
+					// }
 					else {
-						var values = {text: " "};
-						_(inputs).each(function(input) {
-							values[input.name] = $(input).val();
-						});
-						values['latitude'] = this.last_latitude;
-						values['longitude'] = this.last_longitude;
-						if (values['text'] == "") {
-							values['text'] = " ";
-						}
-						console.log(values);
-						$("#question-creation-form")[0].reset();
-
+						// Valid attempt to create a Question
 						// Creates a posting with the values, saves model to server, and adds model to the collection
 						var self = this;
 						this.collection.create(values, {
 							wait: true,
 							success: function(model, response, options) {
-								console.log("Model Created");
-								console.log(model);
-								
-								console.log(response);
+								// server response only returns question id, which is merged into client side model.
+								// fetch model immediately to retrieve additional information.
+								model.fetch({
+									update: true,
+								})
+								$("#question-creation-form")[0].reset();
 								self.last_longitude = null;
 								self.last_latitude = null;
 								if (self.last_marker) {
@@ -131,7 +131,24 @@ define([
 						this.listen_handle = google.maps.event.addListener(this.map_reference, 'click', update_chosen_location);	
 						this.map_chooser_state = true;
 					}
+				},
+				missing_location_notification: function() {
+					$("#location-chooser").animate({opacity: .3}, 200, function() {
+						$("#location-chooser").animate({opacity: 1}, 200, function() {
+							$("#location-chooser").animate({opacity: .3}, 200, function() {
+								$("#location-chooser").animate({opacity: 1}, 200);
+							});
+						});
+					});		
+				},
+				missing_title_notification: function() {
+					console.log("Missing title");
+				}, 
+				missing_text_notification: function() {
+					console.log("Missing text");
 				}
+				// Additional creation view handlers go here
+
 			});
 
 		return QuestionCollectionCreationView

@@ -29,34 +29,33 @@ for user in user_list:
 print u1.id
 
 
-q1 = Question('Testing title', 'How long is the line at SFO?', u1.id)
+q1 = Question('Testing title', 'How long is the line at SFO?', 32.4, 34.7, u1.id)
 db_session.add(q1)
 db_session.commit()
 
-q2 = Question('Airport line length', 'How long is the line at BOS?', u2.id)
+q2 = Question('Airport line length', 'How long is the line at BOS?', 33.4, 67.4, u2.id)
 db_session.add(q2)
 db_session.commit()
 
-q3 = Question('Seats at Yogurtland', 'How many seats are currently available at Yogurtland?', u3.id)
+q3 = Question('Seats at Yogurtland', 'How many seats are currently available at Yogurtland?', 34.6, 67.8, u3.id)
 db_session.add(q3)
 db_session.commit()
 
-g1 = Geolocation(34.2, 37.6, None, q1.id)
-db_session.add(g1)
-db_session.commit()
+# g1 = Geolocation(34.2, 37.6, None, q1.id)
+# db_session.add(g1)
+# db_session.commit()
 
-g2 = Geolocation(45.2, 37.6, None, q2.id)
-db_session.add(g2)
-db_session.commit()
+# g2 = Geolocation(45.2, 37.6, None, q2.id)
+# db_session.add(g2)
+# db_session.commit()
 
-g3 = Geolocation(34.2, 38.6, None, q3.id)
-db_session.add(g3)
-db_session.commit()
+# g3 = Geolocation(34.2, 38.6, None, q3.id)
+# db_session.add(g3)
+# db_session.commit()
 
 
 print User.query.all()
 
-print q1.geolocation
 print q1.author
 print q1.author.questions
 
