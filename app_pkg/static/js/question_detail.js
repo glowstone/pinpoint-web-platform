@@ -41,11 +41,12 @@ require([
 	//'views/generic_adventure_view',
 	'views/answer_collection_display_view',
 	//'views/posting_collection_creation_view',
-	//'views/posting_collection_map_view',
+	'views/answer_collection_map_view',
+	'views/answer_map_view',
 	//'views/user_collection_display_view',
 	'library/backbone_debug',
 	], 
-	function(communication, google, GMapsHelper, User, Question, Answer, UserCollection, AnswerCollection, OwnAnswerView, OtherAnswerView, UserView, AnswerCollectionDisplayView, BBDebug) {
+	function(communication, google, GMapsHelper, User, Question, Answer, UserCollection, AnswerCollection, OwnAnswerView, OtherAnswerView, UserView, AnswerCollectionDisplayView, AnswerCollectionMapView, AnswerMapView, BBDebug) {
 
 		var debug = true;
 
@@ -71,23 +72,31 @@ require([
 			// 	map_reference: map,
 			// });
 			// posting_creator.render();
-
+			
 			answer_display = new AnswerCollectionDisplayView({
 				el: $("#answer-display-region"),
 				collection: answer_collection,
 				fetch_data: {
-					question_id: QUESTION_ID,
+					q: JSON.stringify({
+						"filters": [
+							{
+								name: "question_id",
+								op: "==",
+								val: QUESTION_ID,
+							},
+						]
+					})
 				},
 				generate_answer_view: generate_answer_view,
 				empty_message: "No posts yet."
 			});
 			answer_display.render()
 
-			// posting_on_map = new PostingCollectionMapView({
-			// 	el: $(map),
-			// 	collection: posting_collection,
-			// 	//map_reference: map,				
-			// });
+			answer_on_map = new AnswerCollectionMapView({
+				el: $(map),
+				collection: answer_collection,
+				//map_reference: map,				
+			});
 		}
 
 

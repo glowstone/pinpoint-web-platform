@@ -2,7 +2,7 @@
 
 	<div class="span10 offset1 well own-answer">
 
-		<div class="row-fluid">
+		<div class="row-fluid own-answer">
 
 			<div class="span2">
 				<img class='img-rounded pull-left' src="{{author.profile_img_url}}" height="100" width="100"></img>
