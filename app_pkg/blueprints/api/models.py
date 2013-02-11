@@ -18,6 +18,8 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     username = Column(String(80), unique=True, nullable=False)
     email = Column(String(120), unique=True, nullable=False)
+    latitude = Column(Float)
+    longitude = Column(Float)
     password_hash = Column(String(140), nullable=False)
     salt = Column(String(120), nullable=False)
     profile_img_url = Column(String(200), nullable=False)
