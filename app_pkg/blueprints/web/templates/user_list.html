@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{# HEAD #}
+
+{% block head %}{{ super() }}{% endblock head%}
+
+{% block title %}Code Blue{% endblock %}
+
+{% block head_styles %}
+  {{ super() }}
+    <link rel="stylesheet" href="{{url_for('static', filename='css/user_list.css')}}">
+{% endblock %}
+
+{% block head_scripts %}
+  {{ super() }}
+{% endblock head_scripts %}
+
+{# BODY #}
+
+{% block content %}
+  {{ super() }}
+
+  <div id="main-content" class="container-fluid">
+
+    <div class="tabbable well">
+      
+      <ul class="nav nav-tabs pull-right">
+        <!-- <li>
+          <a href="#community-users-pane" data-toggle="tab">Local Users</a>
+        </li> -->
+        <li class="active">
+          <a href="#all-users-pane" data-toggle="tab">Global Users</a>
+        </li>
+      </ul>
+      <div class="clearfix"></div>
+
+      <div class="tab-content well">
+        <div id="community-users-pane" class="tab-pane"></div>
+        <div id="all-users-pane" class="tab-pane active"></div>
+      </div>
+
+    </div>
+    
+  <!--End of container-->
+  </div>
+
+{% endblock content %}
+
+{% block footer %}
+    {{ super() }}
+{% endblock footer %}
+
+{% block tail_scripts %}
+    {{ super() }}
+    <script>
+      // A change to the web interface urls.py will also update the URL base used by JS for redirection to individual questions and users.
+      WEB_USER_URL = "{{url_for('web.question_list', username='username')}}".split("/").slice(0,-1).join('/') + '/';     
+    </script>
+<script data-main="{{url_for('static', filename='js/user_list.js')}}" src="{{url_for('static', filename='js/require.js')}}"></script>
+{% endblock tail_scripts %}

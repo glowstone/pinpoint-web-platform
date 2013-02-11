@@ -1,19 +1,19 @@
 define([
-	'models/question'
+	'models/user'
 	],
-	function(Question) {
+	function(User) {
 
-		var QuestionCollection =  Backbone.Collection.extend({
-			model: Question,
+		var UserCollection =  Backbone.Collection.extend({
+			model: User,
 			// Flask Restless server does not accept a trailing slash.
-			url: '/api/question',
+			url: '/api/user',
 			parse: function(response) {
 				// The backend Flask Restless API provides the object array inside the objects response field.
 				return response.objects;
 			},
 		});
 
-		return QuestionCollection;
+		return UserCollection;
 
 	// End of Module define function closure.
 	}

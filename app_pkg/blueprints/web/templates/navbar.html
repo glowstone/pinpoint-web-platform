@@ -37,8 +37,12 @@
         <ul class="nav">
 
           {% if session['user'] %}
-          <li><a href="{{ url_for('web.question_list', username=session.user.username) }}">Questions</a></li>
-          <li><a href="{{ url_for('web.user_list') }}">Users</a></li>
+          <li class="questions-tab">
+            <a href="{{ url_for('web.question_list', username=session.user.username) }}">Questions</a>
+          </li>
+          <li class="users-tab">
+            <a href="{{ url_for('web.user_list') }}">Users</a>
+          </li>
           {% endif %}
         </ul>
 

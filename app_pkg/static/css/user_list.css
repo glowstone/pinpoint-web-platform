@@ -1,0 +1,32 @@
+.visit-profile {
+	background-color: white;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+	box-shadow: 4px 4px 4px #888888;
+	margin-bottom: 30px;	
+	text-align: center;      /* Produces reasonable result on mobile devices */
+	padding: 10px;
+}
+
+.visit-profile a:hover {
+	text-decoration: none;
+}
+
+.visit-profile-img img {
+	width: 90%;
+}
+
+.visit-profile:hover {
+	box-shadow: 6px 6px 6px #888888;
+}
+
+.tab-content {
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	-webkit-border-radius: 10px;
+}
+
+span.counter {
+	font-size: 13px;
+}

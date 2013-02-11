@@ -5,8 +5,6 @@ define([
 		var Question = Backbone.Model.extend({
 			defaults: {
 			},
-			/* Backbone uses this route during saving models and  Trailing slash required since dealing
-			with individual models and Backbone just appends the model.id.*/
 			urlRoot: '/api/question',
 		});
 

@@ -37,6 +37,7 @@ require([
 	function(google, GMapsHelper, location, Question, QuestionCollection, GenericQuestionView, QuestionCollectionDisplayView, QuestionCollectionCreatorView) {
 
 		var debug = true;
+		$("li.questions-tab").addClass("active");
 
 		// Cannot get a reference to the map without being passed along as a callback.
 		var ugly = function(map) {
