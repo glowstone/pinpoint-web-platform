@@ -1,8 +1,9 @@
 define([
 	'text!templates/own_question_template',
+	'models/answer',
 	'handlebars',
 	],
-	function(template_source) {
+	function(template_source, Answer) {
 
 		var debug = false;
 
@@ -71,8 +72,9 @@ define([
 			},
 			delete_handler: function() {
 				var self = this;
+				this.delete_question_answers();
 				this.model.destroy({
-					wait: false,
+					wait: true,
 					error: function(model, xhr, options) {
 						console.log(xhr);
 						if (options.xhr.status === 204) {
@@ -83,6 +85,17 @@ define([
 					}
 				});
 			},
+			delete_question_answers: function() {
+				// Flask Restless API does not remove Answers when deleting a Question
+				// To get Question deletion to succeed, must delete all questions
+				_(this.model.attributes.answers).each(function(id_obj) {
+					an_answer = new Answer({
+						id: id_obj.id
+					});
+					an_answer.destroy();
+				});
+			},
+
 		});
 
 		return OwnQuestionView;
