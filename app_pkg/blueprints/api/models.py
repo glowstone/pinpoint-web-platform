@@ -19,12 +19,12 @@ class User(Base):
     username = Column(String(80), unique=True, nullable=False)
     email = Column(String(120), unique=True, nullable=False)
     password_hash = Column(String(140), nullable=False)
-    salt = Column(String(120))
-    profile_img_url = Column(String(200))
+    salt = Column(String(120), nullable=False)
+    profile_img_url = Column(String(200), nullable=False)
     # Relationships
-    geolocation = relationship('Geolocation', uselist=False, backref='user')
+    #geolocation = relationship('Geolocation', uselist=False, backref='user')
     questions = relationship('Question', backref='author')
-    authors = relationship('Answer', backref='author')
+    answers = relationship('Answer', backref='author')
 
     def __init__(self, username, email, password_hash, salt, *args, **kwargs):
         """
@@ -95,7 +95,7 @@ class Question(Base):
     latitude = Column(Float, nullable=False)
     longitude = Column(Float, nullable=False)
     # Relationships
-    user_id = Column(Integer, ForeignKey('user.id'))    # One User to many Questions
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)    # One User to many Questions
     answers = relationship("Answer", backref="question")                # One Question to many Answers
 
     def __init__(self, title, text, latitude, longitude, user_id, *args, **kwargs):
@@ -111,26 +111,29 @@ class Question(Base):
         super(Question, self).__init__(*args, **kwargs)
 
     def __repr__(self):
-        return '<Question %s>' % (self.text)
+        return '<Question %s>' % (self.title)
 
 
 class Answer(Base):
     __tablename__ = 'answer'
     id = Column(Integer, primary_key=True)
-    text = Column(Text)
-    #score = Column(Integer)
+    text = Column(Text, nullable=False)
+    latitude = Column(Float, nullable=False)
+    longitude = Column(Float, nullable=False) 
     # Relationships
-    user_id = Column(Integer, ForeignKey('user.id'))            # One User to many Answers
-    question_id = Column(Integer, ForeignKey('question.id'))    # One Question to many Answers
+    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)            # One User to many Answers
+    question_id = Column(Integer, ForeignKey('question.id'), nullable=False)    # One Question to many Answers
 
-    def __init__(self, text, user_id, *args, **kwargs):
+    def __init__(self, text, latitude, longitude, question_id, user_id, *args, **kwargs):
         """
         RESTless requires that each model have an __init__ method that accepts kwargs since 
         this is used for POST create requests.
         """
         self.text = text
+        self.latitude = latitude
+        self.longitude = longitude
         self.user_id = user_id
         super(Answer, self).__init__(*args, **kwargs) 
 
     def __repr__(self):
-        return '<Answer %s>'
+        return '<Answer %s>' % self.text

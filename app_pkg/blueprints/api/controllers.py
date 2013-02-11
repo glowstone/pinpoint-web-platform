@@ -24,32 +24,13 @@ def question_post_preprocessor(data):
     This function must return a dictionary representing the fields to
     set on the new instance of the model.
     """
-    print data
     user = session.get('user', False)
     if user:
-        print user
         data['user_id'] = user.id
-        data.pop('longitude', None)
-        data.pop('latitude', None)
-        print data
     else:
         raise ProcessingException(message='Not Authorized',
                                   status_code=401)
     return data
-
-
-def question_post_postprocessor(data):
-    """Accepts a single argument, `data`, which is the dictionary
-    representation of the created instance of the model.
-    This function must return a dictionary representing the JSON to
-    return to the client.
-    """
-    print data
-    print "Postprocessor"
-    question = Question.query.get(data['id'])
-    print question
-    return data
-
 
 
 # RESTless API
@@ -60,9 +41,9 @@ manager = APIManager(app, session=db_session)
 
 user_rest_app = manager.create_api_blueprint(
     model=User, 
-    # Allow GET requests only.
-    methods=['GET'], 
-    url_prefix='/api'
+    methods=['GET'],    # Allow GET requests only
+    url_prefix='/api',
+    include_columns = ['id', 'username', 'profile_img_url', 'questions', 'questions.id', 'answers', 'answers.id']
 )
 
 
@@ -70,7 +51,7 @@ geolocation_rest_app = manager.create_api_blueprint(
     Geolocation, 
     # Allow GET requests only.
     methods=['GET'], 
-    url_prefix='/api'
+    url_prefix='/api',
 )
 
 
@@ -79,11 +60,9 @@ question_rest_app = manager.create_api_blueprint(
     # Allow GET, POST, PUT, and DELETE requests.
     methods=['GET', 'POST', 'PUT', 'DELETE'],
     url_prefix='/api',
+    include_columns = ['id', 'title', 'text', 'latitude', 'longitude', 'author', 'author.username', 'author.profile_img_url', 'answers', 'answers.id'],
     preprocessors = {
         'POST': [question_post_preprocessor],
-    },
-    postprocessors = {
-        'POST': [question_post_postprocessor]
     },
     results_per_page = -1,      # Disable pagination
 )
@@ -93,7 +72,8 @@ answer_rest_app = manager.create_api_blueprint(
     Answer,
     # Allow GET, POST, PUT, and DELETE requests.
     methods=['GET', 'POST', 'PUT', 'DELETE'], 
-    url_prefix='/api')
+    url_prefix='/api',
+    results_per_page = -1)
 
 
 

@@ -61,13 +61,13 @@ define([
 						this.missing_location_notification()
 										
 					}
-					// else if (values.title == "" || values.text == ""){
-					// 	if (values.title == "") {
-					// 		this.missing_title_notification()
-					// 	} else {
-					// 		this.missing_text_notification()
-					// 	}
-					// }
+					else if (values.title == "" || values.text == ""){
+						if (values.title == "") {
+							this.missing_title_notification()
+						} else {
+							this.missing_text_notification()
+						}
+					}
 					else {
 						// Valid attempt to create a Question
 						// Creates a posting with the values, saves model to server, and adds model to the collection
@@ -80,18 +80,7 @@ define([
 								model.fetch({
 									update: true,
 								})
-								$("#question-creation-form")[0].reset();
-								self.last_longitude = null;
-								self.last_latitude = null;
-								if (self.last_marker) {
-									self.last_marker.setMap(null);    //Clear last marker
-								}
-								if (self.map_chooser_state) {
-									//Stops listening, changes button back, sets map_chooser state to false
-									self.choose_location();   
-								}
-								$("#latitude-indicator").text("None");
-								$("#longitude-indicator").text("None");
+								self.reset_creation_form()
 							},
 							error: function(model, xhr, options) {
 								console.log(xhr);
@@ -131,6 +120,20 @@ define([
 						this.listen_handle = google.maps.event.addListener(this.map_reference, 'click', update_chosen_location);	
 						this.map_chooser_state = true;
 					}
+				},
+				reset_creation_form: function() {
+					$("#question-creation-form")[0].reset();
+					this.last_longitude = null;
+					this.last_latitude = null;
+					if (this.last_marker) {
+						this.last_marker.setMap(null);    //Clear last marker
+					}
+					if (this.map_chooser_state) {
+						//Stops listening, changes button back, sets map_chooser state to false
+						this.choose_location();   
+					}
+					$("#latitude-indicator").text("None");
+					$("#longitude-indicator").text("None");
 				},
 				missing_location_notification: function() {
 					$("#location-chooser").animate({opacity: .3}, 200, function() {

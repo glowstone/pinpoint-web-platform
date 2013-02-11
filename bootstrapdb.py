@@ -1,5 +1,5 @@
 from app_pkg.database import db_session
-from app_pkg.blueprints.api.models import User, Geolocation, Question, Answer
+from app_pkg.blueprints.api.models import User, Question, Answer
 
 import datetime
 
@@ -41,17 +41,17 @@ q3 = Question('Seats at Yogurtland', 'How many seats are currently available at 
 db_session.add(q3)
 db_session.commit()
 
-# g1 = Geolocation(34.2, 37.6, None, q1.id)
-# db_session.add(g1)
+# a1 = Answer("an answer", 34.2, 37.6, None, q1.id)
+# db_session.add(a1)
 # db_session.commit()
 
-# g2 = Geolocation(45.2, 37.6, None, q2.id)
-# db_session.add(g2)
-# db_session.commit()
+a2 = Geolocation(45.2, 37.6, None, q2.id)
+db_session.add(a2)
+db_session.commit()
 
-# g3 = Geolocation(34.2, 38.6, None, q3.id)
-# db_session.add(g3)
-# db_session.commit()
+a3 = Geolocation(34.2, 38.6, None, q3.id)
+db_session.add(a3)
+db_session.commit()
 
 
 print User.query.all()
