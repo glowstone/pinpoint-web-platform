@@ -100,10 +100,10 @@ def question_list(username):
 @login_required
 def question_detail(question_id):
     """Show the question_detail page for the specified question"""    
-    print question_id
     context_vars = {}
+    context_vars['user_id'] = session['user'].id
     context_vars['question_id'] = question_id
-    return render_template('question_show.html', custom_vars=context_vars)
+    return render_template('question_detail.html', **context_vars)
 
 
 @login_required

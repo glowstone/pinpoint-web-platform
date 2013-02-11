@@ -64,7 +64,7 @@ question_rest_app = manager.create_api_blueprint(
     model = Question,
     methods=['GET', 'POST', 'PUT', 'DELETE'],
     url_prefix='/api',
-    include_columns = ['id', 'title', 'text', 'latitude', 'longitude', 'author', 'author.username', 'author.profile_img_url', 'answers', 'answers.id'],
+    include_columns = ['id', 'title', 'text', 'latitude', 'longitude', 'author', 'author.id', 'author.username', 'author.profile_img_url', 'answers', 'answers.id'],
     preprocessors = {
         'POST': [question_post_preprocessor],
     },
@@ -76,7 +76,7 @@ answer_rest_app = manager.create_api_blueprint(
     Answer,
     methods=['GET', 'POST', 'PUT', 'DELETE'], 
     url_prefix='/api',
-    include_columns = ['id', 'text', 'latitude', 'longitude', 'author', 'author.username', 'author.profile_img_url'],
+    include_columns = ['id', 'text', 'latitude', 'longitude', 'author', 'author.id', 'author.username', 'author.profile_img_url'],
     preprocessors = {
         'POST': [answer_post_preprocessor],
     },
