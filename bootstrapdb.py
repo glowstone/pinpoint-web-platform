@@ -29,6 +29,9 @@ for user in user_list:
 print u1.id
 
 
+# Questions
+###############################################################################
+
 q1 = Question('Testing title', 'How long is the line at SFO?', 32.4, 34.7, u1.id)
 db_session.add(q1)
 db_session.commit()
@@ -41,25 +44,29 @@ q3 = Question('Seats at Yogurtland', 'How many seats are currently available at 
 db_session.add(q3)
 db_session.commit()
 
-# a1 = Answer("an answer", 34.2, 37.6, None, q1.id)
-# db_session.add(a1)
-# db_session.commit()
+# Answers
+###############################################################################
 
-a2 = Geolocation(45.2, 37.6, None, q2.id)
+a1 = Answer("an answer", 34.2, 37.6, q1.id, u3.id)
+db_session.add(a1)
+db_session.commit()
+
+a2 = Answer("Some answer", 45.2, 37.6, q2.id, u1.id)
 db_session.add(a2)
 db_session.commit()
 
-a3 = Geolocation(34.2, 38.6, None, q3.id)
+a3 = Answer("Um, about 27", 34.2, 38.6, q3.id, u2.id)
 db_session.add(a3)
+db_session.commit()
+
+a4 = Answer("Answering my own question", 34.2, 39.6, q3.id, u3.id)
+db_session.add(a4)
 db_session.commit()
 
 
 print User.query.all()
-
-print q1.author
-print q1.author.questions
-
-
+print Question.query.all()
+print Answer.query.all()
 
 
 # dalton = User('dalton', 'dhubble@mit.com', 'dsadsadas', 'dwqeqdsadwq', g1)

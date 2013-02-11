@@ -132,6 +132,7 @@ class Answer(Base):
         self.text = text
         self.latitude = latitude
         self.longitude = longitude
+        self.question_id = question_id
         self.user_id = user_id
         super(Answer, self).__init__(*args, **kwargs) 
 

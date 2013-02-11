@@ -36,14 +36,12 @@ from app_pkg.blueprints.web import web_bp
 
 # REST API Blueprints
 from app_pkg.blueprints.api import user_rest_app
-from app_pkg.blueprints.api import geolocation_rest_app
 from app_pkg.blueprints.api import question_rest_app
 from app_pkg.blueprints.api import answer_rest_app
 
 # Register the Blueprint Apps
 app.register_blueprint(web_bp)
 app.register_blueprint(user_rest_app)
-app.register_blueprint(geolocation_rest_app)
 app.register_blueprint(question_rest_app)
 app.register_blueprint(answer_rest_app)
 
