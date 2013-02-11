@@ -1,5 +1,5 @@
 define([
-	'text!templates/generic_question_template',
+	'text!templates/own_question_template',
 	'handlebars',
 	],
 	function(template_source) {
@@ -13,20 +13,25 @@ define([
 		});
 
 
-		var GenericQuestionView = Backbone.View.extend({
+		var OwnQuestionView = Backbone.View.extend({
 			/*
-			Constructs a templated view of an individual Question model. 
-			The client may not trigger delegateEvents causing server side 
-			changes (no editing or deleting).
+			Constructs a templated view of an individual Question model
+			owned by the current authenticated User. 
+			The client may trigger delegateEvents causing server side 
+			changes (editing or deleting). Deleting individual Questions
+			is allowed and handled.
 			*/
 			tagName: 'div',
 			events: {
 				'click .visit-author': 'visit_user_handler',
+				'click a.visit-question': 'visit_question_handler',
+				'click button.visit-question': 'visit_question_handler',
+				'click a.delete-question': 'delete_handler',
 			},
 			// Default model is null because one must be provided upon initialization.
 			model: null,
 			initialize: function() {
-				_.bindAll(this, 'render', 'unrender', 'scroll_to', 'visit_user_handler');
+				_.bindAll(this, 'render', 'unrender', 'scroll_to', 'visit_user_handler', 'visit_question_handler', 'delete_handler');
 			
 				// Bind model events to corresponding view handlers
 				this.model.bind('scroll_to', this.scroll_to);
@@ -59,9 +64,28 @@ define([
 				console.log(user_username);
 				window.location.href = WEB_USER_URL + user_username;
 			},
+			visit_question_handler: function() {
+				event.preventDefault()
+				question_id = this.model.attributes.id
+				window.location.href = WEB_QUESTION_URL + question_id;
+			},
+			delete_handler: function() {
+				var self = this;
+				this.model.destroy({
+					wait: false,
+					error: function(model, xhr, options) {
+						console.log(xhr);
+						if (options.xhr.status === 204) {
+  							self.unrender();     // Backbone considers 204 NO CONTENT an error, though it is valid
+  						} else {
+  							// Failed to delete. Network problems?
+  						}
+					}
+				});
+			},
 		});
 
-		return GenericQuestionView;
+		return OwnQuestionView;
 
 		// End of Module define function closure.
 	}

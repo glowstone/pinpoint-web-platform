@@ -31,11 +31,11 @@ require([
 	'models/question',
 	'models/user',
 	'collections/question_collection',
-	'views/generic_question_view',
+	'views/own_question_view',
 	'views/question_collection_display_view',
 	'views/question_collection_creation_view',
 	], 
-	function(google, GMapsHelper, location, Question, User, QuestionCollection, GenericQuestionView, QuestionCollectionDisplayView, QuestionCollectionCreatorView) {
+	function(google, GMapsHelper, location, Question, User, QuestionCollection, OwnQuestionView, QuestionCollectionDisplayView, QuestionCollectionCreatorView) {
 
 		var debug = true;
 		$("li.questions-tab").addClass("active");
@@ -46,7 +46,7 @@ require([
 
 			// Question View Generator
 			var generate_question_view = function(model, options) {
-				return new GenericQuestionView(options);
+				return new OwnQuestionView(options);
 				// if (model.attributes.author_id == USER_ID) {
 				// 	return new OwnPostingView(options);
 				// } 
