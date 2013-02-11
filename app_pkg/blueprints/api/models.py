@@ -65,6 +65,8 @@ class User(Base):
             'id': self.id,
             'username' : self.username,
             'profile_img_url': self.profile_img_url,
+            'latitude': self.latitude,
+            'longitude': self.longitude,
             'gcm_registration_id': self.gcm_registration_id,
         }
 

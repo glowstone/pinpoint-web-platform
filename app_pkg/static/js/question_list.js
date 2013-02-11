@@ -115,11 +115,6 @@ require([
 		});
 
 
-
-		
-
-	
-
 	// End of Document Ready Closure
 	});
 // End of requireJS Closure

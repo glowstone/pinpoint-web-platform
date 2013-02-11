@@ -86,6 +86,31 @@ def user_show_wrapper():
 	else:
 		return abort(400)      # Bad Request
 
+# Custom API Calls for the Android Client
+###############################################################################
+
+@api.route('/user_put_latlong', methods=['POST'])
+def user_put_latlong():
+	"""
+	Wrapper around the custom API user_put_latlong method.
+	Expects 'latitude' and 'longitude' fields to be passed via POST.
+	Returns a JSON representation of the custom API success containing the 
+	serialized version of the authenticated User, of the custom API error response.
+	"""
+	print "Got here"
+	required_arguments = ['latitude', 'longitude']
+	arguments = util.unpack_arguments(required_arguments)
+	if arguments:
+		api_response = custom.user_put_latlong(**arguments)
+		if api_response.get('success', False):
+			# data field will contain a User object
+			api_response['data'] = api_response.get('data').serialize()
+			return jsonify(api_response)
+		else:
+			return jsonify(api_response)
+	else:
+		return abort(400)      # Bad Request
+
 
 @api.route('/user_register_gcm', methods=['POST'])
 def user_register_gcm_wrapper():
@@ -98,7 +123,7 @@ def user_register_gcm_wrapper():
 	required_arguments = ['registration_id']
 	arguments = util.unpack_arguments(required_arguments)
 	if arguments:
-		api_response = custom.register_gcm(**arguments)
+		api_response = custom.user_register_gcm(**arguments)
 		if api_response.get('success', False):
 			# data field will contain a User object
 			api_response['data'] = api_response.get('data').serialize()
@@ -107,3 +132,5 @@ def user_register_gcm_wrapper():
 			return jsonify(api_response)
 	else:
 		return abort(400)      # Bad Request
+
+

@@ -66,21 +66,16 @@ def user_show(username):
         return util.error_response("No user with username " + username)
 
 
-
-def user_set_geolocation_json(latitude, longitude, elevation=None):
+def user_put_latlong(latitude, longitude):
     """Update's the authenticated user's Geolocation"""
-    user = current_session_user()['data']
+    username = session['user'].username
+    # We want to modify the database User, not the (possibly stale) copy in the session.
+    user = User.query.filter_by(username=username).first()    # Returns None if no User found
     if user:
-        latitude = float(latitude)        # Take out when argument manager is created
-        longitude = float(longitude)      # Take out when argument manager is created
-        # Update Geolocation
-        geolocation = user.geolocation
-        geolocation.latitude = latitude
-        geolocation.longitude = longitude
-        if elevation:
-            geolocation.elevation = elevation
+        user.latitude = float(latitude)
+        user.longitude = float(longitude)
         db_session.commit()
-        return util.success_response()
+        return util.success_response(user)
     else:
         return util.error_response("Session user was not found.")
 
@@ -89,9 +84,12 @@ def user_register_gcm(registration_id):
     """
     Updates the current authenticated User's gcm_registration_id.
     """
+    username = session['user'].username
+    # We want to modify the database User, not the (possible stale) copy in the session.
     user = User.query.filter_by(username=username).first()    # Returns None if no User found
     if user:
         user.gcm_registration_id = registration_id
+        db_session.commit()
         return util.success_response(user)
     else:
         return util.error_response("No user with username " + username)
