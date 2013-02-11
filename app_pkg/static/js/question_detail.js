@@ -104,7 +104,7 @@ require([
 		// Create Question Representation Client-Side
 		question = new Question({
 			id: QUESTION_ID,
-		})
+		});
 
 		// Return a function that will build the map and invoke the custom callback after the map is created.
 		build_map = GMapsHelper.get_func_to_build_map_and_call(ugly);

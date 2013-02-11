@@ -90,6 +90,7 @@ def question_list(username):
     if api_response.get('success', False):
         user = api_response['data']
         context_vars = {}
+        context_vars['user_id'] = session['user'].id
         context_vars['page_for'] = user
         return render_template('question_list.html', **context_vars)
     else:
