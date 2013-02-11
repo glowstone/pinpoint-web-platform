@@ -21,8 +21,8 @@ class User(Base):
     password_hash = Column(String(140), nullable=False)
     salt = Column(String(120), nullable=False)
     profile_img_url = Column(String(200), nullable=False)
+    gcm_registration_id = Column(String(250))
     # Relationships
-    #geolocation = relationship('Geolocation', uselist=False, backref='user')
     questions = relationship('Question', backref='author')
     answers = relationship('Answer', backref='author')
 
@@ -63,35 +63,11 @@ class User(Base):
             'id': self.id,
             'username' : self.username,
             'profile_img_url': self.profile_img_url,
+            'gcm_registration_id': self.gcm_registration_id,
         }
 
     def __repr__(self):
         return '<User %s>' % (self.username)
-
-    
-class Geolocation(Base):
-    __tablename__ = 'geolocation'
-    id = Column(Integer, primary_key=True)
-    latitude = Column(Float)
-    longitude = Column(Float)
-    # Relationships
-    user_id = Column(Integer, ForeignKey('user.id'))           # One Geolocation to one User
-    question_id = Column(Integer, ForeignKey('question.id'))   # One Geolocation to one Question
-    # Note either user_id or question_id is null. Users and Questions have their own Geolocation objects. 
-
-    def __init__(self, latitude, longitude, user_id, question_id, *args, **kwargs):
-        """
-        RESTless requires that each model have an __init__ method that accepts kwargs since 
-        this is used for POST create requests.
-        """
-        self.latitude = latitude
-        self.longitude = longitude
-        self.user_id = user_id
-        self.question_id = question_id
-        super(Geolocation, self).__init__(*args, **kwargs)
-
-    def __repr__(self):
-        return '<Geolocation %s,%s>' % (self.latitude, self.longitude)
 
 
 class Question(Base):

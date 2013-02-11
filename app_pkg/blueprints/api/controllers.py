@@ -55,7 +55,7 @@ user_rest_app = manager.create_api_blueprint(
     model=User, 
     methods=['GET'],
     url_prefix='/api',
-    include_columns = ['id', 'username', 'profile_img_url', 'questions', 'questions.id', 'answers', 'answers.id'],
+    include_columns = ['id', 'username', 'profile_img_url', 'questions', 'questions.id', 'answers', 'answers.id', 'gcm_registration_id'],
     results_per_page = -1,        # Disable pagination
 )
 

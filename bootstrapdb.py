@@ -5,28 +5,24 @@ import datetime
 
 # Bootstrap Example Objects. Demonstrate properties of the application's Object model.
 
-u1 = User.create_user('bilbo', 'bilbo@gmail.com', 'sample')
-u2 = User.create_user('fili', 'fili@gmail.com', 'sample')
-u3 = User.create_user('kili', 'kili@gmail.com', 'sample')
-u4 = User.create_user('oin', 'oin@gmail.com', 'sample')
-u5 = User.create_user('gloin', 'gloin@gmail.com', 'smog')
-u6 = User.create_user('dwalin', 'dwalin@gmail.com', 'sample')
-u7 = User.create_user('balin', 'balin@gmail.com', 'sample')
-u8 = User.create_user('thorin', 'thorin@gmail.com', 'sample')
-u9 = User.create_user('bifur', 'bifur@gmail.com', 'sample')
-u10 = User.create_user('bofur', 'bofur@gmail.com', 'sample')
-u11 = User.create_user('bombur', 'bombur@gmail.com', 'sample')
-u12 = User.create_user('dori', 'dori@gmail.com', 'sample')
-u13 = User.create_user('nori', 'nori@gmail.com', 'sample')
-u14 = User.create_user('ori', 'ori@gmail.com', 'sample')
+u1 = User.create_user('doctor', 'doctor@gmail.com', 'sample')
+u2 = User.create_user('rose', 'rose@gmail.com', 'sample')
+u3 = User.create_user('martha', 'martha@gmail.com', 'sample')
+u4 = User.create_user('harriet', 'harriet@gmail.com', 'sample')
+u5 = User.create_user('donna', 'donna@gmail.com', 'smog')
+u6 = User.create_user('amy', 'amy@gmail.com', 'sample')
+u7 = User.create_user('dalek', 'dalek@gmail.com', 'sample')
+u8 = User.create_user('rory', 'rory@gmail.com', 'sample')
+u9 = User.create_user('jenny', 'jenny@gmail.com', 'sample')
+u10 = User.create_user('river', 'river@gmail.com', 'sample')
+u11 = User.create_user('melody', 'melody@gmail.com', 'sample')
+u12 = User.create_user('k9', 'k9@gmail.com', 'sample')
 
-user_list = [u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12, u13, u14]
+user_list = [u1, u2, u3, u4, u5, u6, u7, u8, u9, u10, u11, u12]
 
 for user in user_list:
     db_session.add(user)
     db_session.commit()
-
-print u1.id
 
 
 # Questions

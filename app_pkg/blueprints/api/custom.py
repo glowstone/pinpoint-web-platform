@@ -85,4 +85,18 @@ def user_set_geolocation_json(latitude, longitude, elevation=None):
         return util.error_response("Session user was not found.")
 
 
+def user_register_gcm(registration_id):
+    """
+    Updates the current authenticated User's gcm_registration_id.
+    """
+    user = User.query.filter_by(username=username).first()    # Returns None if no User found
+    if user:
+        user.gcm_registration_id = registration_id
+        return util.success_response(user)
+    else:
+        return util.error_response("No user with username " + username)
+
+
+
+
 

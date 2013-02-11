@@ -45,7 +45,8 @@ def user_authenticate_wrapper():
 	Expects 'user_identifier'(username or email) and 'password' fields to be POSTed
 	Note: POSTed not because they modify server data, but so that arguments (plaintext
 	password) do not appear in any client visible representations.
-	Returns a JSON representation of the custom API success or error response.
+	Returns a JSON representation of the custom API success response containing
+	the serialized version of the authenticated Usser, or the custom API error response.
 	"""
 	required_arguments = ['user_identifier', 'password']
 	arguments = util.unpack_arguments(required_arguments)
@@ -69,12 +70,35 @@ def user_show_wrapper():
 	"""
 	Wrapper around the custom API user_show method.
 	Expects 'username' field to be passed via GET
-	Returns a JSON representation of the custom API success or error response.
+	Returns a JSON representation of the custom API success containing the
+	serialized version fo the authenticated User, or the custom API error response.
 	"""
 	required_arguments = ['username']
 	arguments = util.unpack_arguments(required_arguments)
 	if arguments:
 		api_response = custom.user_show(**arguments)
+		if api_response.get('success', False):
+			# data field will contain a User object
+			api_response['data'] = api_response.get('data').serialize()
+			return jsonify(api_response)
+		else:
+			return jsonify(api_response)
+	else:
+		return abort(400)      # Bad Request
+
+
+@api.route('/user_register_gcm', methods=['POST'])
+def user_register_gcm_wrapper():
+	"""
+	Wrapper around the custom API user_register_gcm method.
+	Expects 'registration_id' field to be passed via POST.
+	Returns a JSON representation of the custom API success containing the 
+	serialized version of the authenticated User, of the custom API error response.
+	"""
+	required_arguments = ['registration_id']
+	arguments = util.unpack_arguments(required_arguments)
+	if arguments:
+		api_response = custom.register_gcm(**arguments)
 		if api_response.get('success', False):
 			# data field will contain a User object
 			api_response['data'] = api_response.get('data').serialize()
