@@ -98,15 +98,16 @@ require([
 		user.fetch({
 			success: function(model, response, options) {
 				var geolocation_put = function(latitude, longitude) {
-					console.log(latitude);
-					console.log(longitude);
 					model.attributes.latitude = latitude;
 					model.attributes.longitude = longitude;
-					console.log(model.attributes);
-					model.save();
-				}
-				// Pass a function that will be called with the discovered latitude and longitude.
-				location.geoplugin_coordinates(geolocation_put);
+					model.save({},{wait:true});
+				};
+				// Naive, no backoff.
+				(function fire_geolocation_updates() {
+					// Pass a function that will be called with the discovered latitude and longitude.
+					location.geoplugin_coordinates(geolocation_put);
+					setTimeout(fire_geolocation_updates, 60000);
+				})();	
 			},
 			error: function(model, xhr, options) {
 				// Network problems?

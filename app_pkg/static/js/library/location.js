@@ -12,8 +12,8 @@ define([
 			geoplugin_coordinates: function(after_coordinates_found) {
 
 				var geoplugin_success = function(data) {
-					var latitude = data['geoplugin_latitude']
-					var longitude = data['geoplugin_longitude']
+					var latitude = parseFloat(data['geoplugin_latitude'])
+					var longitude = parseFloat(data['geoplugin_longitude'])
 					after_coordinates_found(latitude, longitude);
 				}
 
