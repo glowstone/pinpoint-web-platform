@@ -146,9 +146,23 @@ define([
 				},
 				missing_title_notification: function() {
 					console.log("Missing title");
+					var self = this;
+					console.log($("#questioncreate-title"));
+					$("#question-create-title", this.el).animate(
+						{backgroundColor: "#42ACE9"}, 750,
+						function() {
+							$("#question-create-title", self.el).animate({borderColor: "#E3E3E3"}, 1750);
+						}
+					);	
 				}, 
 				missing_text_notification: function() {
 					console.log("Missing text");
+					$("question-create-text", this.el).animate(
+						{borderColor: "#42ACE9"}, 750,
+						function() {
+							$("question-create-text", self.el).animate({borderColor: "#E3E3E3"}, 1750);
+						}
+					);	
 				}
 				// Additional creation view handlers go here
 

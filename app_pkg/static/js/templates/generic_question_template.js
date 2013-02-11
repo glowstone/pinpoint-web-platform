@@ -25,7 +25,7 @@
 			<div class="span5 pull-right">
 				<div class="row-fluid">
 					<div class="span6">
-						<span class="badge badge-success"></span>&nbsp; {{pluralize postings_count 'Answer' 'Answers'}}<br>
+						<span class="badge badge-success">{{ answers.length }}</span>&nbsp; {{pluralize postings_count 'Answer' 'Answers'}}<br>
 					</div>
 					<div class="span5 offset1">
 						<button class="btn btn-primary visit-answers span12">Answers »</button>
