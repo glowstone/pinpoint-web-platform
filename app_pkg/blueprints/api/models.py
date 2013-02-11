@@ -58,6 +58,13 @@ class User(Base):
         gravatar_url += urllib.urlencode({'d':'identicon'})
         self.profile_img_url = gravatar_url
 
+    def serialize(self):
+        return {
+            'id': self.id,
+            'username' : self.username,
+            'profile_img_url': self.profile_img_url,
+        }
+
     def __repr__(self):
         return '<User %s>' % (self.username)
 
