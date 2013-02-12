@@ -61,7 +61,7 @@ define([
 					success: BBDebug.notify(debug, "Successful QuestionCollection fetch"),
 					error: BBDebug.notify(debug, "Error upon QuestionCollection fetch"),
 				});
-				setTimeout(fetch_question_collection, 5000);
+				setTimeout(fetch_question_collection, 8000);
 			})();
 			return this;
 		},

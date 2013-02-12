@@ -151,4 +151,22 @@ def question_create_wrapper():
 	else:
 		return abort(400)     # Bad Request
 
+@api.route('/answer_create', methods=['GET', 'POST'])
+def answer_create_wrapper():
+	"""
+	Wrapper around the custom API answer_create method.
+	Expects 'text', 'latitude', 'longitude', and 'question_id' fields to be POSTed.
+	Returns a JSON representation of the custom API success or error response.
+	"""
+	required_arguments = ['text', 'latitude', 'longitude', 'question_id']
+	arguments = util.unpack_arguments(required_arguments)
+	if arguments:
+		api_response = custom.answer_create(**arguments)
+		if api_response.get('success', False):
+			return jsonify(api_response)
+		else:
+			return jsonify(api_response)
+	else:
+		return abort(400)     # Bad Request
+
 
