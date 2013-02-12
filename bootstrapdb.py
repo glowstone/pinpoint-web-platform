@@ -28,34 +28,47 @@ for user in user_list:
 # Questions
 ###############################################################################
 
-q1 = Question('Testing title', 'How long is the line at SFO?', 32.4, 34.7, u1.id)
+q1 = Question('Newton, MA Sights?', 'What are the best places to visit in Newton?', 42.34, -71.21, u1.id)
 db_session.add(q1)
 db_session.commit()
 
-q2 = Question('Airport line length', 'How long is the line at BOS?', 33.4, 67.4, u2.id)
+q2 = Question('Cambridge Schools?', 'What is the best school in Cambridge', 42.36, -71.10, u2.id)
 db_session.add(q2)
 db_session.commit()
 
-q3 = Question('Seats at Yogurtland', 'How many seats are currently available at Yogurtland?', 34.6, 67.8, u3.id)
+q3 = Question('Local Parties?', 'Wellesley parties tonight?', 42.29, -71.30, u3.id)
 db_session.add(q3)
 db_session.commit()
+
+q4 = Question('Line Length?', 'How long is the line at the Empire State Building?', 40.72, -73.99, u3.id)
+db_session.add(q4)
+db_session.commit()
+
+q5 = Question('Stuck on an Island', 'Can anyone narby rescue me from this island?', 42.33, -70.92, u3.id)
+db_session.add(q5)
+db_session.commit()
+
 
 # Answers
 ###############################################################################
 
-a1 = Answer("an answer", 34.2, 37.6, q1.id, u3.id)
+a1 = Answer("You could visit the Bose Corporation?", 42.33, -71.30, q1.id, u3.id)
 db_session.add(a1)
 db_session.commit()
 
-a2 = Answer("Some answer", 45.2, 37.6, q2.id, u1.id)
+a2 = Answer("MIT of course", 42.357, -71.09, q2.id, u1.id)
 db_session.add(a2)
 db_session.commit()
 
-a3 = Answer("Um, about 27", 34.2, 38.6, q3.id, u2.id)
+a3 = Answer("About 20 minutes.", 40.74, -73.9, q4.id, u2.id)
 db_session.add(a3)
 db_session.commit()
 
-a4 = Answer("Answering my own question", 34.2, 39.6, q3.id, u3.id)
+a4 = Answer("Nope", 42.30, -70.93, q5.id, u3.id)
+db_session.add(a4)
+db_session.commit()
+
+a4 = Answer("There is one over here!", 42.29, -71.30, q3.id, u6.id)
 db_session.add(a4)
 db_session.commit()
 
