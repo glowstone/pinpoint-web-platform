@@ -5,7 +5,7 @@ from flask import session, request
 from app_pkg.database import db_session
 
 from app_pkg.blueprints.api import util
-from app_pkg.blueprints.api.util import login_required
+from app_pkg.blueprints.api.util import login_required, send_gcm_message
 
 from models import User, Question, Answer
 
@@ -96,6 +96,10 @@ def question_create(title, text, latitude, longitude):
     try:
         db_session.add(question)
         db_session.commit()
+
+        # Send a GCM message
+        users = User.query.filter(User.id != user_id).all()
+        send_gcm_message(users, {'data': 'New message'})
         return util.success_response({})
     except Exception:               # SQLAlchemyError would be better, but not sure how to import it.
         db_session.rollback()
