@@ -38,7 +38,7 @@ require([
 	'views/other_answer_view',
 	'views/user_view',
 	//'views/user_adventure_page_view',
-	//'views/generic_adventure_view',
+	'views/generic_question_view',
 	'views/answer_collection_display_view',
 	'views/answer_collection_creation_view',
 	'views/answer_collection_map_view',
@@ -46,7 +46,7 @@ require([
 	//'views/user_collection_display_view',
 	'library/backbone_debug',
 	], 
-	function(communication, google, GMapsHelper, User, Question, Answer, UserCollection, AnswerCollection, OwnAnswerView, OtherAnswerView, UserView, AnswerCollectionDisplayView, AnswerCollectionCreatorView, AnswerCollectionMapView, AnswerMapView, BBDebug) {
+	function(communication, google, GMapsHelper, User, Question, Answer, UserCollection, AnswerCollection, OwnAnswerView, OtherAnswerView, UserView, GenericQuestionView, AnswerCollectionDisplayView, AnswerCollectionCreatorView, AnswerCollectionMapView, AnswerMapView, BBDebug) {
 
 		var debug = true;
 
@@ -114,8 +114,6 @@ require([
 		question.fetch({
 			success: function(model, response, options) {
 				// Build map centered at latitude and longitude, then call ugly.
-				console.log(model.attributes.latitude);
-				console.log(model.attributes.longitude);
 				build_map(model.attributes.latitude, model.attributes.longitude);
 			},
 			error: function(model, xhr, options) {
@@ -124,11 +122,11 @@ require([
 			}
 		});
 
-		// question_stats = new GenericAdventureView({
-		// 	el: $("#adventure-stats-region"),
-		// 	model: adventure,
-		// });
-		// adventure_stats.render();
+		question_stats = new GenericQuestionView({
+			el: $("#question-stats-region"),
+			model: question,
+		});
+		question_stats.render();
 
 
 	$(document).ready(function() {
