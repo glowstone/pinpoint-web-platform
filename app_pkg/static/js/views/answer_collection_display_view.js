@@ -6,7 +6,7 @@ define([
 	],
 	function(AnswerCollection, BBDebug, empty_template_src, handlebars) {
 
-		debug = true;
+		debug = false;
 		var empty_template = Handlebars.compile(empty_template_src);
 
 		var AnswerCollectionDisplayView = Backbone.View.extend({
@@ -61,7 +61,7 @@ define([
 					success: BBDebug.notify(debug, "Successful AnswerCollection fetch"),
 					error: BBDebug.notify(debug, "Error upon AnswerCollection fetch"),
 				});
-				setTimeout(fetch_user_collection, 6000);
+				setTimeout(fetch_user_collection, 8000);
 			})();
 			return this;
 		},

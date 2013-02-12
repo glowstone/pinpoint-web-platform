@@ -68,12 +68,32 @@ require([
 				});
 				question_creator.render();
 
+				// question_display = new QuestionCollectionDisplayView({
+				// 	el: $("#global-question-display-region"),
+				// 	collection: question_collection,
+				// 	fetch_data: {},
+				// 	generate_question_view: generate_question_view,
+				// 	empty_message: "No Questions yet. You could be the first to ask one."
+				// });
+				// question_display.render()
+				// console.log(USER_ID)
+
 				question_display = new QuestionCollectionDisplayView({
-					el: $("#question-display-region"),
+					el: $("#user-question-display-region"),
 					collection: question_collection,
-					fetch_data: {},
+					fetch_data: {
+						// q: JSON.stringify({
+						// "filters": [
+						// 		{
+						// 			name: "author__id",
+						// 			op: "==",
+						// 			val: 2,
+						// 		},
+						// 	]
+						// }),
+					},
 					generate_question_view: generate_question_view,
-					empty_message: "No Questions yet. You could be the first to ask one."
+					empty_message: "You haven't created any Questions. Try pinning one on the map now?"
 				});
 				question_display.render()
 
@@ -85,7 +105,7 @@ require([
 			}
 			else {
 
-				
+
 			}
 
 		}

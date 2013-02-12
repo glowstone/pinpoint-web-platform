@@ -60,7 +60,7 @@ define([
 						success: BBDebug.notify(debug, "Successful UserCollection fetch"),
 						error: BBDebug.notify(debug, "Error upon UserCollection fetch"),
 					});
-					setTimeout(fetch_user_collection, 6000);
+					setTimeout(fetch_user_collection, 15000);
 				})();				
 				return this;
 			},

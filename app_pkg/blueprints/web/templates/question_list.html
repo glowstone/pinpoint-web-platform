@@ -33,12 +33,28 @@
 
       <!--Main Content-->
       <div id="main_content" class="span8">
-        
+
+        {% if session['user'].id == page_for.id %}
+
         <div id="question-creator-region" class="well">
         </div>
 
-        <div id="question-display-region">
+        <div id="global-question-display-region">
+          <h2>Questions</h2>
         </div>
+
+        <div id="user-question-display-region">
+          <h2>Your Questions</h2>
+        </div>
+
+        {% else %}
+
+        <div id="page-owner-question-display-region">
+          <h2>{{page_for.username}}'s Questions</h2>
+        </div>
+
+        {% endif %}
+
     
       </div>
 
