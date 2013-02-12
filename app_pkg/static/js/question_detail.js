@@ -40,13 +40,13 @@ require([
 	//'views/user_adventure_page_view',
 	//'views/generic_adventure_view',
 	'views/answer_collection_display_view',
-	//'views/posting_collection_creation_view',
+	'views/answer_collection_creation_view',
 	'views/answer_collection_map_view',
 	'views/answer_map_view',
 	//'views/user_collection_display_view',
 	'library/backbone_debug',
 	], 
-	function(communication, google, GMapsHelper, User, Question, Answer, UserCollection, AnswerCollection, OwnAnswerView, OtherAnswerView, UserView, AnswerCollectionDisplayView, AnswerCollectionMapView, AnswerMapView, BBDebug) {
+	function(communication, google, GMapsHelper, User, Question, Answer, UserCollection, AnswerCollection, OwnAnswerView, OtherAnswerView, UserView, AnswerCollectionDisplayView, AnswerCollectionCreatorView, AnswerCollectionMapView, AnswerMapView, BBDebug) {
 
 		var debug = true;
 
@@ -56,9 +56,15 @@ require([
 
 			// Posting View Generator
 			var generate_answer_view = function(model, options) {
-				if (model.attributes.author.id == USER_ID) {
+				console.log(model.attributes)
+				if (model.attributes.author && model.attributes.author.id == USER_ID) {
 					return new OwnAnswerView(options);
-				} 
+				}
+				else if (typeof model.attributes.author == 'undefined'){
+					console.log("Got here");
+					// Should only be undefined if built in client and waiting for data (i.e. authenticated user owns the Answer)
+					return new OwnAnswerView(options);
+				}
 				else {
 					return new OtherAnswerView(options);
 				}
@@ -66,13 +72,13 @@ require([
 
 			answer_collection = new AnswerCollection()
 
-			// posting_creator = new PostingCollectionCreatorView({
-			// 	el: $("#posting-creator-region"),
-			// 	collection: posting_collection,
-			// 	map_reference: map,
-			// });
-			// posting_creator.render();
-			
+			answer_creator = new AnswerCollectionCreatorView({
+				el: $("#answer-creator-region"),
+				collection: answer_collection,
+				map_reference: map,
+			});
+			answer_creator.render();
+
 			answer_display = new AnswerCollectionDisplayView({
 				el: $("#answer-display-region"),
 				collection: answer_collection,
@@ -94,13 +100,12 @@ require([
 
 			answer_on_map = new AnswerCollectionMapView({
 				el: $(map),
-				collection: answer_collection,
-				//map_reference: map,				
+				collection: answer_collection,			
 			});
+
+		// End of ugly
 		}
 
-
-		
 		// Create Question Representation Client-Side
 		question = new Question({
 			id: QUESTION_ID,

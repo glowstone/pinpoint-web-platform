@@ -1,26 +1,25 @@
 define([
-	'models/posting',
-	'collections/posting_collection',
-	'backbone_debug',
-	'text!templates/posting_creation_template',
-	'jquery-ui',
+	'models/answer',
+	'collections/answer_collection',
+	'library/backbone_debug',
+	'text!templates/answer_creation_template',
 	'handlebars',
 	],
-	function(Posting, PostingCollection, BBDebug, template_source, jq, hb) {
+	function(Answer, AnswerCollection, BBDebug, template_source, hb) {
 
 
-		debug = debug;
+		debug = false;
 		var template = Handlebars.compile(template_source);
 
-		var PostingCollectionCreationView = Backbone.View.extend({
+		var AnswerCollectionCreationView = Backbone.View.extend({
 				/*
-				Constructs a view that is used to create Postings, but it does
-				NOT display the postings. To do that, pass both the 
-				PostingCollectionDisplayView and this PostingCollectionCreationView
-				the same Posting collection at initialization so they internally
+				Constructs a view that is used to create Answers, but it does
+				NOT display the answers. To do that, pass both the 
+				AnswerCollectionDisplayView and this AnswerCollectionCreationView
+				the same Answer collection at initialization so they internally
 				share a data structure. 
-				Client may trigger delegateEvents to create a new Posting. The hooked
-				up display view then has rendering responsibility for the posting in
+				Client may trigger delegateEvents to create a new Answer. The hooked
+				up display view then has rendering responsibility for the answer in
 				the shared collection.
 				Required: pass collection instance in options hash.
 				*/
@@ -28,13 +27,13 @@ define([
 					// Client may trigger Adventure creation.
 					'click button#location-chooser': 'choose_location',
 					'click button#add-photo-button': 'add_photo_url',
-					'click button#submit-posting': 'posting_creation_handler',
+					'click button#submit-answer': 'answer_creation_handler',
 				},
-				model: Posting,
+				model: Answer,
 				// Default collection SHARED by views unless caller provides AdventureCollection at initialization.
 				collection: null,
 				initialize: function(options) {
-					_.bindAll(this, 'render', 'posting_creation_handler', 'add_photo_url', 'choose_location')
+					_.bindAll(this, 'render', 'add_photo_url', 'choose_location', 'answer_creation_handler')
 					this.el = options.el;
 					this.map_reference = options.map_reference;
 					this.last_photo_url = null;
@@ -49,48 +48,37 @@ define([
 					$(this.el).append(rendered_content);
 					return this;
 				},
-				posting_creation_handler: function(event) {
-					var inputs = $('#posting-creation-form :input')
+				answer_creation_handler: function(event) {
+					var values = {};
+					var inputs = $('#answer-creation-form :input');
+					_(inputs).each(function(input) {
+						values[input.name] = $(input).val();
+					});
+					values['question_id'] = QUESTION_ID;
+					//values['photo_url'] = this.last_photo_url;
+					values['latitude'] = this.last_latitude;
+					values['longitude'] = this.last_longitude;
+
 					if (this.last_latitude == null || this.last_longitude == null) {
 						//Don't submit the data. Flash the button to choose a location.
-						$("#location-chooser").animate({opacity: .3}, 200, function() {
-							$("#location-chooser").animate({opacity: 1}, 200, function() {
-								$("#location-chooser").animate({opacity: .3}, 200, function() {
-									$("#location-chooser").animate({opacity: 1}, 200);
-								});
-							});
-						});						
+						this.missing_location_notification();					
+					}
+					else if (values.text == "") {
+						this.missing_text_notification();
 					}
 					else {
-						var values = {text: " "};
-						_(inputs).each(function(input) {
-							values[input.name] = $(input).val();
-						});
-						values['adventure'] = ADVENTURE_ID;
-						values['photo_url'] = this.last_photo_url;
-						values['latitude'] = this.last_latitude;
-						values['longitude'] = this.last_longitude;
-						if (values['text'] == "") {
-							values['text'] = " ";
-						}
-						$("#posting-creation-form")[0].reset();
-
-						// Creates a posting with the values, saves model to server, and adds model to the collection
+						// Valid attempt to create an Answer
+						// Creates an Answer with the values, saves model to server, and adds model to the collection.
 						var self = this;
 						this.collection.create(values, {
 							wait: true,
 							success: function(model, response, options) {
-								self.last_longitude = null;
-								self.last_latitude = null;
-								if (self.last_marker) {
-									self.last_marker.setMap(null);    //Clear last marker
-								}
-								if (self.map_chooser_state) {
-									//Stops listening, changes button back, sets map_chooser state to false
-									self.choose_location();   
-								}
-								$("#latitude-indicator").text("None");
-								$("#longitude-indicator").text("None");
+								// server response only returns answer id, which is merged into client side model.
+								// fetch model immediately to retrieve additional information.
+								model.fetch({
+									update: true,
+								});
+								self.reset_creation_form();
 							},
 							error: function(model, xhr, options) {
 								console.log(xhr);
@@ -154,10 +142,44 @@ define([
 						this.listen_handle = google.maps.event.addListener(this.map_reference, 'click', update_chosen_location);	
 						this.map_chooser_state = true;
 					}
+				},
+				reset_creation_form: function() {
+					$("#answer-creation-form")[0].reset();
+					this.last_longitude = null;
+					this.last_latitude = null;
+					if (this.last_marker) {
+						this.last_marker.setMap(null);    //Clear last marker
+					}
+					if (this.map_chooser_state) {
+						//Stops listening, changes button back, sets map_chooser state to false
+						this.choose_location();   
+					}
+					$("#latitude-indicator").text("None");
+					$("#longitude-indicator").text("None");
+				},
+				missing_location_notification: function() {
+					$("#location-chooser").animate({opacity: .3}, 200, function() {
+						$("#location-chooser").animate({opacity: 1}, 200, function() {
+							$("#location-chooser").animate({opacity: .3}, 200, function() {
+								$("#location-chooser").animate({opacity: 1}, 200);
+							});
+						});
+					});		
+				},
+				missing_text_notification: function() {
+					console.log("Missing text");
+					$("answer-create-text", this.el).animate(
+						{borderColor: "#42ACE9"}, 750,
+						function() {
+							$("answer-create-text", self.el).animate({borderColor: "#E3E3E3"}, 1750);
+						}
+					);	
 				}
+				// Additional creation view handlers go here
+
 			});
 
-		return PostingCollectionCreationView
+		return AnswerCollectionCreationView
 
 	// End of Module define function closure
 	}

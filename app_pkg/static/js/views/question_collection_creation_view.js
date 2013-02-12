@@ -8,7 +8,7 @@ define([
 	function(Question, QuestionCollection, BBDebug, template_source, hb) {
 
 
-		debug = debug;
+		debug = false;
 		var template = Handlebars.compile(template_source);
 
 		var QuestionCollectionCreationView = Backbone.View.extend({
@@ -49,7 +49,7 @@ define([
 				},
 				posting_creation_handler: function(event) {
 					var values = {};
-					var inputs = $('#question-creation-form :input')
+					var inputs = $('#question-creation-form :input');
 					_(inputs).each(function(input) {
 						values[input.name] = $(input).val();
 					});
@@ -58,14 +58,13 @@ define([
 
 					if (this.last_latitude == null || this.last_longitude == null) {
 						//Don't submit the data. Flash the button to choose a location.
-						this.missing_location_notification()
-										
+						this.missing_location_notification();			
 					}
 					else if (values.title == "" || values.text == ""){
 						if (values.title == "") {
-							this.missing_title_notification()
+							this.missing_title_notification();
 						} else {
-							this.missing_text_notification()
+							this.missing_text_notification();
 						}
 					}
 					else {
