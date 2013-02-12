@@ -35,8 +35,9 @@ require([
 	'views/other_question_view',
 	'views/question_collection_display_view',
 	'views/question_collection_creation_view',
+	'views/question_collection_map_view',
 	], 
-	function(google, GMapsHelper, location, Question, User, QuestionCollection, OwnQuestionView, OtherQuestionView, QuestionCollectionDisplayView, QuestionCollectionCreatorView) {
+	function(google, GMapsHelper, location, Question, User, QuestionCollection, OwnQuestionView, OtherQuestionView, QuestionCollectionDisplayView, QuestionCollectionCreatorView, QuestionCollectionMapView) {
 
 		var debug = true;
 		$("li.questions-tab").addClass("active");
@@ -54,6 +55,9 @@ require([
 					return new OtherQuestionView(options);
 				}
 			}
+
+			// User viewing his own Question Listing Page
+			///////////////////////////////////////////////////////////////////
 
 			question_collection = new QuestionCollection()
 
@@ -73,11 +77,11 @@ require([
 			});
 			question_display.render()
 
-			// posting_on_map = new PostingCollectionMapView({
-			// 	el: $(map),
-			// 	collection: posting_collection,
-			// 	//map_reference: map,				
-			// });
+			question_on_map = new QuestionCollectionMapView({
+				el: $(map),
+				collection: question_collection,
+				map_reference: map,				
+			});
 		}
 
 		// Return a function that will build the map and invoke the custom callback after the map is created.
