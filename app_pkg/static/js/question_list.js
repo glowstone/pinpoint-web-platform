@@ -48,9 +48,13 @@ require([
 
 			// Question View Generator
 			var generate_question_view = function(model, options) {
-				if (model.attributes.author.id == USER_ID) {
+				if (model.attributes.author && model.attributes.author.id == USER_ID) {
 					return new OwnQuestionView(options);
 				} 
+				else if (typeof model.attributes.author == 'undefined'){
+					// Should only be undefined if built in client and waiting for data (i.e. authenticated user owns the Question)
+					return new OwnQuestionView(options);
+				}
 				else {
 					return new OtherQuestionView(options);
 				}

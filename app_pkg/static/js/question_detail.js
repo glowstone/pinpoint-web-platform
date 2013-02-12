@@ -56,7 +56,6 @@ require([
 
 			// Posting View Generator
 			var generate_answer_view = function(model, options) {
-				console.log(model.attributes)
 				if (model.attributes.author && model.attributes.author.id == USER_ID) {
 					return new OwnAnswerView(options);
 				}
