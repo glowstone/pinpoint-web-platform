@@ -61,7 +61,6 @@ require([
 					return new OwnAnswerView(options);
 				}
 				else if (typeof model.attributes.author == 'undefined'){
-					console.log("Got here");
 					// Should only be undefined if built in client and waiting for data (i.e. authenticated user owns the Answer)
 					return new OwnAnswerView(options);
 				}
@@ -91,7 +90,7 @@ require([
 								val: QUESTION_ID,
 							},
 						]
-					})
+					}),
 				},
 				generate_answer_view: generate_answer_view,
 				empty_message: "No posts yet."

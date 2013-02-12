@@ -16,6 +16,6 @@
 
 </div>
 
-<div class="row-fluid posting-bar">
-	<button id="submit-posting" class='btn btn-success span12'>Post</button>
+<div class="row-fluid question-bar">
+	<button id="submit-question" class='btn btn-success span12'>Post</button>
 </div>

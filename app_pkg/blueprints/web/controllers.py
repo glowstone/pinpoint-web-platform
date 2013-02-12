@@ -110,7 +110,9 @@ def question_detail(question_id):
 @login_required
 def user_list():
     """Show the user listing page"""
-    return render_template('user_list.html')
+    context_vars = {}
+    context_vars['user_id'] = session['user'].id
+    return render_template('user_list.html', **context_vars)
 
 
 @login_required

@@ -38,6 +38,17 @@ require([
 				el: $("#all-users-pane").get(0),
 				collection: new UserCollection(),
 				generate_user_view: generate_user_view,
+				fetch_data: {
+					q: JSON.stringify({
+						"filters": [
+							{
+								name: "id",
+								op: "!=",
+								val: USER_ID,
+							},
+						]
+					})
+				},
 				empty_message: ""       // Don't show a message about there being no other users. 
 			});
 			all_users_view.render();

@@ -5,14 +5,9 @@ from flask import session, request
 from app_pkg.database import db_session
 
 from app_pkg.blueprints.api import util
+from app_pkg.blueprints.api.util import login_required
 
-# Package Modules
-#from sqlalchemy.core.exceptions import *
-from models import *
-
-
-# Libraries
-import datetime
+from models import User, Question, Answer
 
 
 def user_create(username, email, password):
@@ -52,7 +47,6 @@ def user_authenticate(user_identifier, password):
                 return util.error_response('Invalid password')
         else:
             return util.error_response('No User with that username or email')
-
 
 
 def user_show(username):

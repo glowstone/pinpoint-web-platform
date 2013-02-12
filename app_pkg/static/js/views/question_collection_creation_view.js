@@ -26,13 +26,13 @@ define([
 				events: {
 					// Client may trigger Adventure creation.
 					'click button#location-chooser': 'choose_location',
-					'click button#submit-posting': 'posting_creation_handler',
+					'click button#submit-question': 'question_creation_handler',
 				},
 				model: Question,
 				// Default collection SHARED by views unless caller provides QuestionCollection at initialization.
 				collection: null,
 				initialize: function(options) {
-					_.bindAll(this, 'render', 'posting_creation_handler', 'choose_location')
+					_.bindAll(this, 'render', 'question_creation_handler', 'choose_location')
 					this.el = options.el;
 					this.map_reference = options.map_reference;
 					this.last_photo_url = null;
@@ -47,7 +47,7 @@ define([
 					$(this.el).append(rendered_content);
 					return this;
 				},
-				posting_creation_handler: function(event) {
+				question_creation_handler: function(event) {
 					var values = {};
 					var inputs = $('#question-creation-form :input');
 					_(inputs).each(function(input) {
@@ -69,7 +69,7 @@ define([
 					}
 					else {
 						// Valid attempt to create a Question
-						// Creates a posting with the values, saves model to server, and adds model to the collection
+						// Creates a Question with the values, saves model to server, and adds model to the collection
 						var self = this;
 						this.collection.create(values, {
 							wait: true,

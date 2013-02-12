@@ -47,7 +47,7 @@ define([
 			},
 			visit_profile_handler: function(event) {
 				event.preventDefault();
-				user_username = this.model.attributes.author
+				user_username = this.model.attributes.author.username
 				window.location.href = WEB_USER_URL + user_username;
 			},
 			render: function() {	

@@ -2,6 +2,7 @@ from flask import jsonify, redirect, abort, request, Response
 # Provides an API call for session authentication.
 from flask import session
 from app_pkg.blueprints.api import custom_api_bp as api
+from app_pkg.blueprints.api.util import login_required
 
 import json
 
@@ -66,6 +67,7 @@ def user_authenticate_wrapper():
 
 
 @api.route('/user_show', methods=['GET'])
+@login_required
 def user_show_wrapper():
 	"""
 	Wrapper around the custom API user_show method.
@@ -90,6 +92,7 @@ def user_show_wrapper():
 ###############################################################################
 
 @api.route('/user_put_latlong', methods=['POST'])
+@login_required
 def user_put_latlong():
 	"""
 	Wrapper around the custom API user_put_latlong method.
@@ -113,6 +116,7 @@ def user_put_latlong():
 
 
 @api.route('/user_register_gcm', methods=['POST'])
+@login_required
 def user_register_gcm_wrapper():
 	"""
 	Wrapper around the custom API user_register_gcm method.
@@ -133,7 +137,9 @@ def user_register_gcm_wrapper():
 	else:
 		return abort(400)      # Bad Request
 
+
 @api.route('/question_create', methods=['POST'])
+@login_required
 def question_create_wrapper():
 	"""
 	Wrapper around the custom API question_create method.
@@ -152,6 +158,7 @@ def question_create_wrapper():
 		return abort(400)     # Bad Request
 
 @api.route('/answer_create', methods=['GET', 'POST'])
+@login_required
 def answer_create_wrapper():
 	"""
 	Wrapper around the custom API answer_create method.

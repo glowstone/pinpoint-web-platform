@@ -4,7 +4,8 @@ import string
 import random
 import datetime
 #from web_package.models import *
-from flask import session, request
+from flask import session, request, redirect, url_for
+from functools import wraps
 
 
 #Characters used to generate a hash
@@ -15,6 +16,18 @@ EARTH_RADIUS_METERS = 6371000   # Radius of the earth, in kilometers
 
 # Crypto
 ###############################################################################
+
+
+def login_required(f):
+    """Checks that the user has an authenticated session. Otherwise redirect
+    to the index page to login"""
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'user' not in session:
+            return redirect(url_for('web.index', next=request.url))
+        return f(*args, **kwargs)
+    return decorated_function
+
 
 def random_salt(salt_length=SALT_LENGTH):
     """Return a salt_length string of cryptographically random bytes."""

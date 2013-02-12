@@ -28,7 +28,8 @@ define([
 			initialize: function(options) {
 				_.bindAll(this, 'render', 'append_subview', 'depend_subview', 'reset_handler', 'check_empty_status');
 				this.el = options.el;         // No el by default. 
-				this.generate_user_view = options.generate_user_view
+				this.fetch_data = options.fetch_data;
+				this.generate_user_view = options.generate_user_view;
 				this.empty_message_template = empty_template({empty_message: options.empty_message});
 			
 				// Bind collection events to corresponding view handlers
@@ -55,6 +56,7 @@ define([
 				(function fetch_user_collection() {
 					self.collection.fetch({
 						update: true,
+						data: self.fetch_data,
 						success: BBDebug.notify(debug, "Successful UserCollection fetch"),
 						error: BBDebug.notify(debug, "Error upon UserCollection fetch"),
 					});
