@@ -27,7 +27,7 @@ def user_create(username, email, password):
     try:
         db_session.commit()
     except Exception:               # SQLAlchemyError would be better, but not sure how to import it.
-        db_session.rollback()       # TODO: Does not rollback geolocation creation as we would like
+        db_session.rollback()       
         return util.error_response("Database error creating User")
         
     return util.success_response(user)
@@ -93,6 +93,32 @@ def user_register_gcm(registration_id):
         return util.success_response(user)
     else:
         return util.error_response("No user with username " + username)
+
+
+def question_create(title, text, latitude, longitude):
+    """Create a new Question"""
+    user_id = session['user'].id
+    question = Question(title, text, latitude, longitude, user_id)
+    try:
+        db_session.add(question)
+        db_session.commit()
+        return util.success_response({})
+    except Exception:               # SQLAlchemyError would be better, but not sure how to import it.
+        db_session.rollback()
+        return util.error_response("Database error creating Question")
+        
+
+def answer_create(title, text, latitude, longitude):
+    """Create a new Question"""
+    user_id = session['user'].id
+    question = Question(title, text, latitude, longitude, user_id)
+    try:
+        db_session.add(question)
+        db_session.commit()
+        return util.success_response({})
+    except Exception:               # SQLAlchemyError would be better, but not sure how to import it.
+        db_session.rollback()
+        return util.error_response("Database error creating Question")
 
 
 

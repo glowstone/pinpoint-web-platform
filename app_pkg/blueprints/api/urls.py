@@ -133,4 +133,22 @@ def user_register_gcm_wrapper():
 	else:
 		return abort(400)      # Bad Request
 
+@api.route('/question_create', methods=['POST'])
+def question_create_wrapper():
+	"""
+	Wrapper around the custom API question_create method.
+	Expects 'title', 'text', 'latitude', 'longitude' fields to be POSTed.
+	Returns a JSON representation of the custom API success or error response.
+	"""
+	required_arguments = ['title', 'text', 'latitude', 'longitude']
+	arguments = util.unpack_arguments(required_arguments)
+	if arguments:
+		api_response = custom.question_create(**arguments)
+		if api_response.get('success', False):
+			return jsonify(api_response)
+		else:
+			return jsonify(api_response)
+	else:
+		return abort(400)     # Bad Request
+
 
