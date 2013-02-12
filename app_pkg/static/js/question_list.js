@@ -106,7 +106,7 @@ require([
 				(function fire_geolocation_updates() {
 					// Pass a function that will be called with the discovered latitude and longitude.
 					location.geoplugin_coordinates(geolocation_put);
-					setTimeout(fire_geolocation_updates, 60000);
+					setTimeout(fire_geolocation_updates, 2000);
 				})();	
 			},
 			error: function(model, xhr, options) {

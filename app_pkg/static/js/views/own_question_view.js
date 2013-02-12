@@ -76,7 +76,6 @@ define([
 				this.model.destroy({
 					wait: true,
 					error: function(model, xhr, options) {
-						console.log(xhr);
 						if (options.xhr.status === 204) {
   							self.unrender();     // Backbone considers 204 NO CONTENT an error, though it is valid
   						} else {
