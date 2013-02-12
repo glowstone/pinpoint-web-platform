@@ -5,6 +5,35 @@ textarea {
 	margin-bottom: 0px
 }
 
+h1, h2 {
+	color: #636363;
+}
+
+a:hover {
+	text-decoration: none;
+}
+
+
+.profile-img {
+	margin-bottom: 20px;
+}
+
+#side-content {
+	margin-top: 60px;
+	margin-left: 0px;
+}
+
+.sidebar-wrap {
+	background-color: white;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+}
+
+.sidebar-wrap h3 {
+	color: #636363;
+}
+
 .map-collapse {
 	height: 300px;
 	width: 100%;
@@ -46,7 +75,7 @@ textarea {
 }
 
 #user-question-display-region {
-	min-height: 300px;
+	min-height: 600px;
 }
 
 #page-owner-question-display-region {

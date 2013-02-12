@@ -110,16 +110,17 @@ require([
 		});
 
 		// Return a function that will build the map and invoke the custom callback after the map is created.
-		build_map = GMapsHelper.get_func_to_build_map_and_call(ugly);
-
+		build_map = GMapsHelper.get_func_to_build_map_at_latlng_and_call($("#map_canvas"), ugly);
 		question.fetch({
 			success: function(model, response, options) {
-				var address = model.attributes.location;
-				geocoder = new google.maps.Geocoder();
-				geocoder.geocode({address: address}, build_map);
+				// Build map centered at latitude and longitude, then call ugly.
+				console.log(model.attributes.latitude);
+				console.log(model.attributes.longitude);
+				build_map(model.attributes.latitude, model.attributes.longitude);
 			},
 			error: function(model, xhr, options) {
-				buildmap(null, null);             // Will build default map and call ugly.
+				// Build map centered at NYC, NY by default, then call ugly.
+				build_map(null, null);
 			}
 		});
 

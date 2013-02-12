@@ -1,5 +1,5 @@
-
 <div class="row-fluid">
+
 
 	<div class="span8">
 		<form id='question-creation-form' action='/should_not_be_submitted'>
@@ -19,3 +19,5 @@
 <div class="row-fluid question-bar">
 	<button id="submit-question" class='btn btn-success span12'>Post</button>
 </div>
+
+	

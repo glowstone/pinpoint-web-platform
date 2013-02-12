@@ -50,14 +50,29 @@ def question_post_preprocessor(data):
     set on the new instance of the model.
     """
     user = session.get('user', False)
-    # Send a GCM message
-    users = User.query.filter(User.id != user.id).all()
-    util.send_gcm_message(users, {'data': 'New message'})
     if user:
         data['user_id'] = user.id
     else:
         raise ProcessingException(message='Not Authorized',
                                   status_code=401)
+    return data
+
+
+def question_post_postprocessor(data):
+    """Accepts a single argument, `data`, which is the dictionary
+    representation of the created instance of the model.
+    This function must return a dictionary representing the JSON to
+    return to the client.
+
+    Execution reaches this point when a new question has been successfully
+    created. An Android GCM Push notification is made to users to 
+    notify them of the new Question
+    """
+    user = session.get('user', False)
+    # Send a GCM message
+    users = User.query.filter(User.id != user.id).all()
+    util.send_gcm_message(users, {'data': 'New message'})
+
     return data
 
 
@@ -142,6 +157,9 @@ question_rest_app = manager.create_api_blueprint(
     preprocessors = {
         'POST': [question_post_preprocessor],
         'DELETE': [question_delete_preprocessor],
+    },
+    postprocessors = {
+        'POST': [question_post_postprocessor],
     },
     results_per_page = -1,        # Disable pagination
 )
