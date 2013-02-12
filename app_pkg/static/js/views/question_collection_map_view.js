@@ -24,7 +24,6 @@ define([
 			_.bindAll(this, 'render', 'append_subview', 'depend_subview', 'reset_handler')
 			this.el = options.el;
 			this.generate_question_view = options.generate_question_view
-			this.map_reference = options.map_reference;
 
 			// Bind collection events to corresponding view handlers
 			this.collection.on('add', this.append_subview);

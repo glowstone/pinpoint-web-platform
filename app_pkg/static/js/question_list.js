@@ -58,30 +58,36 @@ require([
 
 			// User viewing his own Question Listing Page
 			///////////////////////////////////////////////////////////////////
+			if (YOUR_PAGE) {
 
-			question_collection = new QuestionCollection()
+				question_collection = new QuestionCollection()
+				question_creator = new QuestionCollectionCreatorView({
+					el: $("#question-creator-region"),
+					collection: question_collection,
+					map_reference: map,
+				});
+				question_creator.render();
 
-			question_creator = new QuestionCollectionCreatorView({
-				el: $("#question-creator-region"),
-				collection: question_collection,
-				map_reference: map,
-			});
-			question_creator.render();
+				question_display = new QuestionCollectionDisplayView({
+					el: $("#question-display-region"),
+					collection: question_collection,
+					fetch_data: {},
+					generate_question_view: generate_question_view,
+					empty_message: "No Questions yet. You could be the first to ask one."
+				});
+				question_display.render()
 
-			question_display = new QuestionCollectionDisplayView({
-				el: $("#question-display-region"),
-				collection: question_collection,
-				fetch_data: {},
-				generate_question_view: generate_question_view,
-				empty_message: "No Questions yet. You could be the first to ask one."
-			});
-			question_display.render()
+				question_on_map = new QuestionCollectionMapView({
+					el: $(map),
+					collection: question_collection,
+					map_reference: map,				
+				});
+			}
+			else {
 
-			question_on_map = new QuestionCollectionMapView({
-				el: $(map),
-				collection: question_collection,
-				map_reference: map,				
-			});
+				
+			}
+
 		}
 
 		// Return a function that will build the map and invoke the custom callback after the map is created.
