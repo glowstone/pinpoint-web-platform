@@ -32,10 +32,11 @@ require([
 	'models/user',
 	'collections/question_collection',
 	'views/own_question_view',
+	'views/other_question_view',
 	'views/question_collection_display_view',
 	'views/question_collection_creation_view',
 	], 
-	function(google, GMapsHelper, location, Question, User, QuestionCollection, OwnQuestionView, QuestionCollectionDisplayView, QuestionCollectionCreatorView) {
+	function(google, GMapsHelper, location, Question, User, QuestionCollection, OwnQuestionView, OtherQuestionView, QuestionCollectionDisplayView, QuestionCollectionCreatorView) {
 
 		var debug = true;
 		$("li.questions-tab").addClass("active");
@@ -46,13 +47,12 @@ require([
 
 			// Question View Generator
 			var generate_question_view = function(model, options) {
-				return new OwnQuestionView(options);
-				// if (model.attributes.author_id == USER_ID) {
-				// 	return new OwnPostingView(options);
-				// } 
-				// else {
-				// 	return new OtherPostingView(options);
-				// }
+				if (model.attributes.author.id == USER_ID) {
+					return new OwnQuestionView(options);
+				} 
+				else {
+					return new OtherQuestionView(options);
+				}
 			}
 
 			question_collection = new QuestionCollection()
@@ -67,8 +67,7 @@ require([
 			question_display = new QuestionCollectionDisplayView({
 				el: $("#question-display-region"),
 				collection: question_collection,
-				fetch_data: {
-				},
+				fetch_data: {},
 				generate_question_view: generate_question_view,
 				empty_message: "No Questions yet. You could be the first to ask one."
 			});
@@ -106,7 +105,7 @@ require([
 				(function fire_geolocation_updates() {
 					// Pass a function that will be called with the discovered latitude and longitude.
 					location.geoplugin_coordinates(geolocation_put);
-					setTimeout(fire_geolocation_updates, 2000);
+					setTimeout(fire_geolocation_updates, 60000);
 				})();	
 			},
 			error: function(model, xhr, options) {
