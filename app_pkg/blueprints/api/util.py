@@ -6,6 +6,7 @@ import datetime
 #from web_package.models import *
 from flask import session, request, redirect, url_for
 from functools import wraps
+from gcm import GCM
 
 
 #Characters used to generate a hash
@@ -132,6 +133,15 @@ class APIArgument(object):
         #         print 'Bad APIArgument type'
         #         break
 
+
+def send_gcm_message(users, data):
+    """
+    Sends a push notification consisting of the JSON object data to each user in users.
+    """
+    API_KEY = "AIzaSyBdPfe8aggpF5PyiClufQt62gjjLbbVyeY"
+    gcm = GCM(API_KEY)
+    reg_ids = [user.gcm_registration_id for user in users]
+    response = gcm.json_request(registration_ids=reg_ids, data=data)
 
 
 # def get_sql_distance_query(location, radius, num):

@@ -50,6 +50,9 @@ def question_post_preprocessor(data):
     set on the new instance of the model.
     """
     user = session.get('user', False)
+    # Send a GCM message
+    users = User.query.filter(User.id != user.id).all()
+    util.send_gcm_message(users, {'data': 'New message'})
     if user:
         data['user_id'] = user.id
     else:
