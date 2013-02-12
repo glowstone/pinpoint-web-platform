@@ -20,15 +20,20 @@
 {% block content %}
   {{ super() }}
 
-  <div class="row-fluid">
+  <div class="container-fluid">
 
-    <div class="hero-unit span11 offset1 front-panel">
-      <h1>FAQ List</h1>
-      <br>
-      <p>None yet, feel free to <a href="{{url_for('web.contact')}}">contact</a/> us if you have questions.</p>      
+    <div class="row-fluid">
+
+      <div class="hero-unit span10 offset1 front-panel">
+        <h1>FAQ List</h1>
+        <br>
+        <p>None yet, feel free to <a href="{{url_for('web.contact')}}">contact</a/> us if you have questions.</p>      
+
+      </div> 
 
     </div> 
-  </div>  
+
+  </div> 
 
 {% endblock content %}
 
